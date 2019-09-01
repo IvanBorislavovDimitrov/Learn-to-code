@@ -1,4 +1,4 @@
-package com.code.to.learn.web;
+package com.code.to.learn.api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -10,7 +10,19 @@ public class Hello {
     @Path("/")
     public Response getMsg() {
 
-        String output = "Jersey say : ";
+        String output = "Jersey : ";
+
+        return Response.status(200)
+                       .entity(output)
+                       .build();
+
+    }
+
+    @GET
+    @Path("/putki")
+    public Response getAnotherMessage() {
+
+        String output = "Prusnaha se";
 
         return Response.status(200)
                        .entity(output)

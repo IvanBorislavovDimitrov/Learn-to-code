@@ -2,9 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.learn.to.code</groupId>
   <artifactId>learn-to-code</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${project.version}</version>
   <packaging>pom</packaging>
+  
+  <properties>
+  <project.version>0.0.1-SNAPSHOT</project.version>
+  </properties>
+  
   <modules>
   	<module>com.code.to.learn.web</module>
+  	<module>com.code.to.learn.api</module>
+  	<module>com.code.to.learn.core</module>
+  	<module>com.code.to.learn.persistence</module>
+  	<module>com.code.to.learn.process</module>
   </modules>
 </project>
