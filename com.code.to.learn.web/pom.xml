@@ -22,14 +22,12 @@
 		</plugins>
 	</build>
 
-	<dependencies>
-
+  	<dependencies>
 		<dependency>
 			<groupId>com.learn.to.code</groupId>
-			<artifactId>com.code.to.learn.api</artifactId>
+			<artifactId>com.code.to.learn.process</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 	</dependencies>
 
 </project>
