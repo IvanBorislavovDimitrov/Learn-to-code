@@ -17,6 +17,7 @@ public class UserApi {
 
     @GetMapping(value = "/")
     public String sayHello() {
-        return userService != null ? "ima go" : "nema go";
+        userService.register();
+        return "result";
     }
 }

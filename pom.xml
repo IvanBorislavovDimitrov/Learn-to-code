@@ -10,15 +10,29 @@
     <properties>
         <project.version>0.0.1-SNAPSHOT</project.version>
         <spring.version>5.1.3.RELEASE</spring.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <modules>
         <module>com.code.to.learn.web</module>
         <module>com.code.to.learn.api</module>
-        <module>com.code.to.learn.core</module>
         <module>com.code.to.learn.persistence</module>
         <module>com.code.to.learn.process</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
@@ -31,6 +45,8 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+
     </dependencies>
 
 </project>
