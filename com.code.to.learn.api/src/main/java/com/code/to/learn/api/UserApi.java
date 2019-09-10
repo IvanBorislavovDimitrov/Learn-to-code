@@ -1,25 +1,22 @@
 package com.code.to.learn.api;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.code.to.learn.api.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Path("/user")
+@RestController
 public class UserApi {
 
-    @Autowired
     private UserService userService;
 
-    @GET
-    @Path("/")
-    public Response getUserServiceInformation() {
-        String infoFormUserService = userService == null ? "NEMA GO" : "IMA GO";
-        return Response.status(200)
-                       .entity(infoFormUserService)
-                       .build();
+    @Autowired
+    public UserApi(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping(value = "/")
+    public String sayHello() {
+        return userService != null ? "ima go" : "nema go";
     }
 }

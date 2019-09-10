@@ -5,16 +5,8 @@
 	<parent>
 		<groupId>com.learn.to.code</groupId>
 		<artifactId>learn-to-code</artifactId>
-		<version>${project.version}</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.code.to.learn.api</artifactId>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.8</version>
-		</dependency>
-	</dependencies>
 
 </project>
