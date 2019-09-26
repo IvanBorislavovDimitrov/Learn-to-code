@@ -4,13 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.learn.to.code</groupId>
     <artifactId>learn-to-code</artifactId>
-    <version>${project.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
-        <project.version>0.0.1-SNAPSHOT</project.version>
         <spring.version>5.1.3.RELEASE</spring.version>
         <java.version>1.8</java.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
+        <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
+        <jackson.version>2.9.10</jackson.version>
     </properties>
 
     <modules>
@@ -45,8 +47,27 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
     </dependencies>
+
 
 </project>

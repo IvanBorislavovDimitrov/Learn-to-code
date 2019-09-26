@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int guid;
+    private String guid;
 
     @Column(name = "first_name")
     private String firstName;
@@ -19,11 +19,11 @@ public class User {
     @Column(name = "email_address")
     private String emailAddress;
 
-    public int getGuid() {
+    public String getGuid() {
         return guid;
     }
 
-    public void setGuid(int guid) {
+    public void setGuid(String guid) {
         this.guid = guid;
     }
 
