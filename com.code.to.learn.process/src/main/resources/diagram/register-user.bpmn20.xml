@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="register-user" name="register-user" isExecutable="true">
+    <documentation>Registers a user</documentation>
+    <startEvent id="startEvent1" flowable:formKey="register-user" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="sid-5F128503-3A26-469C-B6B8-1ED6D931BBF5" name="Validate User" flowable:class="com.code.to.learn.process.steps.ValidateUserStep"></serviceTask>
+    <sequenceFlow id="sid-F7DB5474-2A57-4BA7-90DD-E3762854C257" sourceRef="startEvent1" targetRef="sid-5F128503-3A26-469C-B6B8-1ED6D931BBF5"></sequenceFlow>
+    <serviceTask id="sid-C6A42454-35C9-4467-93A7-1D62BD2D71C4" name="Persist User" flowable:class="com.code.to.learn.process.steps.PersistUserStep"></serviceTask>
+    <sequenceFlow id="sid-8994610C-47D6-4CAE-98A6-E61489E7DC3C" sourceRef="sid-5F128503-3A26-469C-B6B8-1ED6D931BBF5" targetRef="sid-C6A42454-35C9-4467-93A7-1D62BD2D71C4"></sequenceFlow>
+    <serviceTask id="sid-9B00E825-9D80-4037-AF48-944F728B5AA7" name="Send User Email" flowable:class="com.code.to.learn.process.steps.SendUserEmailStep"></serviceTask>
+    <endEvent id="sid-44BFDC95-1972-4841-9073-40E5CB9F5960"></endEvent>
+    <sequenceFlow id="sid-8461B495-2F0D-416F-A963-CD44F1B12A73" sourceRef="sid-9B00E825-9D80-4037-AF48-944F728B5AA7" targetRef="sid-44BFDC95-1972-4841-9073-40E5CB9F5960"></sequenceFlow>
+    <sequenceFlow id="sid-E6181E26-E8A7-4BB7-90D1-3E1209D37E38" sourceRef="sid-C6A42454-35C9-4467-93A7-1D62BD2D71C4" targetRef="sid-9B00E825-9D80-4037-AF48-944F728B5AA7"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_register-user">
+    <bpmndi:BPMNPlane bpmnElement="register-user" id="BPMNPlane_register-user">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-5F128503-3A26-469C-B6B8-1ED6D931BBF5" id="BPMNShape_sid-5F128503-3A26-469C-B6B8-1ED6D931BBF5">
+        <omgdc:Bounds height="80.0" width="100.0" x="270.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C6A42454-35C9-4467-93A7-1D62BD2D71C4" id="BPMNShape_sid-C6A42454-35C9-4467-93A7-1D62BD2D71C4">
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9B00E825-9D80-4037-AF48-944F728B5AA7" id="BPMNShape_sid-9B00E825-9D80-4037-AF48-944F728B5AA7">
+        <omgdc:Bounds height="80.0" width="100.0" x="705.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-44BFDC95-1972-4841-9073-40E5CB9F5960" id="BPMNShape_sid-44BFDC95-1972-4841-9073-40E5CB9F5960">
+        <omgdc:Bounds height="28.0" width="28.0" x="975.0" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-E6181E26-E8A7-4BB7-90D1-3E1209D37E38" id="BPMNEdge_sid-E6181E26-E8A7-4BB7-90D1-3E1209D37E38">
+        <omgdi:waypoint x="594.9499999999504" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="704.999999999997" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8994610C-47D6-4CAE-98A6-E61489E7DC3C" id="BPMNEdge_sid-8994610C-47D6-4CAE-98A6-E61489E7DC3C">
+        <omgdi:waypoint x="369.94999999996566" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="495.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F7DB5474-2A57-4BA7-90DD-E3762854C257" id="BPMNEdge_sid-F7DB5474-2A57-4BA7-90DD-E3762854C257">
+        <omgdi:waypoint x="129.94999956503588" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="269.99999999995566" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8461B495-2F0D-416F-A963-CD44F1B12A73" id="BPMNEdge_sid-8461B495-2F0D-416F-A963-CD44F1B12A73">
+        <omgdi:waypoint x="804.9499999999273" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="975.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

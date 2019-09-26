@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.hibernate;
 
-import com.code.to.learn.persistence.User;
+import com.code.to.learn.persistence.domain.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

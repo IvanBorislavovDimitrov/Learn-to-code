@@ -1,17 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.learn.to.code</groupId>
-    <artifactId>learn-to-code</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>com.code.to.learn.process</artifactId>
-  
-  	<dependencies>
-		<dependency>
-			<groupId>com.learn.to.code</groupId>
-			<artifactId>com.code.to.learn.persistence</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.learn.to.code</groupId>
+        <artifactId>learn-to-code</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>com.code.to.learn.process</artifactId>
+
+    <properties>
+        <flowable.engine.version>6.4.2</flowable.engine.version>
+        <slf4j.version>1.7.21</slf4j.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.learn.to.code</groupId>
+            <artifactId>com.code.to.learn.persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-engine</artifactId>
+            <version>${flowable.engine.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+    </dependencies>
 </project>
