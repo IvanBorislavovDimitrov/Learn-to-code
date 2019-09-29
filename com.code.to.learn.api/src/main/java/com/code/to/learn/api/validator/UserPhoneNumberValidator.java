@@ -1,6 +1,6 @@
 package com.code.to.learn.api.validator;
 
-import com.code.to.learn.api.annotations.PhoneNumberConstraint;
+import com.code.to.learn.api.annotation.PhoneNumberConstraint;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

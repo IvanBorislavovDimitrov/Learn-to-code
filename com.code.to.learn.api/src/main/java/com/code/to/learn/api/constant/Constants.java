@@ -1,4 +1,4 @@
-package com.code.to.learn.api.constants;
+package com.code.to.learn.api.constant;
 
 public class Constants {
 

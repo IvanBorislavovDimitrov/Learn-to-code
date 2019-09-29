@@ -1,8 +1,8 @@
 package com.code.to.learn.api.model;
 
-import com.code.to.learn.api.annotations.EmailConstraint;
-import com.code.to.learn.api.annotations.PasswordConstraint;
-import com.code.to.learn.api.annotations.PhoneNumberConstraint;
+import com.code.to.learn.api.annotation.EmailConstraint;
+import com.code.to.learn.api.annotation.PasswordConstraint;
+import com.code.to.learn.api.annotation.PhoneNumberConstraint;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

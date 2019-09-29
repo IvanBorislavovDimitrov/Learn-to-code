@@ -1,6 +1,6 @@
-package com.code.to.learn.api.annotations;
+package com.code.to.learn.api.annotation;
 
-import com.code.to.learn.api.constants.Constants;
+import com.code.to.learn.api.constant.Constants;
 import com.code.to.learn.api.validator.UserPhoneNumberValidator;
 
 import javax.validation.Constraint;

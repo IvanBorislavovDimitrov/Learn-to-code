@@ -1,6 +1,6 @@
 package com.code.to.learn.api.validator;
 
-import com.code.to.learn.api.annotations.PasswordConstraint;
+import com.code.to.learn.api.annotation.PasswordConstraint;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

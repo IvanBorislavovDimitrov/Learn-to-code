@@ -1,7 +1,6 @@
-package com.code.to.learn.api.annotations;
+package com.code.to.learn.api.annotation;
 
-import com.code.to.learn.api.constants.Constants;
-import com.code.to.learn.api.validator.UserEmailValidator;
+import com.code.to.learn.api.constant.Constants;
 import com.code.to.learn.api.validator.UserPasswordValidator;
 
 import javax.validation.Constraint;
@@ -13,11 +12,12 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@Constraint(validatedBy = UserEmailValidator.class)
-public @interface EmailConstraint {
-    String message() default Constants.INVALID_EMAIL;
+@Constraint(validatedBy = UserPasswordValidator.class)
+public @interface PasswordConstraint {
+    String message() default Constants.INVALID_PASSWORD;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }
