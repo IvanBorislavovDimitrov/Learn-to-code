@@ -47,10 +47,11 @@ public class ProcessStarter {
     }
 
     private Map<String, Object> getDatabaseProperties() {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        Map<String, Object> properties = sessionFactory.getProperties();
-        sessionFactory.close();
-        return properties;
+        try (SessionFactory sessionFactory = HibernateUtils.getSessionFactory()) {
+            Map<String, Object> properties = sessionFactory.getProperties();
+            sessionFactory.close();
+            return properties;
+        }
     }
 
     private Map<String, Object> createUserProcessVariables(UserBindingModel userBindingModel) {

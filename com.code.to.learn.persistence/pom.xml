@@ -12,6 +12,7 @@
 	<properties>
 		<hibernate.version>5.4.3.Final</hibernate.version>
 		<postgres.version>9.1-901-1.jdbc4</postgres.version>
+		<model.mapper.version>2.3.5</model.mapper.version>
 	</properties>
 
 	<dependencies>
@@ -29,6 +30,12 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgres.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${model.mapper.version}</version>
 		</dependency>
 
 	</dependencies>
