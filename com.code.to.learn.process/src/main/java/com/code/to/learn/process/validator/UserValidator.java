@@ -2,6 +2,7 @@ package com.code.to.learn.process.validator;
 
 import com.code.to.learn.api.model.UserBindingModel;
 import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.process.exception.user.EmailTakenException;
 import com.code.to.learn.process.exception.user.UsernameTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class UserValidator {
     public void validateUserBindingModel(UserBindingModel userBindingModel) {
         if (userService.isUsernameTaken(userBindingModel.getUsername())) {
             throw new UsernameTakenException(userBindingModel.getUsername());
+        }
+        if (userService.isEmailTaken(userBindingModel.getEmail())) {
+            throw new EmailTakenException(userBindingModel.getEmail());
         }
     }
 

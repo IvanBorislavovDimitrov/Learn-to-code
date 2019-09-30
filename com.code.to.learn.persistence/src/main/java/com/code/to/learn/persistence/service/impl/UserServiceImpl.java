@@ -64,4 +64,9 @@ public class UserServiceImpl implements UserService {
         return !Objects.isNull(userRepository.getUserByUsername(username));
     }
 
+    @Override
+    public boolean isEmailTaken(String email) {
+        return !Objects.isNull(userRepository.getUserByEmail(email));
+    }
+
 }

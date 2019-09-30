@@ -33,15 +33,7 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
 
     @Override
     public T getById(String id) {
-        try (SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
-            Root<T> root = criteriaQuery.from(getDomainClassType());
-            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(Constants.ID), id));
-            Query<T> query = session.createQuery(criteriaQuery);
-            return query.getSingleResult();
-        }
+        return getByField(Constants.ID, id, false);
     }
 
     @Override
@@ -79,12 +71,30 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
         session.getTransaction().commit();
     }
 
+    protected T getByField(String field, String value, boolean safe) {
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+            Root<T> root = criteriaQuery.from(getDomainClassType());
+            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field), value));
+            if (safe) {
+                return getOrNull(session, criteriaQuery);
+            }
+            return getSingleResult(session, criteriaQuery);
+        }
+    }
+
     protected T getOrNull(Session session, CriteriaQuery<T> criteriaQuery) {
         try {
-            return session.createQuery(criteriaQuery).getSingleResult();
+            return getSingleResult(session, criteriaQuery);
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    private T getSingleResult(Session session, CriteriaQuery<T> criteriaQuery) {
+        return session.createQuery(criteriaQuery).getSingleResult();
     }
 
     protected abstract Class<T> getDomainClassType();
