@@ -1,4 +1,4 @@
-package com.code.to.learn.process.exception;
+package com.code.to.learn.process.exception.general;
 
 import com.code.to.learn.process.constant.Messages;
 

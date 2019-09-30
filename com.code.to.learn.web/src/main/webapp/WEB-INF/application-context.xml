@@ -8,8 +8,5 @@
                            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:spring-configured/>
-<!--    <context:annotation-config />-->
-<!--    <bean id="validateUserStep" class="com.code.to.learn.process.steps.ValidateUserStep" />-->
-
 
 </beans>

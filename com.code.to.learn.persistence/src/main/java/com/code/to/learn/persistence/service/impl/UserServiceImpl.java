@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,4 +53,15 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel delete(UserServiceModel userServiceModel) {
         return deleteById(userServiceModel.getId());
     }
+
+    @Override
+    public void registerUser(UserServiceModel userServiceModel) {
+
+    }
+
+    @Override
+    public boolean isUsernameTaken(String username) {
+        return !Objects.isNull(userRepository.getUserByUsername(username));
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.code.to.learn.process.parser;
 
-import com.code.to.learn.process.exception.InvalidParserTypeException;
+import com.code.to.learn.process.exception.general.InvalidParserTypeException;
 
 public final class ParserFactory {
 

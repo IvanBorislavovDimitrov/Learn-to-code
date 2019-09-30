@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -76,6 +77,14 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
         session.getTransaction().begin();
         supplier.get();
         session.getTransaction().commit();
+    }
+
+    protected T getOrNull(Session session, CriteriaQuery<T> criteriaQuery) {
+        try {
+            return session.createQuery(criteriaQuery).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     protected abstract Class<T> getDomainClassType();

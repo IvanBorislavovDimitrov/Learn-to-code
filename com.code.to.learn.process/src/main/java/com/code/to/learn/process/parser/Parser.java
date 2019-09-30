@@ -1,6 +1,6 @@
 package com.code.to.learn.process.parser;
 
-import com.code.to.learn.process.exception.ParsingException;
+import com.code.to.learn.process.exception.general.ParsingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
