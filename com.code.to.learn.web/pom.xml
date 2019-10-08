@@ -28,8 +28,6 @@
 			<artifactId>com.code.to.learn.process</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-
 	</dependencies>
 
 </project>
