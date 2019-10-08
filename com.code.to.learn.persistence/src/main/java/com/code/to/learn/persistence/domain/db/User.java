@@ -1,29 +1,36 @@
-package com.code.to.learn.persistence.domain;
+package com.code.to.learn.persistence.domain.db;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"users\"")
 public class User extends IdEntity {
 
-    @Column(length = 100, nullable = false)
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String EMAIL = "email";
+    public static final String PHONE_NUMBER = "phoneNumber";
+
+    @Column(length = 100, nullable = false, name = FIRST_NAME)
     private String firstName;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = LAST_NAME)
     private String lastName;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = USERNAME)
     private String username;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = true, name = PHONE_NUMBER)
     private String phoneNumber;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = PASSWORD)
     private String password;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = EMAIL)
     private String email;
 
     public String getFirstName() {

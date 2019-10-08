@@ -9,4 +9,6 @@ public interface UserService extends Service<UserServiceModel> {
     boolean isUsernameTaken(String username);
 
     boolean isEmailTaken(String email);
+
+    boolean isPhoneNumberFree(String phoneNumber);
 }

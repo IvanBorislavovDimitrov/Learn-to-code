@@ -11,6 +11,11 @@
     <dependencies>
         <dependency>
             <groupId>com.learn.to.code</groupId>
+            <artifactId>com.code.to.learn.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.learn.to.code</groupId>
             <artifactId>com.code.to.learn.persistence</artifactId>
             <version>${project.version}</version>
         </dependency>

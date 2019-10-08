@@ -1,7 +1,7 @@
 package com.code.to.learn.persistence.repository.impl;
 
 import com.code.to.learn.persistence.constant.Constants;
-import com.code.to.learn.persistence.domain.User;
+import com.code.to.learn.persistence.domain.db.User;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import org.springframework.stereotype.Component;
 
@@ -10,12 +10,17 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<User> implements U
 
     @Override
     public User getUserByUsername(String username) {
-        return getByField(Constants.USERNAME, username, true);
+        return getByField(User.USERNAME, username);
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return getByField(Constants.EMAIL, email, true);
+        return getByField(User.EMAIL, email);
+    }
+
+    @Override
+    public User getUserByPhoneNumber(String phoneNumber) {
+        return getByField(User.PHONE_NUMBER, phoneNumber);
     }
 
     @Override

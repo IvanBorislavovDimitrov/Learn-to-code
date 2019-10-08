@@ -1,10 +1,12 @@
 package com.code.to.learn.persistence.repository.api;
 
-import com.code.to.learn.persistence.domain.User;
+import com.code.to.learn.persistence.domain.db.User;
 
 public interface UserRepository extends GenericRepository<User> {
 
     User getUserByUsername(String username);
 
     User getUserByEmail(String email);
+
+    User getUserByPhoneNumber(String phoneNumber);
 }

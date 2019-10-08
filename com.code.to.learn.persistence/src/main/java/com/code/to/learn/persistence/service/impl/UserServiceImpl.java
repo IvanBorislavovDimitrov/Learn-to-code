@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.service.impl;
 
-import com.code.to.learn.persistence.domain.User;
+import com.code.to.learn.persistence.domain.db.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -56,7 +56,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserServiceModel userServiceModel) {
-
+        User user = modelMapper.map(userServiceModel, User.class);
+        userRepository.persist(user);
     }
 
     @Override
@@ -67,6 +68,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isEmailTaken(String email) {
         return !Objects.isNull(userRepository.getUserByEmail(email));
+    }
+
+    @Override
+    public boolean isPhoneNumberFree(String phoneNumber) {
+        return !Objects.isNull(userRepository.getUserByPhoneNumber(phoneNumber));
     }
 
 }

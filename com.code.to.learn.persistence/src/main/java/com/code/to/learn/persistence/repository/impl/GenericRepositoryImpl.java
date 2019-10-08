@@ -1,7 +1,7 @@
 package com.code.to.learn.persistence.repository.impl;
 
 import com.code.to.learn.persistence.constant.Constants;
-import com.code.to.learn.persistence.domain.IdEntity;
+import com.code.to.learn.persistence.domain.db.IdEntity;
 import com.code.to.learn.persistence.hibernate.HibernateUtils;
 import com.code.to.learn.persistence.repository.api.GenericRepository;
 import org.hibernate.Session;
@@ -20,8 +20,8 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
 
     @Override
     public List<T> getAll() {
-        try (SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
             Root<T> root = criteriaQuery.from(getDomainClassType());
@@ -33,13 +33,13 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
 
     @Override
     public T getById(String id) {
-        return getByField(Constants.ID, id, false);
+        return getByField(IdEntity.ID, id, false);
     }
 
     @Override
     public void persist(T obj) {
-        try (SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
             executeInTransaction(session, () -> {
                 session.persist(obj);
                 return null;
@@ -55,8 +55,8 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
 
     @Override
     public T delete(T obj) {
-        try (SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
             executeInTransaction(session, () -> {
                 session.delete(obj);
                 return null;
@@ -69,6 +69,10 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
         session.getTransaction().begin();
         supplier.get();
         session.getTransaction().commit();
+    }
+
+    protected T getByField(String field, String value) {
+        return getByField(field, value, true);
     }
 
     protected T getByField(String field, String value, boolean safe) {
