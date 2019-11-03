@@ -11,13 +11,13 @@ public class UserPasswordValidator implements ConstraintValidator<PasswordConstr
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
-        return password.contains("!") ||
+        return password != null && (password.contains("!") ||
                 password.contains("@") ||
                 password.contains("#") ||
                 password.contains("$") ||
                 password.contains("%") ||
                 password.contains("^") ||
                 password.contains("&") ||
-                password.contains("*");
+                password.contains("*"));
     }
 }

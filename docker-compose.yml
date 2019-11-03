@@ -1,0 +1,21 @@
+version: "3"
+services:
+  web:
+    container_name: learn-to-code
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    links:
+      - db
+  db:
+    image: "postgres"
+    container_name: "postgres_container"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=34273427
+      - POSTGRES_DB=code
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
