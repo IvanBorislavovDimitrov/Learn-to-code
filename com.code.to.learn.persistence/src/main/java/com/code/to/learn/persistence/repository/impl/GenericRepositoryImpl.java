@@ -1,6 +1,5 @@
 package com.code.to.learn.persistence.repository.impl;
 
-import com.code.to.learn.persistence.constant.Constants;
 import com.code.to.learn.persistence.domain.db.IdEntity;
 import com.code.to.learn.persistence.hibernate.HibernateUtils;
 import com.code.to.learn.persistence.repository.api.GenericRepository;

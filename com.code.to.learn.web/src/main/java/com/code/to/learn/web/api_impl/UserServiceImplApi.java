@@ -2,8 +2,8 @@ package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.UserServiceApi;
 import com.code.to.learn.api.model.UserBindingModel;
+import com.code.to.learn.api.model.UserViewModel;
 import com.code.to.learn.process.process.api.UserOperations;
-import com.code.to.learn.web.model.view.UserViewModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,7 @@ public class UserServiceImplApi implements UserServiceApi {
     }
 
     @Override
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List<UserViewModel>> getAllUsers() {
         List<UserViewModel> userViewModels = userOperations.getUsers().stream()
                 .map(userServiceModel -> modelMapper.map(userServiceModel, UserViewModel.class))
                 .collect(Collectors.toList());
