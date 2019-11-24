@@ -39,7 +39,8 @@ public class UserServiceImplApi implements UserServiceApi {
 
     @Override
     public ResponseEntity<List<UserViewModel>> getAllUsers() {
-        List<UserViewModel> userViewModels = userOperations.getUsers().stream()
+        List<UserViewModel> userViewModels = userOperations.getUsers()
+                .stream()
                 .map(userServiceModel -> modelMapper.map(userServiceModel, UserViewModel.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok()
