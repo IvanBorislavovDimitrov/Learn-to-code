@@ -3,6 +3,7 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.UserServiceApi;
 import com.code.to.learn.api.model.UserBindingModel;
 import com.code.to.learn.api.model.UserViewModel;
+import com.code.to.learn.process.exception.user.UserException;
 import com.code.to.learn.process.process.api.UserOperations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,18 @@ public class UserServiceImplApi implements UserServiceApi {
                 .body("{\"message\":\"hello\"}");
     }
 
+    // FIX
     @Override
     public ResponseEntity<?> register(UserBindingModel userBindingModel) {
-        userOperations.register(userBindingModel);
-        return ResponseEntity.ok()
-                .body("{\"message\":\"done\"}");
+        try {
+            userOperations.register(userBindingModel);
+            return ResponseEntity.ok()
+                    .body("{\"message\":\"done\"}");
+        } catch (UserException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
+
     }
 
     @Override
@@ -46,4 +54,6 @@ public class UserServiceImplApi implements UserServiceApi {
         return ResponseEntity.ok()
                 .body(userViewModels);
     }
+
+
 }
