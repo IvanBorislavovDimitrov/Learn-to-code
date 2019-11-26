@@ -1,6 +1,12 @@
 package com.code.to.learn.persistence.domain.model;
 
-public class UserServiceModel extends IdServiceEntity {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+public class UserServiceModel extends IdServiceEntity implements UserDetails {
 
     private String firstName;
     private String lastName;
@@ -33,6 +39,26 @@ public class UserServiceModel extends IdServiceEntity {
         this.username = username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -41,6 +67,12 @@ public class UserServiceModel extends IdServiceEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }

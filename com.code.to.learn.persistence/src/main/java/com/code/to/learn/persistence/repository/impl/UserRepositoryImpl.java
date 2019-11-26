@@ -2,9 +2,10 @@ package com.code.to.learn.persistence.repository.impl;
 
 import com.code.to.learn.persistence.domain.db.User;
 import com.code.to.learn.persistence.repository.api.UserRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+// REFACTOR AND USE Optional<User>
+@Repository
 public class UserRepositoryImpl extends GenericRepositoryImpl<User> implements UserRepository {
 
     @Override
