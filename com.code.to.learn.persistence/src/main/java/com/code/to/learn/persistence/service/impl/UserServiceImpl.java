@@ -2,6 +2,7 @@ package com.code.to.learn.persistence.service.impl;
 
 import com.code.to.learn.persistence.domain.db.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.IdNotFoundException;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -25,15 +26,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserServiceModel> getAll() {
+    public List<UserServiceModel> findAll() {
         return userRepository.getAll().stream()
                 .map(user -> modelMapper.map(user, UserServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserServiceModel getById(String id) {
-        User user = userRepository.getById(id);
+    public UserServiceModel findById(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IdNotFoundException(id));
         return modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel deleteById(String id) {
-        User user = userRepository.deleteById(id);
+        User user = userRepository.deleteById(id).orElseThrow(() -> new IdNotFoundException(id));
         return modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -62,17 +63,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUsernameTaken(String username) {
-        return !Objects.isNull(userRepository.getUserByUsername(username));
+        return userRepository.findUserByUsername(username).isPresent();
     }
 
     @Override
     public boolean isEmailTaken(String email) {
-        return !Objects.isNull(userRepository.getUserByEmail(email));
+        return userRepository.findUserByEmail(email).isPresent();
     }
 
     @Override
-    public boolean isPhoneNumberFree(String phoneNumber) {
-        return !Objects.isNull(userRepository.getUserByPhoneNumber(phoneNumber));
+    public boolean isPhoneNumberTaken(String phoneNumber) {
+        return userRepository.findUserByPhoneNumber(phoneNumber).isPresent();
     }
 
 }

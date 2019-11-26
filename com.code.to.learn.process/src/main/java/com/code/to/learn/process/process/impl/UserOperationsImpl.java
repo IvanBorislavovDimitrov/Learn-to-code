@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserOperationsImpl implements UserOperations {
@@ -38,7 +37,7 @@ public class UserOperationsImpl implements UserOperations {
 
     @Override
     public List<UserServiceModel> getUsers() {
-        return userService.getAll();
+        return userService.findAll();
     }
 
     private UserServiceModel toUserServiceModel(UserBindingModel userBindingModel) {

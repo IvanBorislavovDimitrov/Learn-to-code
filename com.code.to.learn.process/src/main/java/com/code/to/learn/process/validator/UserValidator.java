@@ -28,7 +28,7 @@ public class UserValidator {
         if (userService.isEmailTaken(userBindingModel.getEmail())) {
             throw new EmailTakenException(userBindingModel.getEmail());
         }
-        if (userService.isPhoneNumberFree(userBindingModel.getPhoneNumber())) {
+        if (userService.isPhoneNumberTaken(userBindingModel.getPhoneNumber())) {
             throw new PhoneNumberTakenException(userBindingModel.getPhoneNumber());
         }
         if (!passwordsMatch(userBindingModel.getPassword(), userBindingModel.getConfirmPassword())) {

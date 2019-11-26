@@ -1,12 +1,9 @@
 package com.code.to.learn.web.config;
 
-import com.code.to.learn.process.bean.ProcessBeans;
-import com.code.to.learn.web.web_service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,14 +40,14 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(getRestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/")
+                .antMatchers("/api/logged")
                 .authenticated()
                 .antMatchers("/api/admin/**")
                 .hasRole("ADMIN")
                 .and()
                 .formLogin()
-                .successHandler(successHandler())
-                .failureHandler(failureHandler())
+                .successHandler(getSuccessHandler())
+                .failureHandler(getFailureHandler())
                 .and()
                 .logout();
     }
@@ -59,11 +56,11 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
         return new RestAuthenticationEntryPoint();
     }
 
-    public CustomUrlAuthenticationSuccessHandler successHandler() {
+    public CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
         return new CustomUrlAuthenticationSuccessHandler();
     }
 
-    public SimpleUrlAuthenticationFailureHandler failureHandler() {
+    public SimpleUrlAuthenticationFailureHandler getFailureHandler() {
         return new SimpleUrlAuthenticationFailureHandler();
     }
 

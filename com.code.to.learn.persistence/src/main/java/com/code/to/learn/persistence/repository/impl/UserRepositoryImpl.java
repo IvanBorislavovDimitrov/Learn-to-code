@@ -4,23 +4,24 @@ import com.code.to.learn.persistence.domain.db.User;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import org.springframework.stereotype.Repository;
 
-// REFACTOR AND USE Optional<User>
+import java.util.Optional;
+
 @Repository
 public class UserRepositoryImpl extends GenericRepositoryImpl<User> implements UserRepository {
 
     @Override
-    public User getUserByUsername(String username) {
-        return getByField(User.USERNAME, username);
+    public Optional<User> findUserByUsername(String username) {
+        return findByField(User.USERNAME, username);
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return getByField(User.EMAIL, email);
+    public Optional<User> findUserByEmail(String email) {
+        return findByField(User.EMAIL, email);
     }
 
     @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return getByField(User.PHONE_NUMBER, phoneNumber);
+    public Optional<User> findUserByPhoneNumber(String phoneNumber) {
+        return findByField(User.PHONE_NUMBER, phoneNumber);
     }
 
     @Override

@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface Service<T> {
 
-    List<T> getAll();
+    List<T> findAll();
 
-    T getById(String id);
+    T findById(String id);
 
     void save(T obj);
 

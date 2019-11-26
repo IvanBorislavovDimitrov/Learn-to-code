@@ -12,7 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 // Refactor using more generic selection
 public abstract class GenericRepositoryImpl<T extends IdEntity> implements GenericRepository<T> {
@@ -31,50 +31,48 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
     }
 
     @Override
-    public T getById(String id) {
-        return getByField(IdEntity.ID, id, false);
+    public Optional<T> findById(String id) {
+        return findByField(IdEntity.ID, id, false);
     }
 
     @Override
     public void persist(T obj) {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
-            executeInTransaction(session, () -> {
-                session.persist(obj);
-                return null;
-            });
+            executeInTransaction(session, () -> session.persist(obj));
         }
     }
 
     @Override
-    public T deleteById(String id) {
-        T obj = getById(id);
-        return delete(obj);
+    public Optional<T> deleteById(String id) {
+        Optional<T> obj = findById(id);
+        if (obj.isPresent()) {
+            delete(obj.get());
+            return obj;
+        }
+        return Optional.empty();
     }
 
     @Override
-    public T delete(T obj) {
+    public Optional<T> delete(T obj) {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
-            executeInTransaction(session, () -> {
-                session.delete(obj);
-                return null;
-            });
+            executeInTransaction(session, () -> session.delete(obj));
         }
-        return obj;
+        return Optional.of(obj);
     }
 
-    private void executeInTransaction(Session session, Supplier<T> supplier) {
+    private void executeInTransaction(Session session, Runnable runnable) {
         session.getTransaction().begin();
-        supplier.get();
+        runnable.run();
         session.getTransaction().commit();
     }
 
-    protected T getByField(String field, String value) {
-        return getByField(field, value, true);
+    protected Optional<T> findByField(String field, String value) {
+        return findByField(field, value, true);
     }
 
-    protected T getByField(String field, String value, boolean safe) {
+    protected Optional<T> findByField(String field, String value, boolean safe) {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -82,22 +80,22 @@ public abstract class GenericRepositoryImpl<T extends IdEntity> implements Gener
             Root<T> root = criteriaQuery.from(getDomainClassType());
             criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field), value));
             if (safe) {
-                return getOrNull(session, criteriaQuery);
+                return getOrEmpty(session, criteriaQuery);
             }
             return getSingleResult(session, criteriaQuery);
         }
     }
 
-    protected T getOrNull(Session session, CriteriaQuery<T> criteriaQuery) {
+    protected Optional<T> getOrEmpty(Session session, CriteriaQuery<T> criteriaQuery) {
         try {
             return getSingleResult(session, criteriaQuery);
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
-    private T getSingleResult(Session session, CriteriaQuery<T> criteriaQuery) {
-        return session.createQuery(criteriaQuery).getSingleResult();
+    private Optional<T> getSingleResult(Session session, CriteriaQuery<T> criteriaQuery) {
+        return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
     }
 
     protected abstract Class<T> getDomainClassType();

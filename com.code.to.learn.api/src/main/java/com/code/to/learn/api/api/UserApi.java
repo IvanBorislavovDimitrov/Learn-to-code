@@ -27,7 +27,6 @@ public class UserApi {
     @RequestMapping(value = "/users/register", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody @Valid UserBindingModel userBindingModel) {
-        System.out.println("THE REQUEST HAS COME");
         return userServiceApi.register(userBindingModel);
     }
 
