@@ -1,4 +1,4 @@
-package com.code.to.learn.process.parser;
+package com.code.to.learn.api.parser;
 
 public enum ParserType {
     XML, JSON;

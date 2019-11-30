@@ -1,7 +1,7 @@
 package com.code.to.learn.api.api;
 
-import com.code.to.learn.api.model.UserBindingModel;
-import com.code.to.learn.api.model.UserViewModel;
+import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserViewModel;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

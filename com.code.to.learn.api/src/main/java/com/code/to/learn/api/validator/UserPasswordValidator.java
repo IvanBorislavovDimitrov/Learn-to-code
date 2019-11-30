@@ -5,19 +5,13 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
 @Component
 public class UserPasswordValidator implements ConstraintValidator<PasswordConstraint, String> {
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
-        return password != null && (password.contains("!") ||
-                password.contains("@") ||
-                password.contains("#") ||
-                password.contains("$") ||
-                password.contains("%") ||
-                password.contains("^") ||
-                password.contains("&") ||
-                password.contains("*"));
+        return Objects.nonNull(password);
     }
 }

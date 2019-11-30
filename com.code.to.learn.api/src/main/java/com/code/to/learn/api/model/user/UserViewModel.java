@@ -1,4 +1,4 @@
-package com.code.to.learn.api.model;
+package com.code.to.learn.api.model.user;
 
 public class UserViewModel {
 

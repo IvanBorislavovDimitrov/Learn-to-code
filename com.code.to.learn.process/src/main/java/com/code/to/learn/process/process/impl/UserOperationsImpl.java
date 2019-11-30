@@ -1,6 +1,6 @@
 package com.code.to.learn.process.process.impl;
 
-import com.code.to.learn.api.model.UserBindingModel;
+import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.process.process.api.UserOperations;

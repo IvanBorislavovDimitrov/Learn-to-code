@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
 @Component
 public class UserPhoneNumberValidator extends RegexValidator implements ConstraintValidator<PhoneNumberConstraint, String> {
@@ -13,7 +14,7 @@ public class UserPhoneNumberValidator extends RegexValidator implements Constrai
 
     @Override
     public boolean isValid(String phoneNumber, ConstraintValidatorContext constraintValidatorContext) {
-        return regexMatches(PHONE_NUMBER_REGEX, phoneNumber);
+        return Objects.nonNull(phoneNumber) && regexMatches(PHONE_NUMBER_REGEX, phoneNumber);
 
     }
 }

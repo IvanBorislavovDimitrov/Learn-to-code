@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
 @Component
 public class UserEmailValidator extends RegexValidator implements ConstraintValidator<EmailConstraint, String> {
@@ -13,6 +14,6 @@ public class UserEmailValidator extends RegexValidator implements ConstraintVali
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        return regexMatches(EMAIL_REGEX, email);
+        return Objects.nonNull(email) && regexMatches(EMAIL_REGEX, email);
     }
 }

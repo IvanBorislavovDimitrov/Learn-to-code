@@ -1,6 +1,6 @@
 package com.code.to.learn.process.validator;
 
-import com.code.to.learn.api.model.UserBindingModel;
+import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.process.exception.user.EmailTakenException;
 import com.code.to.learn.process.exception.user.PasswordsNotMatchException;
