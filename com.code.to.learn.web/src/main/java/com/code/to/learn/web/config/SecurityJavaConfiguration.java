@@ -52,15 +52,15 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .logout();
     }
 
-    public RestAuthenticationEntryPoint getRestAuthenticationEntryPoint() {
+    private RestAuthenticationEntryPoint getRestAuthenticationEntryPoint() {
         return new RestAuthenticationEntryPoint();
     }
 
-    public CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
+    private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
         return new CustomUrlAuthenticationSuccessHandler();
     }
 
-    public SimpleUrlAuthenticationFailureHandler getFailureHandler() {
+    private SimpleUrlAuthenticationFailureHandler getFailureHandler() {
         return new SimpleUrlAuthenticationFailureHandler();
     }
 

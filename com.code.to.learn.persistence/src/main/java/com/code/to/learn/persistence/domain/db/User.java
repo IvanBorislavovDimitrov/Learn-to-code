@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "\"users\"")
+@Table(name = "user")
 public class User extends IdEntity implements UserDetails {
 
     public static final String FIRST_NAME = "firstName";
