@@ -1,6 +1,6 @@
 package com.code.to.learn.api.api;
 
-import com.code.to.learn.api.model.base.ErrorResponse;
+import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.parser.Parser;
 import com.code.to.learn.api.parser.ParserFactory;
 import com.code.to.learn.api.parser.ParserType;

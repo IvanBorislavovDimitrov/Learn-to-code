@@ -1,4 +1,4 @@
-package com.code.to.learn.api.model.base;
+package com.code.to.learn.api.model.error;
 
 public class ErrorResponse {
 

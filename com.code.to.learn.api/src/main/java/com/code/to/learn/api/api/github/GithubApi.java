@@ -1,13 +1,25 @@
 package com.code.to.learn.api.api.github;
 
 import com.code.to.learn.api.api.BaseRestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.code.to.learn.api.model.github.GithubUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class GithubApi extends BaseRestController {
 
-    @RequestMapping(value = "/github", method = RequestMethod.GET)
-    public String getHome() {
-        return null;
+    private final GithubService githubService;
+
+    @Autowired
+    public GithubApi(GithubService githubService) {
+        this.githubService = githubService;
+    }
+
+    @GetMapping(value = "/github/users/{username}")
+    public ResponseEntity<GithubUser> githubUser(@PathVariable String username) {
+        return githubService.getGithubUserInfo(username);
     }
 }

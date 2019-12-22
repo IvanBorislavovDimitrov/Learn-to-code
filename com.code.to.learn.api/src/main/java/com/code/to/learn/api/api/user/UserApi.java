@@ -5,35 +5,37 @@ import com.code.to.learn.api.model.user.UserBindingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@RestController
 public class UserApi extends BaseRestController {
 
-    private final UserServiceApi userServiceApi;
+    private final UserService userService;
 
     @Autowired
-    public UserApi(UserServiceApi userServiceApi) {
-        this.userServiceApi = userServiceApi;
+    public UserApi(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> sayHello() {
-        return userServiceApi.sayHello();
+        return userService.sayHello();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/users/register",
+    @PostMapping(value = "/users/register",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody @Valid UserBindingModel userBindingModel) {
-        return userServiceApi.register(userBindingModel);
+        return userService.register(userBindingModel);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/users/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllUsers() {
-        return userServiceApi.getAllUsers();
+        return userService.getAllUsers();
     }
 
 }

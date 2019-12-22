@@ -6,7 +6,7 @@
         <artifactId>learn-to-code</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>com.code.to.learn.process</artifactId>
+    <artifactId>com.code.to.learn.core</artifactId>
 
     <dependencies>
         <dependency>

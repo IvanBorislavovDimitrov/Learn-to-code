@@ -1,7 +1,7 @@
 package com.code.to.learn.web.api_impl;
 
-import com.code.to.learn.api.api.user.UserServiceApi;
-import com.code.to.learn.api.model.base.ErrorResponse;
+import com.code.to.learn.api.api.user.UserService;
+import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserViewModel;
 import com.code.to.learn.core.exception.user.UserException;
@@ -18,15 +18,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class UserServiceImplApi implements UserServiceApi {
+@Service("userServiceApiImpl")
+public class UserServiceImpl implements UserService {
 
 	private final UserOperations userOperations;
 	private final ModelMapper modelMapper;
 	private final Parser parser = ParserFactory.createParser(ParserType.JSON);
 
 	@Autowired
-	public UserServiceImplApi(UserOperations userOperations, ModelMapper modelMapper) {
+	public UserServiceImpl(UserOperations userOperations, ModelMapper modelMapper) {
 		this.userOperations = userOperations;
 		this.modelMapper = modelMapper;
 	}
