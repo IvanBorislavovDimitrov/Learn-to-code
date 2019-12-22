@@ -2,5 +2,11 @@ package com.code.to.learn.web.environment;
 
 public interface Environment {
 
-    String getGithubUrl();
+    String getGithubApiUrl();
+
+    String getGithubAccessTokenUrl();
+
+    String getClientIdValue();
+
+    String getClientSecretValue();
 }

@@ -1,5 +1,7 @@
 package com.code.to.learn.core.exception.basic;
 
+import java.text.MessageFormat;
+
 public class LCException extends RuntimeException {
 
     public LCException() {
@@ -10,8 +12,8 @@ public class LCException extends RuntimeException {
         super(exception);
     }
 
-    public LCException(String message) {
-        super(message);
+    public LCException(String message, Object... args) {
+        super(MessageFormat.format(message, args));
     }
 
     public LCException(String message, Throwable cause) {

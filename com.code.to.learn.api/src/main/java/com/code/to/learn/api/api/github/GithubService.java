@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface GithubService {
 
     ResponseEntity<GithubUser> getGithubUserInfo(String username);
+
+    String getAccessTokenForUser(String code);
 }
