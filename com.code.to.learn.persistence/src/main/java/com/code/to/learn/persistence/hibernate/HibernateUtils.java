@@ -1,6 +1,7 @@
 package com.code.to.learn.persistence.hibernate;
 
-import com.code.to.learn.persistence.domain.db.User;
+import com.code.to.learn.persistence.domain.entity.GithubAccessToken;
+import com.code.to.learn.persistence.domain.entity.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -13,6 +14,7 @@ public final class HibernateUtils {
     static {
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(GithubAccessToken.class);
 
         StandardServiceRegistryBuilder standardServiceRegistryBuilder = new StandardServiceRegistryBuilder();
         configuration.configure("hibernate.cfg.xml");

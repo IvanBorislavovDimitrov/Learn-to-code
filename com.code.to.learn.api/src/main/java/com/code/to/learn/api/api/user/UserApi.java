@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -20,6 +22,11 @@ public class UserApi extends BaseRestController {
     @Autowired
     public UserApi(UserService userService) {
         this.userService = userService;
+    }
+
+    @RequestMapping(value = "/users/login", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> login() {
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)

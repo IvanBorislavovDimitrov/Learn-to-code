@@ -2,6 +2,8 @@ package com.code.to.learn.persistence.service.api;
 
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 
+import java.util.Optional;
+
 public interface UserService extends Service<UserServiceModel> {
 
     void registerUser(UserServiceModel userServiceModel);
@@ -11,4 +13,6 @@ public interface UserService extends Service<UserServiceModel> {
     boolean isEmailTaken(String email);
 
     boolean isPhoneNumberTaken(String phoneNumber);
+
+    Optional<UserServiceModel> findByUsername(String username);
 }

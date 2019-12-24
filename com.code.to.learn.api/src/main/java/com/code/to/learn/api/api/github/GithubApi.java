@@ -4,6 +4,8 @@ import com.code.to.learn.api.api.BaseRestController;
 import com.code.to.learn.api.model.github.GithubUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +24,9 @@ public class GithubApi extends BaseRestController {
 
     @PostMapping(value = "/github/users/authorize")
     public ResponseEntity<String> authorizeUser(@RequestParam String code) {
-        String token = githubService.getAccessTokenForUser(code);
-        System.out.println("TOKEN: " + token);
-        return ResponseEntity.ok(token);
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        githubService.requestAccessTokenForUser(user.getUsername(), code);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/github/users/{username}")

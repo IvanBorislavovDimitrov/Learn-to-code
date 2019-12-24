@@ -7,5 +7,5 @@ public interface GithubService {
 
     ResponseEntity<GithubUser> getGithubUserInfo(String username);
 
-    String getAccessTokenForUser(String code);
+    void requestAccessTokenForUser(String loggedUserUsername, String code);
 }

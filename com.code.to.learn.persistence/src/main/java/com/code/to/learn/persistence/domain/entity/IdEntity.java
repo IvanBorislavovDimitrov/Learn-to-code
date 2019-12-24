@@ -1,4 +1,4 @@
-package com.code.to.learn.persistence.domain.db;
+package com.code.to.learn.persistence.domain.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 

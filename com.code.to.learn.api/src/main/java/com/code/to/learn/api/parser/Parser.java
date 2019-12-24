@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public abstract class Parser {
 
-    private ObjectMapper objectMapper = createMapper();
+    private final ObjectMapper objectMapper = createMapper();
 
     public <T> String serialize(T type) {
         try {

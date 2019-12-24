@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.repository.impl;
 
-import com.code.to.learn.persistence.domain.db.User;
+import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,57 +1,25 @@
 package com.code.to.learn.persistence.service.impl;
 
-import com.code.to.learn.persistence.domain.db.User;
+import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.exception.IdNotFoundException;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends GenericService<User, UserServiceModel> implements UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+        super(userRepository, modelMapper);
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
-
-    @Override
-    public List<UserServiceModel> findAll() {
-        return userRepository.getAll().stream()
-                .map(user -> modelMapper.map(user, UserServiceModel.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserServiceModel findById(String id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IdNotFoundException(id));
-        return modelMapper.map(user, UserServiceModel.class);
-    }
-
-    @Override
-    public void save(UserServiceModel userServiceModel) {
-        User user = modelMapper.map(userServiceModel, User.class);
-        userRepository.persist(user);
-    }
-
-    @Override
-    public UserServiceModel deleteById(String id) {
-        User user = userRepository.deleteById(id).orElseThrow(() -> new IdNotFoundException(id));
-        return modelMapper.map(user, UserServiceModel.class);
-    }
-
-    @Override
-    public UserServiceModel delete(UserServiceModel userServiceModel) {
-        return deleteById(userServiceModel.getId());
     }
 
     @Override
@@ -73,6 +41,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isPhoneNumberTaken(String phoneNumber) {
         return userRepository.findUserByPhoneNumber(phoneNumber).isPresent();
+    }
+
+    @Override
+    public Optional<UserServiceModel> findByUsername(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        UserServiceModel userServiceModel = modelMapper
+                .map(user.orElseThrow(() -> new UsernameNotFoundException(username)), UserServiceModel.class);
+        return Optional.of(userServiceModel);
+    }
+
+    @Override
+    protected Class<UserServiceModel> getModelClass() {
+        return UserServiceModel.class;
+    }
+
+    @Override
+    protected Class<User> getEntityClass() {
+        return User.class;
     }
 
 }

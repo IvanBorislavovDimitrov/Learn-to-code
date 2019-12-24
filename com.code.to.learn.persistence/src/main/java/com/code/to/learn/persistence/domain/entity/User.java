@@ -1,22 +1,26 @@
-package com.code.to.learn.persistence.domain.db;
+package com.code.to.learn.persistence.domain.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users", schema = "code")
 public class User extends IdEntity implements UserDetails {
 
-    public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "lastName";
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
     public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
+    private static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String PHONE_NUMBER = "phoneNumber";
 
@@ -37,6 +41,10 @@ public class User extends IdEntity implements UserDetails {
 
     @Column(length = 100, nullable = false, name = EMAIL)
     private String email;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
+    private GithubAccessToken githubAccessToken;
 
     public String getFirstName() {
         return firstName;
@@ -109,5 +117,13 @@ public class User extends IdEntity implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public GithubAccessToken getGithubAccessToken() {
+        return githubAccessToken;
+    }
+
+    public void setGithubAccessToken(GithubAccessToken githubAccessToken) {
+        this.githubAccessToken = githubAccessToken;
     }
 }

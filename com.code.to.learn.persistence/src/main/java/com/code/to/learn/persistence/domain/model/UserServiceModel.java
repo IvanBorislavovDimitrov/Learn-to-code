@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.domain.model;
 
-public class UserServiceModel extends IdServiceEntity {
+public class UserServiceModel extends IdServiceModel {
 
     private String firstName;
     private String lastName;
@@ -8,6 +8,7 @@ public class UserServiceModel extends IdServiceEntity {
     private String phoneNumber;
     private String password;
     private String email;
+    private GithubAccessTokenServiceModel githubAccessTokenServiceModel;
 
     public String getFirstName() {
         return firstName;
@@ -55,5 +56,13 @@ public class UserServiceModel extends IdServiceEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public GithubAccessTokenServiceModel getGithubAccessTokenServiceModel() {
+        return githubAccessTokenServiceModel;
+    }
+
+    public void setGithubAccessTokenServiceModel(GithubAccessTokenServiceModel githubAccessTokenServiceModel) {
+        this.githubAccessTokenServiceModel = githubAccessTokenServiceModel;
     }
 }

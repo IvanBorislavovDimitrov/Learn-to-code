@@ -1,16 +1,20 @@
 package com.code.to.learn.persistence.service.api;
 
+import com.code.to.learn.persistence.domain.model.IdServiceModel;
+
 import java.util.List;
 
-public interface Service<T> {
+public interface Service<M extends IdServiceModel> {
 
-    List<T> findAll();
+    List<M> findAll();
 
-    T findById(String id);
+    M findById(String id);
 
-    void save(T obj);
+    void save(M model);
 
-    T deleteById(String id);
+    M deleteById(String model);
 
-    T delete(T obj);
+    M delete(M model);
+
+    M update(M model);
 }

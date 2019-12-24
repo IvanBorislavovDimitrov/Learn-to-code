@@ -1,6 +1,6 @@
 package com.code.to.learn.web.web_service;
 
-import com.code.to.learn.persistence.domain.db.User;
+import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.repository.api.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

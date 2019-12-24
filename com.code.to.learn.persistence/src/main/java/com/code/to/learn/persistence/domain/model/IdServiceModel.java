@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.domain.model;
 
-public abstract class IdServiceEntity {
+public abstract class IdServiceModel {
 
     private String id;
 

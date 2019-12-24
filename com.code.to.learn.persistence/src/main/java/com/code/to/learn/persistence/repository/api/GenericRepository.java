@@ -1,19 +1,21 @@
 package com.code.to.learn.persistence.repository.api;
 
-import com.code.to.learn.persistence.domain.db.IdEntity;
+import com.code.to.learn.persistence.domain.entity.IdEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface GenericRepository<T extends IdEntity> {
+public interface GenericRepository<E extends IdEntity> {
 
-    List<T> getAll();
+    List<E> getAll();
 
-    Optional<T> findById(String id);
+    Optional<E> findById(String id);
 
-    void persist(T obj);
+    void persist(E entity);
 
-    Optional<T> deleteById(String id);
+    Optional<E> deleteById(String id);
 
-    Optional<T> delete(T obj);
+    Optional<E> delete(E entity);
+
+    Optional<E> update(E entity);
 }
