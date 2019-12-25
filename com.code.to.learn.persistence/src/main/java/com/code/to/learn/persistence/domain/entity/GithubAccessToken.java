@@ -1,13 +1,9 @@
 package com.code.to.learn.persistence.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "github_access_tokens", schema = "code")
+@Table(name = "github_access_tokens")
 public class GithubAccessToken extends IdEntity {
 
     private static final String ACCESS_TOKEN = "access_token";
