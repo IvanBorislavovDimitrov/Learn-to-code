@@ -6,7 +6,6 @@ import com.code.to.learn.persistence.repository.api.UserRepository;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -46,8 +45,10 @@ public class UserServiceImpl extends GenericService<User, UserServiceModel> impl
     @Override
     public Optional<UserServiceModel> findByUsername(String username) {
         Optional<User> user = userRepository.findUserByUsername(username);
-        UserServiceModel userServiceModel = modelMapper
-                .map(user.orElseThrow(() -> new UsernameNotFoundException(username)), UserServiceModel.class);
+        if (!user.isPresent()) {
+            return Optional.empty();
+        }
+        UserServiceModel userServiceModel = modelMapper.map(user.get(), UserServiceModel.class);
         return Optional.of(userServiceModel);
     }
 

@@ -1,6 +1,5 @@
 package com.code.to.learn.api.api.user;
 
-import com.code.to.learn.api.api.BaseRestController;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-public class UserApi extends BaseRestController {
+public class UserApi {
 
     private final UserService userService;
 

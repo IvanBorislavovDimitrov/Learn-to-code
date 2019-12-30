@@ -1,4 +1,4 @@
-package com.code.to.learn.api.parser;
+package com.code.to.learn.core.parser;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JsonParser extends Parser {
+
+    JsonParser() {
+
+    }
 
     @Override
     protected ObjectMapper createMapper() {

@@ -1,4 +1,4 @@
-package com.code.to.learn.web.environment;
+package com.code.to.learn.core.environment;
 
 public interface Environment {
 
@@ -9,4 +9,6 @@ public interface Environment {
     String getClientIdValue();
 
     String getClientSecretValue();
+
+    boolean useXMLParser();
 }

@@ -1,6 +1,6 @@
-package com.code.to.learn.web.environment;
+package com.code.to.learn.core.environment;
 
-import com.code.to.learn.web.constants.Constants;
+import com.code.to.learn.core.constant.Constants;
 
 public class StaticEnvironment implements Environment {
 
@@ -22,5 +22,10 @@ public class StaticEnvironment implements Environment {
     @Override
     public String getClientSecretValue() {
         return Constants.CLIENT_SECRET_VALUE;
+    }
+
+    @Override
+    public boolean useXMLParser() {
+        return false;
     }
 }

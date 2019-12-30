@@ -1,9 +1,8 @@
-package com.code.to.learn.api.api;
+package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.model.error.ErrorResponse;
-import com.code.to.learn.api.parser.Parser;
-import com.code.to.learn.api.parser.ParserFactory;
-import com.code.to.learn.api.parser.ParserType;
+import com.code.to.learn.core.parser.Parser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private static final String DEFAULT_CONSTRAINT_VALIDATION_MESSAGE = "There is no error message for the validation";
 
-    private final Parser parser = ParserFactory.createParser(ParserType.JSON);
+    private final Parser parser;
+
+    @Autowired
+    public CustomResponseEntityExceptionHandler(Parser parser) {
+        this.parser = parser;
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,

@@ -4,11 +4,9 @@ import com.code.to.learn.api.api.user.UserService;
 import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserViewModel;
-import com.code.to.learn.api.parser.Parser;
-import com.code.to.learn.api.parser.ParserFactory;
-import com.code.to.learn.api.parser.ParserType;
 import com.code.to.learn.core.exception.user.UserException;
 import com.code.to.learn.core.operation.api.UserOperations;
+import com.code.to.learn.core.parser.Parser;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,12 +21,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserOperations userOperations;
     private final ModelMapper modelMapper;
-    private final Parser parser = ParserFactory.createParser(ParserType.JSON);
+    private final Parser parser;
 
     @Autowired
-    public UserServiceImpl(UserOperations userOperations, ModelMapper modelMapper) {
+    public UserServiceImpl(UserOperations userOperations, ModelMapper modelMapper, Parser parser) {
         this.userOperations = userOperations;
         this.modelMapper = modelMapper;
+        this.parser = parser;
     }
 
     @Override

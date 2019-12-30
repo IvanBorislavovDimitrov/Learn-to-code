@@ -5,20 +5,18 @@ import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.model.github.GithubAccessToken;
 import com.code.to.learn.api.model.github.GithubErrorResponse;
 import com.code.to.learn.api.model.github.GithubUser;
-import com.code.to.learn.api.parser.Parser;
-import com.code.to.learn.api.parser.ParserFactory;
-import com.code.to.learn.api.parser.ParserType;
+import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.constant.Messages;
+import com.code.to.learn.core.environment.Environment;
 import com.code.to.learn.core.exception.basic.LCException;
 import com.code.to.learn.core.exception.basic.NotFoundException;
 import com.code.to.learn.core.exception.github.GithubException;
+import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
-import com.code.to.learn.web.constants.Constants;
-import com.code.to.learn.web.environment.Environment;
 import com.code.to.learn.web.util.SafeURLDecoder;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -45,14 +43,16 @@ public class GithubServiceImpl implements GithubService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceImpl.class);
 
-    private final Parser parser = ParserFactory.createParser(ParserType.JSON);
+    private final Parser parser;
     private final ResilientHttpClient resilientHttpClient;
     private final ModelMapper modelMapper;
     private final Environment environment;
     private final UserService userService;
 
     @Autowired
-    public GithubServiceImpl(ResilientHttpClient resilientHttpClient, ModelMapper modelMapper, Environment environment, UserService userService) {
+    public GithubServiceImpl(Parser parser, ResilientHttpClient resilientHttpClient,
+                             ModelMapper modelMapper, Environment environment, UserService userService) {
+        this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
         this.modelMapper = modelMapper;
         this.environment = environment;
@@ -81,7 +81,7 @@ public class GithubServiceImpl implements GithubService {
     }
 
     private String getUsernameResource(String username) {
-        return environment.getGithubApiUrl() + "/" + Constants.USERS_RESOURCE + "/" + username;
+        return environment.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USERS_RESOURCE + "/" + username;
     }
 
     private HttpResponse executeAccessTokenRequest(String code) {

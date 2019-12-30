@@ -1,4 +1,4 @@
-package com.code.to.learn.api.parser.exception;
+package com.code.to.learn.core.parser.exception;
 
 public class ParsingException extends RuntimeException {
 

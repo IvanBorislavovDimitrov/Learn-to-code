@@ -1,6 +1,8 @@
-package com.code.to.learn.web.environment;
+package com.code.to.learn.core.environment;
 
-import com.code.to.learn.web.constants.Constants;
+import com.code.to.learn.core.constant.Constants;
+
+import java.util.Objects;
 
 public class DynamicEnvironment implements Environment {
 
@@ -22,5 +24,10 @@ public class DynamicEnvironment implements Environment {
     @Override
     public String getClientSecretValue() {
         return null;
+    }
+
+    @Override
+    public boolean useXMLParser() {
+        return Objects.nonNull(EnvironmentGetter.getVariable(Constants.USE_XML_PARSER));
     }
 }

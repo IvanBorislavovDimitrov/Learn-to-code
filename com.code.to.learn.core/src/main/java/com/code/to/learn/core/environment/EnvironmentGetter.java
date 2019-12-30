@@ -1,4 +1,4 @@
-package com.code.to.learn.web.environment;
+package com.code.to.learn.core.environment;
 
 public final class EnvironmentGetter {
 
