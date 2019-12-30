@@ -64,9 +64,10 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+        config.addExposedHeader("Set-Cookie");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
+        config.setAllowCredentials(true);
         config.addAllowedMethod(HttpMethod.OPTIONS);
         config.addAllowedMethod(HttpMethod.HEAD);
         config.addAllowedMethod(HttpMethod.GET);

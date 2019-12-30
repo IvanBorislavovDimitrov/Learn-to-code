@@ -5,18 +5,21 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 public class WebServletConfiguration implements WebApplicationInitializer {
 
+    private static final String DISPATCHER_SERVLET = "dispatcher";
+    private static final String DEFAULT_MAPPING = "/";
+    private static final int DEFAULT_LOAD_ON_STARTUP = 1;
+
     @Override
-    public void onStartup(ServletContext container) throws ServletException {
+    public void onStartup(ServletContext container) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SpringConfiguration.class);
         context.setServletContext(container);
-        ServletRegistration.Dynamic servlet = container.addServlet("dispatcher", new DispatcherServlet(context));
-        servlet.setLoadOnStartup(1);
-        servlet.addMapping("/");
+        ServletRegistration.Dynamic servlet = container.addServlet(DISPATCHER_SERVLET, new DispatcherServlet(context));
+        servlet.setLoadOnStartup(DEFAULT_LOAD_ON_STARTUP);
+        servlet.addMapping(DEFAULT_MAPPING);
     }
 }

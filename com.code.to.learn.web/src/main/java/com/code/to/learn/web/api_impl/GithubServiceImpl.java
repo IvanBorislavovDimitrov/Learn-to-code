@@ -1,7 +1,9 @@
 package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.github.GithubService;
+import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.model.github.GithubAccessToken;
+import com.code.to.learn.api.model.github.GithubErrorResponse;
 import com.code.to.learn.api.model.github.GithubUser;
 import com.code.to.learn.api.parser.Parser;
 import com.code.to.learn.api.parser.ParserFactory;
@@ -9,6 +11,7 @@ import com.code.to.learn.api.parser.ParserType;
 import com.code.to.learn.core.constant.Messages;
 import com.code.to.learn.core.exception.basic.LCException;
 import com.code.to.learn.core.exception.basic.NotFoundException;
+import com.code.to.learn.core.exception.github.GithubException;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -16,6 +19,7 @@ import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
 import com.code.to.learn.web.constants.Constants;
 import com.code.to.learn.web.environment.Environment;
+import com.code.to.learn.web.util.SafeURLDecoder;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -23,6 +27,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +36,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("githubServiceApiImpl")
 public class GithubServiceImpl implements GithubService {
 
-    private static final String USERS_RESOURCE = "/users";
+    private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceImpl.class);
 
     private final Parser parser = ParserFactory.createParser(ParserType.JSON);
     private final ResilientHttpClient resilientHttpClient;
@@ -64,16 +71,24 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    public void requestAccessTokenForUser(String loggedUserUsername, String code) {
+    public ResponseEntity<?> requestAccessTokenForUser(String loggedUserUsername, String code) {
+        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(loggedUserUsername);
+        if (!optionalUserServiceModel.isPresent()) {
+            return ResponseEntity.badRequest().body(getFormattedErrorMessage(loggedUserUsername));
+        }
+        HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
+        return processAccessTokenForUser(optionalUserServiceModel.get(), accessTokenResponse);
+    }
+
+    private String getUsernameResource(String username) {
+        return environment.getGithubApiUrl() + "/" + Constants.USERS_RESOURCE + "/" + username;
+    }
+
+    private HttpResponse executeAccessTokenRequest(String code) {
         HttpPost accessTokenRequest = new HttpPost(environment.getGithubAccessTokenUrl());
         List<NameValuePair> parameters = getAccessTokenParameters(code);
         setFormEntity(accessTokenRequest, parameters);
-        HttpResponse accessTokenResponse = resilientHttpClient.execute(accessTokenRequest);
-        GithubAccessToken githubAccessToken = parser.deserialize(UncheckedEntityUtils.getResponseBody(accessTokenResponse), GithubAccessToken.class);
-        UserServiceModel user = userService.findByUsername(loggedUserUsername).orElseThrow(() -> new UsernameNotFoundException(loggedUserUsername));
-        GithubAccessTokenServiceModel githubAccessTokenServiceModel = modelMapper.map(githubAccessToken, GithubAccessTokenServiceModel.class);
-        user.setGithubAccessTokenServiceModel(githubAccessTokenServiceModel);
-        userService.update(user);
+        return resilientHttpClient.execute(accessTokenRequest);
     }
 
     private List<NameValuePair> getAccessTokenParameters(String code) {
@@ -88,11 +103,71 @@ public class GithubServiceImpl implements GithubService {
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(parameters));
         } catch (UnsupportedEncodingException e) {
-            throw new LCException(e);
+            throw new LCException(e.getMessage(), e);
         }
     }
 
-    private String getUsernameResource(String username) {
-        return environment.getGithubApiUrl() + "/" + USERS_RESOURCE + "/" + username;
+    private ResponseEntity<?> processAccessTokenForUser(UserServiceModel optionalUserServiceModel, HttpResponse accessTokenResponse) {
+        try {
+            GithubAccessToken githubAccessToken = parseGithubAccessTokenResponse(accessTokenResponse);
+            setGithubAccessTokenForUser(optionalUserServiceModel, githubAccessToken);
+            return ResponseEntity.ok().build();
+        } catch (GithubException e) {
+            LOGGER.error(e.getMessage(), e);
+            return ResponseEntity.unprocessableEntity().body(getFormattedGithubErrorMessage(e));
+        }
     }
+
+    private GithubAccessToken parseGithubAccessTokenResponse(HttpResponse accessTokenResponse) {
+        String accessTokenParametersQuery = UncheckedEntityUtils.getResponseBody(accessTokenResponse);
+        List<String> rawQueryParameters = Arrays.asList(accessTokenParametersQuery.split("&"));
+        Map<String, String> githubAccessTokenQueryParameters = getGithubAccessTokenParameters(rawQueryParameters);
+        verifyNotErrorIsReturned(githubAccessTokenQueryParameters);
+        return mapToGithubAccessToken(githubAccessTokenQueryParameters);
+    }
+
+    private Map<String, String> getGithubAccessTokenParameters(List<String> rawQueryParameters) {
+        return rawQueryParameters.stream()
+                .map(queryParameter -> queryParameter.split("="))
+                .collect(Collectors.toMap(accessTokenKeyValuePair -> accessTokenKeyValuePair[Constants.ACCESS_TOKEN_KEY_POSITION],
+                        this::getAccessTokenValueSafely));
+    }
+
+    private String getAccessTokenValueSafely(String[] accessTokenKeyValuePair) {
+        if (accessTokenKeyValuePair.length != Constants.ACCESS_TOKEN_KEY_VALUE_SIZE) {
+            return "";
+        }
+        return accessTokenKeyValuePair[Constants.ACCESS_TOKEN_VALUE_POSITION];
+    }
+
+    public void verifyNotErrorIsReturned(Map<String, String> accessTokenQueryParameters) {
+        if (accessTokenQueryParameters.containsKey(Constants.ERROR)) {
+            throw new GithubException(com.code.to.learn.web.message.Messages.INVALID_GITHUB_VERIFICATION_CODE, accessTokenQueryParameters);
+        }
+    }
+
+    private GithubAccessToken mapToGithubAccessToken(Map<String, String> githubAccessTokenQueryParameters) {
+        return GithubAccessToken.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
+    }
+
+    private String getFormattedErrorMessage(String username) {
+        ErrorResponse.Builder errorResponse = new ErrorResponse.Builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, username))
+                .type(UsernameNotFoundException.class.toString());
+        return parser.serialize(errorResponse);
+    }
+
+    private void setGithubAccessTokenForUser(UserServiceModel optionalUserServiceModel, GithubAccessToken githubAccessToken) {
+        GithubAccessTokenServiceModel githubAccessTokenServiceModel = modelMapper.map(githubAccessToken, GithubAccessTokenServiceModel.class);
+        optionalUserServiceModel.setGithubAccessTokenServiceModel(githubAccessTokenServiceModel);
+        userService.update(optionalUserServiceModel);
+    }
+
+    private String getFormattedGithubErrorMessage(GithubException exception) {
+        Map<String, String> accessTokenQueryParameters = exception.getAccessTokenQueryParameters();
+        GithubErrorResponse githubErrorResponse = GithubErrorResponse
+                .fromAccessTokenQueryParameters(SafeURLDecoder.decodeMap(accessTokenQueryParameters));
+        return parser.serialize(githubErrorResponse);
+    }
+
 }

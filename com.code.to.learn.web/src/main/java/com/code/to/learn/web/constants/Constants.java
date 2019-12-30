@@ -10,6 +10,13 @@ public final class Constants {
     public static final String CLIENT_SECRET_KEY = "client_secret";
     public static final String CLIENT_SECRET_VALUE = "6b118a1b5bf8983c134be95a6b9fc1e437b84560";
     public static final String AUTHENTICATION_CODE = "code";
+    public static final int ACCESS_TOKEN_KEY_POSITION = 0;
+    public static final int ACCESS_TOKEN_VALUE_POSITION = 1;
+    public static final int ACCESS_TOKEN_KEY_VALUE_SIZE = 2;
+    public static final String ERROR = "error";
+
+    public static final String USERS_RESOURCE = "/users";
+
 
     // Environment variables
     public static final String USE_DYNAMIC_ENVIRONMENT = "useDynamicEnvironment";
