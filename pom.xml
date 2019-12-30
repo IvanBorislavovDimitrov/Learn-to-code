@@ -117,11 +117,6 @@
             <artifactId>httpclient</artifactId>
             <version>${apache.http.client}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-catalina</artifactId>
-            <version>9.0.30</version>
-        </dependency>
 
     </dependencies>
 </project>

@@ -24,6 +24,4 @@ rebel.xml
 /out
 /.springBeans
 /.gradletasknamecache
-/.groovy
-*.class
 *.classpath
