@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/github")
 public class GithubApi {
 
     private final GithubService githubService;
@@ -17,12 +18,12 @@ public class GithubApi {
         this.githubService = githubService;
     }
 
-    @PostMapping(value = "/github/users/authorize")
+    @PostMapping(value = "/users/authorize")
     public ResponseEntity<?> authorizeUser(@RequestParam String code) {
         return githubService.requestAccessTokenForUser(getLoggedUserUsername(), code);
     }
 
-    @GetMapping(value = "/github/users/{username}")
+    @GetMapping(value = "/users/{username}")
     public ResponseEntity<GithubUser> githubUser(@PathVariable String username) {
         return githubService.getGithubUserInfo(username);
     }

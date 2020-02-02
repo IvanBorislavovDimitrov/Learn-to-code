@@ -1,12 +1,20 @@
 package com.code.to.learn.api.model.user;
 
-public class UserViewModel {
+public class UserResponseModel {
 
+    private String username;
     private String firstName;
     private String lastName;
-    private String username;
     private String phoneNumber;
     private String email;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -22,14 +30,6 @@ public class UserViewModel {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPhoneNumber() {

@@ -1,16 +1,14 @@
 package com.code.to.learn.api.api.user;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.api.model.user.UserViewModel;
+import com.code.to.learn.api.model.user.UserResponseModel;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<?> sayHello();
+    ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel);
 
-    ResponseEntity<?> register(UserBindingModel userBindingModel);
-
-    ResponseEntity<List<UserViewModel>> getAllUsers();
+    ResponseEntity<List<UserResponseModel>> getAllUsers();
 }

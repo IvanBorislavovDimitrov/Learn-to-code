@@ -24,7 +24,7 @@ public class ResilientExecutor {
 
     public <T> T executeWithRetry(SupplierWithCheckedException<T> supplier) {
         int retries = this.retries;
-        while (retries > 0) {
+        while (true) {
             try {
                 return supplier.execute();
             } catch (Exception e) {
@@ -33,15 +33,6 @@ public class ResilientExecutor {
                 }
                 LOGGER.debug(MessageFormat.format(Messages.EXECUTION_RETRIED, retries, this.retries));
             }
-        }
-        return execute(supplier);
-    }
-
-    private <T> T execute(SupplierWithCheckedException<T> supplier) {
-        try {
-            return supplier.execute();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

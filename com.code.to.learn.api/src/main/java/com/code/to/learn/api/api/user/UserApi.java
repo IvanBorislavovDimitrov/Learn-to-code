@@ -1,19 +1,18 @@
 package com.code.to.learn.api.api.user;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
+@RequestMapping(value = "/users")
 public class UserApi {
 
     private final UserService userService;
@@ -23,24 +22,25 @@ public class UserApi {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/users/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> sayHello() {
-        return userService.sayHello();
-    }
-
-    @PostMapping(value = "/users/register",
+    @PostMapping(value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> register(@RequestBody @Valid UserBindingModel userBindingModel) {
+    public ResponseEntity<UserResponseModel> register(@RequestBody @Valid UserBindingModel userBindingModel) {
         return userService.register(userBindingModel);
     }
 
-    @GetMapping(value = "/users/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllUsers() {
+    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+    public ResponseEntity<Object> preflighLogin() {
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/logout")
+    public ResponseEntity<Object> logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserResponseModel>> getAllUsers() {
         return userService.getAllUsers();
     }
 

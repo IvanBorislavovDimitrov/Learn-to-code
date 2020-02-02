@@ -1,6 +1,7 @@
 package com.code.to.learn.core.operation.impl;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.core.operation.api.UserOperations;
@@ -29,10 +30,11 @@ public class UserOperationsImpl implements UserOperations {
     }
 
     @Override
-    public void register(UserBindingModel userBindingModel) {
+    public UserResponseModel register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
         UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
         userService.registerUser(userServiceModel);
+        return modelMapper.map(userServiceModel, UserResponseModel.class);
     }
 
     @Override

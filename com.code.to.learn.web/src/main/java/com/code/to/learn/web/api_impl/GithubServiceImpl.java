@@ -71,10 +71,10 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    public ResponseEntity<?> requestAccessTokenForUser(String loggedUserUsername, String code) {
+    public ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String loggedUserUsername, String code) {
         Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(loggedUserUsername);
         if (!optionalUserServiceModel.isPresent()) {
-            return ResponseEntity.badRequest().body(getFormattedErrorMessage(loggedUserUsername));
+            throw new GithubException(getFormattedErrorMessage(loggedUserUsername), Collections.emptyMap());
         }
         HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
         return processAccessTokenForUser(optionalUserServiceModel.get(), accessTokenResponse);
@@ -107,15 +107,10 @@ public class GithubServiceImpl implements GithubService {
         }
     }
 
-    private ResponseEntity<?> processAccessTokenForUser(UserServiceModel optionalUserServiceModel, HttpResponse accessTokenResponse) {
-        try {
-            GithubAccessToken githubAccessToken = parseGithubAccessTokenResponse(accessTokenResponse);
-            setGithubAccessTokenForUser(optionalUserServiceModel, githubAccessToken);
-            return ResponseEntity.ok().build();
-        } catch (GithubException e) {
-            LOGGER.error(e.getMessage(), e);
-            return ResponseEntity.unprocessableEntity().body(getFormattedGithubErrorMessage(e));
-        }
+    private ResponseEntity<GithubAccessToken> processAccessTokenForUser(UserServiceModel optionalUserServiceModel, HttpResponse accessTokenResponse) {
+        GithubAccessToken githubAccessToken = parseGithubAccessTokenResponse(accessTokenResponse);
+        setGithubAccessTokenForUser(optionalUserServiceModel, githubAccessToken);
+        return ResponseEntity.ok(githubAccessToken);
     }
 
     private GithubAccessToken parseGithubAccessTokenResponse(HttpResponse accessTokenResponse) {
@@ -161,13 +156,6 @@ public class GithubServiceImpl implements GithubService {
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = modelMapper.map(githubAccessToken, GithubAccessTokenServiceModel.class);
         optionalUserServiceModel.setGithubAccessTokenServiceModel(githubAccessTokenServiceModel);
         userService.update(optionalUserServiceModel);
-    }
-
-    private String getFormattedGithubErrorMessage(GithubException exception) {
-        Map<String, String> accessTokenQueryParameters = exception.getAccessTokenQueryParameters();
-        GithubErrorResponse githubErrorResponse = GithubErrorResponse
-                .fromAccessTokenQueryParameters(SafeURLDecoder.decodeMap(accessTokenQueryParameters));
-        return parser.serialize(githubErrorResponse);
     }
 
 }

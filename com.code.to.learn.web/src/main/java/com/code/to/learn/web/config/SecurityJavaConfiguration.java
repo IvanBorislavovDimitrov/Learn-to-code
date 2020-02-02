@@ -47,7 +47,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(getRestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/logged")
+                .antMatchers("/users/logout", "/users/all", "/github/**")
                 .authenticated()
                 .antMatchers("/api/admin/**")
                 .hasRole("ADMIN")
@@ -57,7 +57,9 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .successHandler(getSuccessHandler())
                 .failureHandler(getFailureHandler())
                 .and()
-                .logout();
+                .logout()
+                .invalidateHttpSession(true)
+                .permitAll();
     }
 
     @Bean
