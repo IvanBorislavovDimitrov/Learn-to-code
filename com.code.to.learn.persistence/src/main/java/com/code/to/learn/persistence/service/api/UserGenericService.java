@@ -4,7 +4,7 @@ import com.code.to.learn.persistence.domain.model.UserServiceModel;
 
 import java.util.Optional;
 
-public interface UserService extends Service<UserServiceModel> {
+public interface UserGenericService extends GenericService<UserServiceModel> {
 
     void registerUser(UserServiceModel userServiceModel);
 

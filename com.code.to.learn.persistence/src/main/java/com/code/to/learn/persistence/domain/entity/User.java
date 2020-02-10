@@ -1,28 +1,25 @@
 package com.code.to.learn.persistence.domain.entity;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
 public class User extends IdEntity implements UserDetails {
 
-    private static final String FIRST_NAME = "firstName";
-    private static final String LAST_NAME = "lastName";
     public static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String PHONE_NUMBER = "phoneNumber";
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
+    private static final String PASSWORD = "password";
 
     @Column(length = 100, nullable = false, name = FIRST_NAME)
     private String firstName;
@@ -42,9 +39,24 @@ public class User extends IdEntity implements UserDetails {
     @Column(length = 100, nullable = false, name = EMAIL)
     private String email;
 
+    @Column(name = "birth_date", nullable = false)
+    private LocalDate birthDate;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
+
+    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Course.class)
+    private List<Course> courses;
+
+    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teacher")
+    private List<Course> courseTaught;
+
+    @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.ALL, targetEntity = Course.class, fetch = FetchType.LAZY)
+    private List<Course> coursesInCart;
+
+    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
+    private List<Role> roles;
 
     public String getFirstName() {
         return firstName;
@@ -100,7 +112,9 @@ public class User extends IdEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getUserRole().name()))
+                .collect(Collectors.toList());
     }
 
     public String getPassword() {
@@ -125,5 +139,45 @@ public class User extends IdEntity implements UserDetails {
 
     public void setGithubAccessToken(GithubAccessToken githubAccessToken) {
         this.githubAccessToken = githubAccessToken;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public List<Course> getCourseTaught() {
+        return courseTaught;
+    }
+
+    public void setCourseTaught(List<Course> courseTaught) {
+        this.courseTaught = courseTaught;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public List<Course> getCoursesInCart() {
+        return coursesInCart;
+    }
+
+    public void setCoursesInCart(List<Course> coursesInCart) {
+        this.coursesInCart = coursesInCart;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

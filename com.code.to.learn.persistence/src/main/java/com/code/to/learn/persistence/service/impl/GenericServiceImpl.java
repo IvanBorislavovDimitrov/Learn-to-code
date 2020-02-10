@@ -4,18 +4,18 @@ import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
 import com.code.to.learn.persistence.repository.api.GenericRepository;
-import com.code.to.learn.persistence.service.api.Service;
+import com.code.to.learn.persistence.service.api.GenericService;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class GenericService<E extends IdEntity, M extends IdServiceModel> implements Service<M> {
+public abstract class GenericServiceImpl<E extends IdEntity, M extends IdServiceModel> implements GenericService<M> {
 
-    private final GenericRepository<E> genericRepository;
     protected final ModelMapper modelMapper;
+    private final GenericRepository<E> genericRepository;
 
-    protected GenericService(GenericRepository<E> genericRepository, ModelMapper modelMapper) {
+    protected GenericServiceImpl(GenericRepository<E> genericRepository, ModelMapper modelMapper) {
         this.genericRepository = genericRepository;
         this.modelMapper = modelMapper;
     }

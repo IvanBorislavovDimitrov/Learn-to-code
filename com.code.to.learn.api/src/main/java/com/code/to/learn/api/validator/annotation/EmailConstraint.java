@@ -1,4 +1,4 @@
-package com.code.to.learn.api.annotation;
+package com.code.to.learn.api.validator.annotation;
 
 import com.code.to.learn.api.constant.Constants;
 import com.code.to.learn.api.validator.UserEmailValidator;
@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Constraint(validatedBy = UserEmailValidator.class)
 public @interface EmailConstraint {
+
     String message() default Constants.INVALID_EMAIL;
 
     Class<?>[] groups() default {};

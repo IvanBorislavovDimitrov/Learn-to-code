@@ -1,6 +1,6 @@
 package com.code.to.learn.api.validator;
 
-import com.code.to.learn.api.annotation.EmailConstraint;
+import com.code.to.learn.api.validator.annotation.EmailConstraint;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

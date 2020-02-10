@@ -29,7 +29,7 @@ public class UserApi {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity<Object> preflighLogin() {
+    public ResponseEntity<Object> preflightLogin() {
         return ResponseEntity.ok().build();
     }
 

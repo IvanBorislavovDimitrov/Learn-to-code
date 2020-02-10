@@ -3,7 +3,7 @@ package com.code.to.learn.persistence.service.impl;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.repository.api.UserRepository;
-import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.persistence.service.api.UserGenericService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class UserServiceImpl extends GenericService<User, UserServiceModel> implements UserService {
+public class UserGenericServiceImplImpl extends GenericServiceImpl<User, UserServiceModel> implements UserGenericService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserGenericServiceImplImpl(UserRepository userRepository, ModelMapper modelMapper) {
         super(userRepository, modelMapper);
         this.userRepository = userRepository;
     }

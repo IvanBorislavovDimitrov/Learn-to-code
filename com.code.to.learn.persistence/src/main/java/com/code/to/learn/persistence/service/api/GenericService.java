@@ -4,7 +4,7 @@ import com.code.to.learn.persistence.domain.model.IdServiceModel;
 
 import java.util.List;
 
-public interface Service<M extends IdServiceModel> {
+public interface GenericService<M extends IdServiceModel> {
 
     List<M> findAll();
 

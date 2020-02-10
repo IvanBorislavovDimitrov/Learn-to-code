@@ -3,7 +3,7 @@ package com.code.to.learn.core.operation.impl;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.persistence.service.api.UserGenericService;
 import com.code.to.learn.core.operation.api.UserOperations;
 import com.code.to.learn.core.validator.UserValidator;
 import org.modelmapper.ModelMapper;
@@ -18,11 +18,11 @@ public class UserOperationsImpl implements UserOperations {
 
     private final ModelMapper modelMapper;
     private final UserValidator userValidator;
-    private final UserService userService;
+    private final UserGenericService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserOperationsImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService, PasswordEncoder passwordEncoder) {
+    public UserOperationsImpl(ModelMapper modelMapper, UserValidator userValidator, UserGenericService userService, PasswordEncoder passwordEncoder) {
         this.modelMapper = modelMapper;
         this.userValidator = userValidator;
         this.userService = userService;

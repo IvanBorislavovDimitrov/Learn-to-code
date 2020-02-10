@@ -1,9 +1,7 @@
 package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.github.GithubService;
-import com.code.to.learn.api.model.error.ErrorResponse;
 import com.code.to.learn.api.model.github.GithubAccessToken;
-import com.code.to.learn.api.model.github.GithubErrorResponse;
 import com.code.to.learn.api.model.github.GithubUser;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.constant.Messages;
@@ -14,10 +12,9 @@ import com.code.to.learn.core.exception.github.GithubException;
 import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.persistence.service.api.UserGenericService;
 import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
-import com.code.to.learn.web.util.SafeURLDecoder;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -30,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -47,11 +43,11 @@ public class GithubServiceImpl implements GithubService {
     private final ResilientHttpClient resilientHttpClient;
     private final ModelMapper modelMapper;
     private final Environment environment;
-    private final UserService userService;
+    private final UserGenericService userService;
 
     @Autowired
     public GithubServiceImpl(Parser parser, ResilientHttpClient resilientHttpClient,
-                             ModelMapper modelMapper, Environment environment, UserService userService) {
+                             ModelMapper modelMapper, Environment environment, UserGenericService userService) {
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
         this.modelMapper = modelMapper;
@@ -74,7 +70,7 @@ public class GithubServiceImpl implements GithubService {
     public ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String loggedUserUsername, String code) {
         Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(loggedUserUsername);
         if (!optionalUserServiceModel.isPresent()) {
-            throw new GithubException(getFormattedErrorMessage(loggedUserUsername), Collections.emptyMap());
+            throw new GithubException(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, loggedUserUsername), Collections.emptyMap());
         }
         HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
         return processAccessTokenForUser(optionalUserServiceModel.get(), accessTokenResponse);
@@ -143,13 +139,6 @@ public class GithubServiceImpl implements GithubService {
 
     private GithubAccessToken mapToGithubAccessToken(Map<String, String> githubAccessTokenQueryParameters) {
         return GithubAccessToken.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
-    }
-
-    private String getFormattedErrorMessage(String username) {
-        ErrorResponse.Builder errorResponse = new ErrorResponse.Builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, username))
-                .type(UsernameNotFoundException.class.toString());
-        return parser.serialize(errorResponse);
     }
 
     private void setGithubAccessTokenForUser(UserServiceModel optionalUserServiceModel, GithubAccessToken githubAccessToken) {

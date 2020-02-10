@@ -1,11 +1,14 @@
 package com.code.to.learn.api.model.user;
 
-import com.code.to.learn.api.annotation.EmailConstraint;
-import com.code.to.learn.api.annotation.PasswordConstraint;
-import com.code.to.learn.api.annotation.PhoneNumberConstraint;
+import com.code.to.learn.api.constant.Constants;
+import com.code.to.learn.api.validator.annotation.EmailConstraint;
+import com.code.to.learn.api.validator.annotation.NotBefore;
+import com.code.to.learn.api.validator.annotation.PasswordConstraint;
+import com.code.to.learn.api.validator.annotation.PhoneNumberConstraint;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 public class UserBindingModel {
 
@@ -36,6 +39,10 @@ public class UserBindingModel {
     @NotNull
     @EmailConstraint
     private String email;
+
+    @NotNull
+    @NotBefore(date = Constants.NOT_BEFORE_DATE)
+    private LocalDate localDate;
 
     public String getFirstName() {
         return firstName;
@@ -91,5 +98,13 @@ public class UserBindingModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
     }
 }

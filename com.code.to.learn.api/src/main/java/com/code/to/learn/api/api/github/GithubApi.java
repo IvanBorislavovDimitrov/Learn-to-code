@@ -1,5 +1,6 @@
 package com.code.to.learn.api.api.github;
 
+import com.code.to.learn.api.model.github.GithubAccessToken;
 import com.code.to.learn.api.model.github.GithubUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class GithubApi {
     }
 
     @PostMapping(value = "/users/authorize")
-    public ResponseEntity<?> authorizeUser(@RequestParam String code) {
+    public ResponseEntity<GithubAccessToken> authorizeUser(@RequestParam String code) {
         return githubService.requestAccessTokenForUser(getLoggedUserUsername(), code);
     }
 
