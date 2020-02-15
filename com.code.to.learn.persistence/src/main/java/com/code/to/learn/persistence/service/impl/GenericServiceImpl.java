@@ -1,10 +1,13 @@
 package com.code.to.learn.persistence.service.impl;
 
+import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
-import com.code.to.learn.persistence.repository.api.GenericRepository;
+import com.code.to.learn.persistence.hibernate.HibernateUtils;
 import com.code.to.learn.persistence.service.api.GenericService;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
@@ -13,36 +16,48 @@ import java.util.stream.Collectors;
 public abstract class GenericServiceImpl<E extends IdEntity, M extends IdServiceModel> implements GenericService<M> {
 
     protected final ModelMapper modelMapper;
-    private final GenericRepository<E> genericRepository;
+    private final GenericDao<E> genericDao;
 
-    protected GenericServiceImpl(GenericRepository<E> genericRepository, ModelMapper modelMapper) {
-        this.genericRepository = genericRepository;
+    protected GenericServiceImpl(GenericDao<E> genericDao, ModelMapper modelMapper) {
+        this.genericDao = genericDao;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public List<M> findAll() {
-        return genericRepository.getAll().stream()
-                .map(idServiceEntity -> modelMapper.map(idServiceEntity, getModelClass()))
-                .collect(Collectors.toList());
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            return genericDao.findAll(session).stream()
+                    .map(idServiceEntity -> modelMapper.map(idServiceEntity, getModelClass()))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
     public M findById(String id) {
-        E entity = genericRepository.findById(id).orElseThrow(() -> new IdNotFoundException(id));
-        return modelMapper.map(entity, getModelClass());
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            E entity = genericDao.findById(id, session).orElseThrow(() -> new IdNotFoundException(id));
+            return modelMapper.map(entity, getModelClass());
+        }
     }
 
     @Override
     public void save(M model) {
-        E entity = modelMapper.map(model, getEntityClass());
-        genericRepository.persist(entity);
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            E entity = modelMapper.map(model, getEntityClass());
+            genericDao.persist(entity, session);
+        }
     }
 
     @Override
     public M deleteById(String id) {
-        E entity = genericRepository.deleteById(id).orElseThrow(() -> new IdNotFoundException(id));
-        return modelMapper.map(entity, getModelClass());
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            E entity = genericDao.deleteById(id, session).orElseThrow(() -> new IdNotFoundException(id));
+            return modelMapper.map(entity, getModelClass());
+        }
     }
 
     @Override
@@ -52,9 +67,12 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
 
     @Override
     public M update(M model) {
-        E entity = modelMapper.map(model, getEntityClass());
-        return modelMapper.map(genericRepository.update(entity).orElseThrow(() -> new IdNotFoundException(entity.getId())),
-                getModelClass());
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            E entity = modelMapper.map(model, getEntityClass());
+            return modelMapper.map(genericDao.update(entity, session).orElseThrow(() -> new IdNotFoundException(entity.getId())),
+                    getModelClass());
+        }
     }
 
     protected abstract Class<M> getModelClass();

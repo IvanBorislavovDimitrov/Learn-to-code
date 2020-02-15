@@ -1,5 +1,7 @@
 package com.code.to.learn.api.model.user;
 
+import java.util.List;
+
 public class UserResponseModel {
 
     private String username;
@@ -7,7 +9,7 @@ public class UserResponseModel {
     private String lastName;
     private String phoneNumber;
     private String email;
-    private String role;
+    private List<String> roles;
 
     public String getUsername() {
         return username;
@@ -49,11 +51,11 @@ public class UserResponseModel {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

@@ -9,23 +9,23 @@ import java.util.List;
 @Table(name = "roles")
 public class Role extends IdEntity {
 
-    private static final String TYPE = "type";
+    public static final String NAME = "name";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = TYPE, nullable = false)
-    private UserRole userRole;
+    @Column(name = NAME, nullable = false)
+    private UserRole name;
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class, cascade = CascadeType.ALL)
     @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private List<User> users;
 
-    public UserRole getUserRole() {
-        return userRole;
+    public UserRole getName() {
+        return name;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setName(UserRole name) {
+        this.name = name;
     }
 
     public List<User> getUsers() {

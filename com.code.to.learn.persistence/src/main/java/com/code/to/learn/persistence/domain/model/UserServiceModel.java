@@ -14,9 +14,13 @@ public class UserServiceModel extends IdServiceModel {
     private GithubAccessTokenServiceModel githubAccessTokenServiceModel;
     private LocalDate birthDate;
     private List<CourseServiceModel> courses;
-    private List<CourseServiceModel> courseTaught;
+    private List<CourseServiceModel> coursesThatTeaches;
     private List<CourseServiceModel> coursesInCart;
     private List<RoleServiceModel> roles;
+
+    public UserServiceModel() {
+        // Required by ModelMapper
+    }
 
     public String getFirstName() {
         return firstName;
@@ -90,12 +94,12 @@ public class UserServiceModel extends IdServiceModel {
         this.courses = courses;
     }
 
-    public List<CourseServiceModel> getCourseTaught() {
-        return courseTaught;
+    public List<CourseServiceModel> getCoursesThatTeaches() {
+        return coursesThatTeaches;
     }
 
-    public void setCourseTaught(List<CourseServiceModel> courseTaught) {
-        this.courseTaught = courseTaught;
+    public void setCoursesThatTeaches(List<CourseServiceModel> coursesThatTeaches) {
+        this.coursesThatTeaches = coursesThatTeaches;
     }
 
     public List<CourseServiceModel> getCoursesInCart() {

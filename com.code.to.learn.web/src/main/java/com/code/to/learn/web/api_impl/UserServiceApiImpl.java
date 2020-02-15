@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("userServiceApiImpl")
-public class UserServiceImpl implements UserService {
+public class UserServiceApiImpl implements UserService {
 
     private final UserOperations userOperations;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserOperations userOperations, ModelMapper modelMapper) {
+    public UserServiceApiImpl(UserOperations userOperations, ModelMapper modelMapper) {
         this.userOperations = userOperations;
         this.modelMapper = modelMapper;
     }

@@ -35,9 +35,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("githubServiceApiImpl")
-public class GithubServiceImpl implements GithubService {
+public class GithubServiceApiImpl implements GithubService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiImpl.class);
 
     private final Parser parser;
     private final ResilientHttpClient resilientHttpClient;
@@ -46,8 +46,8 @@ public class GithubServiceImpl implements GithubService {
     private final UserService userService;
 
     @Autowired
-    public GithubServiceImpl(Parser parser, ResilientHttpClient resilientHttpClient,
-                             ModelMapper modelMapper, Environment environment, UserService userService) {
+    public GithubServiceApiImpl(Parser parser, ResilientHttpClient resilientHttpClient,
+                                ModelMapper modelMapper, Environment environment, UserService userService) {
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
         this.modelMapper = modelMapper;

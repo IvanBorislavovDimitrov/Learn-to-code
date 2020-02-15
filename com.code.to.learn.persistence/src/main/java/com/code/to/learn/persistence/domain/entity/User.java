@@ -50,12 +50,13 @@ public class User extends IdEntity implements UserDetails {
     private List<Course> courses;
 
     @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teacher")
-    private List<Course> coursesThatTeach;
+    private List<Course> coursesThatTeaches;
 
     @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.ALL, targetEntity = Course.class, fetch = FetchType.LAZY)
     private List<Course> coursesInCart;
 
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
+    // TODO: If LAZY fetch is required do not return User while logging
+    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "users")
     private List<Role> roles;
 
     public String getFirstName() {
@@ -113,7 +114,7 @@ public class User extends IdEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getUserRole().name()))
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
     }
 
@@ -149,8 +150,8 @@ public class User extends IdEntity implements UserDetails {
         this.courses = courses;
     }
 
-    public List<Course> getCoursesThatTeach() {
-        return coursesThatTeach;
+    public List<Course> getCoursesThatTeaches() {
+        return coursesThatTeaches;
     }
 
     public LocalDate getBirthDate() {

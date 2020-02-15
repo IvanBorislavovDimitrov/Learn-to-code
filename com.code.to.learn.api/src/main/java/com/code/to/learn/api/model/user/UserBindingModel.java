@@ -42,15 +42,16 @@ public class UserBindingModel {
 
     @NotNull
     @NotBefore(date = Constants.NOT_BEFORE_DATE)
-    private LocalDate birthDate;
+    private String birthDate;
 
     public UserBindingModel() {
+        // Required by ModelMapper
     }
 
     public UserBindingModel(UserBindingModel userBindingModel) {
         setFirstName(userBindingModel.getFirstName());
         setLastName(userBindingModel.getLastName());
-        setUsername(userBindingModel.getPhoneNumber());
+        setUsername(userBindingModel.getUsername());
         setPhoneNumber(userBindingModel.getPhoneNumber());
         setPassword(userBindingModel.getPassword());
         setConfirmPassword(userBindingModel.getConfirmPassword());
@@ -114,11 +115,11 @@ public class UserBindingModel {
         this.email = email;
     }
 
-    public LocalDate getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 }
