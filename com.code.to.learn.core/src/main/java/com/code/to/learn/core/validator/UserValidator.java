@@ -5,7 +5,7 @@ import com.code.to.learn.core.exception.user.EmailTakenException;
 import com.code.to.learn.core.exception.user.PasswordsNotMatchException;
 import com.code.to.learn.core.exception.user.PhoneNumberTakenException;
 import com.code.to.learn.core.exception.user.UsernameTakenException;
-import com.code.to.learn.persistence.service.api.UserGenericService;
+import com.code.to.learn.persistence.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +14,10 @@ import java.util.Objects;
 @Component
 public class UserValidator {
 
-    private final UserGenericService userService;
+    private final UserService userService;
 
     @Autowired
-    public UserValidator(UserGenericService userService) {
+    public UserValidator(UserService userService) {
         this.userService = userService;
     }
 

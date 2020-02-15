@@ -7,7 +7,8 @@ import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import java.util.List;
 
 public interface UserOperations {
+
     UserResponseModel register(UserBindingModel userBindingModel);
 
-    List<UserServiceModel> getUsers();
+    List<UserResponseModel> getUsers();
 }

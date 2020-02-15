@@ -50,7 +50,7 @@ public class User extends IdEntity implements UserDetails {
     private List<Course> courses;
 
     @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teacher")
-    private List<Course> courseTaught;
+    private List<Course> coursesThatTeach;
 
     @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.ALL, targetEntity = Course.class, fetch = FetchType.LAZY)
     private List<Course> coursesInCart;
@@ -149,12 +149,8 @@ public class User extends IdEntity implements UserDetails {
         this.courses = courses;
     }
 
-    public List<Course> getCourseTaught() {
-        return courseTaught;
-    }
-
-    public void setCourseTaught(List<Course> courseTaught) {
-        this.courseTaught = courseTaught;
+    public List<Course> getCoursesThatTeach() {
+        return coursesThatTeach;
     }
 
     public LocalDate getBirthDate() {

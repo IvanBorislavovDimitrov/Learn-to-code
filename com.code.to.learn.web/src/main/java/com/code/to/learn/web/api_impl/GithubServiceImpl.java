@@ -12,7 +12,7 @@ import com.code.to.learn.core.exception.github.GithubException;
 import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.service.api.UserGenericService;
+import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
 import org.apache.http.HttpResponse;
@@ -43,11 +43,11 @@ public class GithubServiceImpl implements GithubService {
     private final ResilientHttpClient resilientHttpClient;
     private final ModelMapper modelMapper;
     private final Environment environment;
-    private final UserGenericService userService;
+    private final UserService userService;
 
     @Autowired
     public GithubServiceImpl(Parser parser, ResilientHttpClient resilientHttpClient,
-                             ModelMapper modelMapper, Environment environment, UserGenericService userService) {
+                             ModelMapper modelMapper, Environment environment, UserService userService) {
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
         this.modelMapper = modelMapper;
