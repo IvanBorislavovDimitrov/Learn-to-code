@@ -1,5 +1,7 @@
 package com.code.to.learn.web.config;
 
+import com.code.to.learn.core.parser.Parser;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -24,11 +26,15 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
+    private final ModelMapper modelMapper;
+    private final Parser parser;
 
     @Autowired
-    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService) {
+    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService, ModelMapper modelMapper, Parser parser) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.modelMapper = modelMapper;
+        this.parser = parser;
     }
 
     @Override
@@ -86,7 +92,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
-        return new CustomUrlAuthenticationSuccessHandler();
+        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser);
     }
 
     private SimpleUrlAuthenticationFailureHandler getFailureHandler() {
