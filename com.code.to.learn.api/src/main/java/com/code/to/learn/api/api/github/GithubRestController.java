@@ -1,7 +1,7 @@
 package com.code.to.learn.api.api.github;
 
 import com.code.to.learn.api.model.github.GithubAccessToken;
-import com.code.to.learn.api.model.github.GithubUser;
+import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/github")
-public class GithubApi {
+public class GithubRestController {
 
-    private final GithubService githubService;
+    private final GithubServiceApi githubServiceApi;
     private final UsernameGetter usernameGetter;
 
     @Autowired
-    public GithubApi(GithubService githubService, UsernameGetter usernameGetter) {
-        this.githubService = githubService;
+    public GithubRestController(GithubServiceApi githubServiceApi, UsernameGetter usernameGetter) {
+        this.githubServiceApi = githubServiceApi;
         this.usernameGetter = usernameGetter;
     }
 
     @PostMapping(value = "/users/authorize")
     public ResponseEntity<GithubAccessToken> authorizeUser(@RequestParam String code) {
-        return githubService.requestAccessTokenForUser(usernameGetter.getLoggedInUserUsername(), code);
+        return githubServiceApi.requestAccessTokenForUser(usernameGetter.getLoggedInUserUsername(), code);
     }
 
     @GetMapping(value = "/users/{username}")
-    public ResponseEntity<GithubUser> githubUser(@PathVariable String username) {
-        return githubService.getGithubUserInfo(username);
+    public ResponseEntity<GithubUserResponseModel> githubUser(@PathVariable String username) {
+        return githubServiceApi.getGithubUserInfo(username);
     }
 
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GithubUser {
+public class GithubUserResponseModel {
 
     private String login;
     private String id;

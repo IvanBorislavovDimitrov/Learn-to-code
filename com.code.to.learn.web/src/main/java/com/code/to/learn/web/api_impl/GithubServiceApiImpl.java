@@ -1,8 +1,8 @@
 package com.code.to.learn.web.api_impl;
 
-import com.code.to.learn.api.api.github.GithubService;
+import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessToken;
-import com.code.to.learn.api.model.github.GithubUser;
+import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.constant.Messages;
 import com.code.to.learn.core.environment.Environment;
@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("githubServiceApiImpl")
-public class GithubServiceApiImpl implements GithubService {
+public class GithubServiceApiImpl implements GithubServiceApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiImpl.class);
 
@@ -56,14 +56,14 @@ public class GithubServiceApiImpl implements GithubService {
     }
 
     @Override
-    public ResponseEntity<GithubUser> getGithubUserInfo(String username) {
+    public ResponseEntity<GithubUserResponseModel> getGithubUserInfo(String username) {
         HttpGet userRequest = new HttpGet(getUsernameResource(username));
         HttpResponse userResponse = resilientHttpClient.execute(userRequest);
         if (userResponse.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
             throw new NotFoundException(Messages.USER_NOT_FOUND, username);
         }
-        GithubUser githubUser = parser.deserialize(UncheckedEntityUtils.getResponseBody(userResponse), GithubUser.class);
-        return ResponseEntity.ok(githubUser);
+        GithubUserResponseModel githubUserResponseModel = parser.deserialize(UncheckedEntityUtils.getResponseBody(userResponse), GithubUserResponseModel.class);
+        return ResponseEntity.ok(githubUserResponseModel);
     }
 
     @Override

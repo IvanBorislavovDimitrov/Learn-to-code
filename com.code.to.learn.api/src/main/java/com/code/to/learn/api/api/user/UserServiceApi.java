@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserServiceApi {
 
     ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel);
 

@@ -14,21 +14,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
-public class UserApi {
+public class UserApiRestController {
 
-    private final UserService userService;
+    private final UserServiceApi userServiceApi;
     private final UsernameGetter usernameGetter;
 
     @Autowired
-    public UserApi(UserService userService, UsernameGetter usernameGetter) {
-        this.userService = userService;
+    public UserApiRestController(UserServiceApi userServiceApi, UsernameGetter usernameGetter) {
+        this.userServiceApi = userServiceApi;
         this.usernameGetter = usernameGetter;
     }
 
     @PostMapping(value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseModel> register(@RequestBody @Valid UserBindingModel userBindingModel) {
-        return userService.register(userBindingModel);
+        return userServiceApi.register(userBindingModel);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
@@ -44,13 +44,13 @@ public class UserApi {
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserResponseModel>> getAllUsers() {
-        return userService.findAllUsers();
+        return userServiceApi.findAllUsers();
     }
 
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseModel> getLoggedInUser() {
         String username = usernameGetter.getLoggedInUserUsername();
-        return userService.findUser(username);
+        return userServiceApi.findUser(username);
     }
 
 }
