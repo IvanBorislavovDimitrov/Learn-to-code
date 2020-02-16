@@ -10,5 +10,7 @@ public interface UserOperations {
 
     UserResponseModel register(UserBindingModel userBindingModel);
 
-    List<UserResponseModel> getUsers();
+    List<UserResponseModel> findUsers();
+
+    UserResponseModel findByUsername(String username);
 }

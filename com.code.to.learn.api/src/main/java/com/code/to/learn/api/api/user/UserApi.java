@@ -2,6 +2,7 @@ package com.code.to.learn.api.api.user;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import java.util.List;
 public class UserApi {
 
     private final UserService userService;
+    private final UsernameGetter usernameGetter;
 
     @Autowired
-    public UserApi(UserService userService) {
+    public UserApi(UserService userService, UsernameGetter usernameGetter) {
         this.userService = userService;
+        this.usernameGetter = usernameGetter;
     }
 
     @PostMapping(value = "/register",
@@ -41,7 +44,13 @@ public class UserApi {
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserResponseModel>> getAllUsers() {
-        return userService.getAllUsers();
+        return userService.findAllUsers();
+    }
+
+    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserResponseModel> getLoggedInUser() {
+        String username = usernameGetter.getLoggedInUserUsername();
+        return userService.findUser(username);
     }
 
 }

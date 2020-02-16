@@ -10,6 +10,6 @@ public class GeneralApi {
 
     @GetMapping(value = "/")
     public ResponseEntity<String> pong() {
-        return ResponseEntity.ok(Constants.IT_WORKS);
+        return ResponseEntity.ok(Constants.PONG);
     }
 }

@@ -2,6 +2,8 @@ package com.code.to.learn.core.operation.impl;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.core.constant.Messages;
+import com.code.to.learn.core.exception.basic.NotFoundException;
 import com.code.to.learn.core.operation.api.UserOperations;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -48,10 +51,19 @@ public class UserOperationsImpl implements UserOperations {
     }
 
     @Override
-    public List<UserResponseModel> getUsers() {
+    public List<UserResponseModel> findUsers() {
         return userService.findAll().stream()
                 .map(userServiceModel -> modelMapper.map(userServiceModel, UserResponseModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponseModel findByUsername(String username) {
+        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(username);
+        if (!optionalUserServiceModel.isPresent()) {
+            throw new NotFoundException(Messages.USER_NOT_FOUND, username);
+        }
+        return modelMapper.map(optionalUserServiceModel.get(), UserResponseModel.class);
     }
 
     private UserServiceModel toUserServiceModelWithEncodedPassword(UserBindingModel userBindingModel) {

@@ -4,24 +4,20 @@ import com.code.to.learn.api.api.user.UserService;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.core.operation.api.UserOperations;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("userServiceApiImpl")
 public class UserServiceApiImpl implements UserService {
 
     private final UserOperations userOperations;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceApiImpl(UserOperations userOperations, ModelMapper modelMapper) {
+    public UserServiceApiImpl(UserOperations userOperations) {
         this.userOperations = userOperations;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -31,11 +27,15 @@ public class UserServiceApiImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<List<UserResponseModel>> getAllUsers() {
-        List<UserResponseModel> userViewModels = userOperations.getUsers().stream()
-                .map(userServiceModel -> modelMapper.map(userServiceModel, UserResponseModel.class))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<UserResponseModel>> findAllUsers() {
+        List<UserResponseModel> userViewModels = userOperations.findUsers();
         return ResponseEntity.ok().body(userViewModels);
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> findUser(String username) {
+        UserResponseModel userResponseModel = userOperations.findByUsername(username);
+        return ResponseEntity.ok(userResponseModel);
     }
 
 }

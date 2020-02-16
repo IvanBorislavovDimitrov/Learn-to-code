@@ -2,6 +2,7 @@ package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -58,7 +59,7 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
         return Optional.of(entity);
     }
 
-    protected Optional<E> findByField(String field, String value, Session session) {
+    protected Optional<E> findByField(String field, Object value, Session session) {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -78,7 +79,7 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
         return getInTransaction(session, () -> Optional.of(session.createQuery(criteriaQuery).getSingleResult()));
     }
 
-    private void    executeInTransaction(Session session, Runnable runnable) {
+    private void executeInTransaction(Session session, Runnable runnable) {
         Transaction transaction = session.getTransaction();
         transaction.begin();
         runnable.run();

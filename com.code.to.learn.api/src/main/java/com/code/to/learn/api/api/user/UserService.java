@@ -10,5 +10,7 @@ public interface UserService {
 
     ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel);
 
-    ResponseEntity<List<UserResponseModel>> getAllUsers();
+    ResponseEntity<List<UserResponseModel>> findAllUsers();
+
+    ResponseEntity<UserResponseModel> findUser(String username);
 }

@@ -42,7 +42,6 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, RoleServiceModel> 
                 roleDao.persist(role, session);
             }
         }
-
     }
 
     @Override
@@ -59,7 +58,8 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, RoleServiceModel> 
     public Optional<RoleServiceModel> findByName(String name) {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
-            Optional<Role> optionalRole = roleDao.findByName(name, session);
+            UserRole role = UserRole.valueOf(name);
+            Optional<Role> optionalRole = roleDao.findByName(role, session);
             if (!optionalRole.isPresent()) {
                 return Optional.empty();
             }
