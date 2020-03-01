@@ -2,9 +2,9 @@ package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
-import org.hibernate.Criteria;
+import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import javax.persistence.NoResultException;
@@ -13,12 +13,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E> {
 
+    protected final SessionFactory sessionFactory;
+
+    public GenericDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
-    public List<E> findAll(Session session) {
+    public List<E> findAll() {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -28,38 +34,39 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
     }
 
     @Override
-    public Optional<E> findById(String id, Session session) {
-        return findByField(IdEntity.ID, id, session);
+    public Optional<E> findById(String id) {
+        return findByField(IdEntity.ID, id);
     }
 
     @Override
-    public void persist(E entity, Session session) {
-        executeInTransaction(session, () -> session.persist(entity));
+    public void persist(E entity) {
+        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).persist(entity);
     }
 
     @Override
-    public Optional<E> deleteById(String id, Session session) {
-        Optional<E> entity = findById(id, session);
+    public Optional<E> deleteById(String id) {
+        Optional<E> entity = findById(id);
         if (entity.isPresent()) {
-            delete(entity.get(), session);
+            delete(entity.get());
             return entity;
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<E> delete(E entity, Session session) {
-        executeInTransaction(session, () -> session.delete(entity));
+    public Optional<E> delete(E entity) {
+        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).delete(entity);
         return Optional.of(entity);
     }
 
     @Override
-    public Optional<E> update(E entity, Session session) {
-        executeInTransaction(session, () -> session.update(entity));
+    public Optional<E> update(E entity) {
+        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).update(entity);
         return Optional.of(entity);
     }
 
-    protected Optional<E> findByField(String field, Object value, Session session) {
+    protected Optional<E> findByField(String field, Object value) {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -76,23 +83,12 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
     }
 
     private Optional<?> getSingleResult(Session session, CriteriaQuery<?> criteriaQuery) {
-        return getInTransaction(session, () -> Optional.of(session.createQuery(criteriaQuery).getSingleResult()));
-    }
-
-    private void executeInTransaction(Session session, Runnable runnable) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-        runnable.run();
-        transaction.commit();
-    }
-
-    private <T> T getInTransaction(Session session, Supplier<T> supplier) {
-        Transaction transaction = session.getTransaction();
-        transaction.begin();
-        T result = supplier.get();
-        transaction.commit();
-        return result;
+        return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
     }
 
     protected abstract Class<E> getDomainClassType();
+
+    protected SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }

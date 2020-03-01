@@ -1,6 +1,6 @@
 package com.code.to.learn.web.util;
 
-import com.code.to.learn.core.exception.basic.LCException;
+import com.code.to.learn.persistence.exception.basic.LCException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

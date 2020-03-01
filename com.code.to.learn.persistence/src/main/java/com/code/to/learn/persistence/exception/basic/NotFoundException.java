@@ -1,4 +1,4 @@
-package com.code.to.learn.core.exception.basic;
+package com.code.to.learn.persistence.exception.basic;
 
 public class NotFoundException extends LCException {
 

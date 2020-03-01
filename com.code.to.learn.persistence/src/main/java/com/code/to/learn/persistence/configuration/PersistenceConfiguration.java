@@ -1,35 +1,37 @@
-package com.code.to.learn.persistence.hibernate;
+package com.code.to.learn.persistence.configuration;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
+import org.modelmapper.ModelMapper;
 import org.reflections.Reflections;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.Entity;
 import java.util.Set;
 
-public final class HibernateUtils {
+import static com.code.to.learn.persistence.constant.Constants.HIBERNATE_CONFIGURATION_FILENAME;
 
-    private static final SessionFactory SESSION_FACTORY;
+@Configuration
+public class PersistenceConfiguration {
 
-    static {
-        Configuration configuration = new Configuration().configure();
+    @Bean
+    public ModelMapper getModelMapper() {
+        return new ModelMapper();
+    }
+
+    @Bean
+    public SessionFactory getSessionFactory() {
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure();
         Reflections reflections = new Reflections();
         Set<Class<?>> entityClasses = reflections.getTypesAnnotatedWith(Entity.class);
         entityClasses.forEach(configuration::addAnnotatedClass);
         StandardServiceRegistryBuilder standardServiceRegistryBuilder = new StandardServiceRegistryBuilder();
-        configuration.configure("hibernate.cfg.xml");
+        configuration.configure(HIBERNATE_CONFIGURATION_FILENAME);
         standardServiceRegistryBuilder.applySettings(configuration.getProperties());
         StandardServiceRegistry serviceRegistry = standardServiceRegistryBuilder.build();
-        SESSION_FACTORY = configuration.buildSessionFactory(serviceRegistry);
+        return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    private HibernateUtils() {
-
-    }
-
-    public static SessionFactory getSessionFactory() {
-        return SESSION_FACTORY;
-    }
 }

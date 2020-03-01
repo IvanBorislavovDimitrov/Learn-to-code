@@ -1,10 +1,10 @@
 package com.code.to.learn.core.validator;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.core.exception.user.EmailTakenException;
-import com.code.to.learn.core.exception.user.PasswordsNotMatchException;
-import com.code.to.learn.core.exception.user.PhoneNumberTakenException;
-import com.code.to.learn.core.exception.user.UsernameTakenException;
+import com.code.to.learn.persistence.exception.user.EmailTakenException;
+import com.code.to.learn.persistence.exception.user.PasswordsNotMatchException;
+import com.code.to.learn.persistence.exception.user.PhoneNumberTakenException;
+import com.code.to.learn.persistence.exception.user.UsernameTakenException;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

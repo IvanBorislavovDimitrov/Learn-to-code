@@ -1,9 +1,10 @@
 package com.code.to.learn.persistence.dao.impl;
 
-import com.code.to.learn.persistence.dao.api.RoleDao;
 import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.User;
+import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,30 +16,29 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
-    private final RoleDao roleRepository;
-
     @Autowired
-    public UserDaoImpl(RoleDao roleRepository) {
-        this.roleRepository = roleRepository;
+    public UserDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
     @Override
-    public Optional<User> findByUsername(String username, Session session) {
-        return findByField(User.USERNAME, username, session);
+    public Optional<User> findByUsername(String username) {
+        return findByField(User.USERNAME, username);
     }
 
     @Override
-    public Optional<User> findByEmail(String email, Session session) {
-        return findByField(User.EMAIL, email, session);
+    public Optional<User> findByEmail(String email) {
+        return findByField(User.EMAIL, email);
     }
 
     @Override
-    public Optional<User> findByPhoneNumber(String phoneNumber, Session session) {
-        return findByField(User.PHONE_NUMBER, phoneNumber, session);
+    public Optional<User> findByPhoneNumber(String phoneNumber) {
+        return findByField(User.PHONE_NUMBER, phoneNumber);
     }
 
     @Override
-    public long findUsersCount(Session session) {
+    public long findUsersCount() {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<User> root = criteriaQuery.from(getDomainClassType());

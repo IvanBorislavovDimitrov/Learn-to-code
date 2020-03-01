@@ -4,14 +4,14 @@ import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessToken;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.constant.Constants;
-import com.code.to.learn.core.constant.Messages;
 import com.code.to.learn.core.environment.Environment;
-import com.code.to.learn.core.exception.basic.LCException;
-import com.code.to.learn.core.exception.basic.NotFoundException;
-import com.code.to.learn.core.exception.github.GithubException;
 import com.code.to.learn.core.parser.Parser;
+import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.basic.LCException;
+import com.code.to.learn.persistence.exception.basic.NotFoundException;
+import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
@@ -34,7 +34,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service("githubServiceApiImpl")
+@Service
 public class GithubServiceApiImpl implements GithubServiceApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiImpl.class);

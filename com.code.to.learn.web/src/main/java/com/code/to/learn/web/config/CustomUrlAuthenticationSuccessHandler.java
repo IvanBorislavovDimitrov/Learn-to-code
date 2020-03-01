@@ -1,10 +1,9 @@
 package com.code.to.learn.web.config;
 
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.core.exception.basic.LCException;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.domain.entity.User;
-import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

@@ -1,8 +1,8 @@
 package com.code.to.learn.persistence.service.impl;
 
+import com.code.to.learn.persistence.dao.api.GithubDao;
 import com.code.to.learn.persistence.domain.entity.GithubAccessToken;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
-import com.code.to.learn.persistence.dao.api.GithubDao;
 import com.code.to.learn.persistence.service.api.GithubService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class UserBirthDateValidator implements ConstraintValidator<NotBefore, String> {
@@ -22,7 +23,8 @@ public class UserBirthDateValidator implements ConstraintValidator<NotBefore, St
         if (date == null) {
             return false;
         }
-        LocalDate birthDate = LocalDate.parse(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate birthDate = LocalDate.parse(date, formatter);
         LocalDate notBeforeDate = LocalDate.parse(notBefore);
         return birthDate.compareTo(notBeforeDate) > 0;
     }

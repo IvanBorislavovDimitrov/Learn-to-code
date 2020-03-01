@@ -1,8 +1,8 @@
 package com.code.to.learn.persistence.service.impl;
 
+import com.code.to.learn.persistence.dao.api.CourseDao;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
-import com.code.to.learn.persistence.dao.api.CourseDao;
 import com.code.to.learn.persistence.service.api.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

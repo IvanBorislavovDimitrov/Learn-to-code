@@ -1,8 +1,8 @@
 package com.code.to.learn.persistence.service.api;
 
-import com.code.to.learn.persistence.domain.model.UserServiceModel;
-
 import java.util.Optional;
+
+import com.code.to.learn.persistence.domain.model.UserServiceModel;
 
 public interface UserService extends GenericService<UserServiceModel> {
 

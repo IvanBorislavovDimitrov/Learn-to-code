@@ -3,12 +3,12 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.core.constant.Messages;
-import com.code.to.learn.core.exception.basic.NotFoundException;
 import com.code.to.learn.core.validator.UserValidator;
+import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -18,12 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service("userServiceApiImpl")
+@Service
 public class UserServiceApiImpl implements UserServiceApi {
 
     private final ModelMapper modelMapper;
@@ -106,7 +107,8 @@ public class UserServiceApiImpl implements UserServiceApi {
     }
 
     private void convertAndSetDateToUser(UserBindingModel userBindingModel, UserServiceModel userServiceModel) {
-        LocalDate birthDate = LocalDate.parse(userBindingModel.getBirthDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate birthDate = LocalDate.parse(userBindingModel.getBirthDate(), formatter);
         userServiceModel.setBirthDate(birthDate);
     }
 

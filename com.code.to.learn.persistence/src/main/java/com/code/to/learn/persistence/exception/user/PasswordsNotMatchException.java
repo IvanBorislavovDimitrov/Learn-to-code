@@ -1,6 +1,6 @@
-package com.code.to.learn.core.exception.user;
+package com.code.to.learn.persistence.exception.user;
 
-import com.code.to.learn.core.constant.Messages;
+import com.code.to.learn.persistence.constant.Messages;
 
 public class PasswordsNotMatchException extends UserException {
 

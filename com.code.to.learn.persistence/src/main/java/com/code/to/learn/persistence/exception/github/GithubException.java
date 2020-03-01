@@ -1,4 +1,4 @@
-package com.code.to.learn.core.exception.github;
+package com.code.to.learn.persistence.exception.github;
 
 import java.util.Collections;
 import java.util.Map;

@@ -3,13 +3,38 @@ package com.code.to.learn.persistence.dao.impl;
 import com.code.to.learn.persistence.dao.api.RoleDao;
 import com.code.to.learn.persistence.domain.entity.Role;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
-import org.hibernate.Session;
+import com.code.to.learn.persistence.util.DatabaseSessionUtil;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 @Repository
 public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
+
+    @Autowired
+    public RoleDaoImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @PostConstruct
+    public void init() {
+        if (findAll().isEmpty()) {
+            createRoles();
+        }
+        DatabaseSessionUtil.closeSessionWithCommit(getSessionFactory());
+    }
+
+    private void createRoles() {
+        for (UserRole userRole : UserRole.values()) {
+            Role role = new Role();
+            role.setName(userRole);
+            persist(role);
+        }
+    }
+
 
     @Override
     protected Class<Role> getDomainClassType() {
@@ -17,7 +42,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
     }
 
     @Override
-    public Optional<Role> findByName(UserRole name, Session session) {
-        return findByField(Role.NAME, name, session);
+    public Optional<Role> findByName(UserRole name) {
+        return findByField(Role.NAME, name);
     }
 }

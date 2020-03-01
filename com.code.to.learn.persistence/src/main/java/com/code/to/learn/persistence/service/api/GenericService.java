@@ -1,8 +1,8 @@
 package com.code.to.learn.persistence.service.api;
 
-import com.code.to.learn.persistence.domain.model.IdServiceModel;
-
 import java.util.List;
+
+import com.code.to.learn.persistence.domain.model.IdServiceModel;
 
 public interface GenericService<M extends IdServiceModel> {
 

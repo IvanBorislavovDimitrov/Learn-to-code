@@ -5,10 +5,7 @@ import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.Role;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.hibernate.HibernateUtils;
 import com.code.to.learn.persistence.service.api.UserService;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,57 +27,39 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public void registerUser(UserServiceModel userServiceModel) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            User user = modelMapper.map(userServiceModel, User.class);
-            updateRolesForUser(user, session);
-            userDao.persist(user, session);
-        }
+        User user = modelMapper.map(userServiceModel, User.class);
+        updateRolesForUser(user);
+        userDao.persist(user);
     }
 
     @Override
     public boolean isUsernameTaken(String username) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            return userDao.findByUsername(username, session).isPresent();
-        }
+        return userDao.findByUsername(username).isPresent();
     }
 
     @Override
     public boolean isEmailTaken(String email) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            return userDao.findByEmail(email, session).isPresent();
-        }
+        return userDao.findByEmail(email).isPresent();
     }
 
     @Override
     public boolean isPhoneNumberTaken(String phoneNumber) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            return userDao.findByPhoneNumber(phoneNumber, session).isPresent();
-        }
+        return userDao.findByPhoneNumber(phoneNumber).isPresent();
     }
 
     @Override
     public Optional<UserServiceModel> findByUsername(String username) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            Optional<User> user = userDao.findByUsername(username, session);
-            if (!user.isPresent()) {
-                return Optional.empty();
-            }
-            UserServiceModel userServiceModel = modelMapper.map(user.get(), UserServiceModel.class);
-            return Optional.of(userServiceModel);
+        Optional<User> user = userDao.findByUsername(username);
+        if (!user.isPresent()) {
+            return Optional.empty();
         }
+        UserServiceModel userServiceModel = modelMapper.map(user.get(), UserServiceModel.class);
+        return Optional.of(userServiceModel);
     }
 
     @Override
     public long findUsersCount() {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            return userDao.findUsersCount(session);
-        }
+        return userDao.findUsersCount();
     }
 
     @Override
@@ -93,14 +72,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
         return User.class;
     }
 
-    private void updateRolesForUser(User user, Session session) {
+    private void updateRolesForUser(User user) {
         for (Role role : user.getRoles()) {
-            Optional<Role> optionalRole = roleDao.findById(role.getId(), session);
+            Optional<Role> optionalRole = roleDao.findById(role.getId());
             if (!optionalRole.isPresent()) {
                 continue;
             }
             optionalRole.get().getUsers().add(user);
-            roleDao.update(optionalRole.get(), session);
+            roleDao.update(optionalRole.get());
         }
     }
 

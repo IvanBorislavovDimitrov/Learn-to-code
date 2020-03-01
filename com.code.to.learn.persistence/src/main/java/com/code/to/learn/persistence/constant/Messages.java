@@ -1,4 +1,4 @@
-package com.code.to.learn.core.constant;
+package com.code.to.learn.persistence.constant;
 
 public final class Messages {
 

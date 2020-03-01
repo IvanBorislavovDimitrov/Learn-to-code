@@ -1,4 +1,4 @@
-package com.code.to.learn.core.exception.user;
+package com.code.to.learn.persistence.exception.user;
 
 public abstract class UserException extends RuntimeException {
 

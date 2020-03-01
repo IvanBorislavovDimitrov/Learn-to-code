@@ -4,10 +4,7 @@ import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
-import com.code.to.learn.persistence.hibernate.HibernateUtils;
 import com.code.to.learn.persistence.service.api.GenericService;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
@@ -25,39 +22,27 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
 
     @Override
     public List<M> findAll() {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            return genericDao.findAll(session).stream()
-                    .map(idServiceEntity -> modelMapper.map(idServiceEntity, getModelClass()))
-                    .collect(Collectors.toList());
-        }
+        return genericDao.findAll().stream()
+                .map(idServiceEntity -> modelMapper.map(idServiceEntity, getModelClass()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public M findById(String id) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            E entity = genericDao.findById(id, session).orElseThrow(() -> new IdNotFoundException(id));
-            return modelMapper.map(entity, getModelClass());
-        }
+        E entity = genericDao.findById(id).orElseThrow(() -> new IdNotFoundException(id));
+        return modelMapper.map(entity, getModelClass());
     }
 
     @Override
     public void save(M model) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            E entity = modelMapper.map(model, getEntityClass());
-            genericDao.persist(entity, session);
-        }
+        E entity = modelMapper.map(model, getEntityClass());
+        genericDao.persist(entity);
     }
 
     @Override
     public M deleteById(String id) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            E entity = genericDao.deleteById(id, session).orElseThrow(() -> new IdNotFoundException(id));
-            return modelMapper.map(entity, getModelClass());
-        }
+        E entity = genericDao.deleteById(id).orElseThrow(() -> new IdNotFoundException(id));
+        return modelMapper.map(entity, getModelClass());
     }
 
     @Override
@@ -67,12 +52,9 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
 
     @Override
     public M update(M model) {
-        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-            E entity = modelMapper.map(model, getEntityClass());
-            return modelMapper.map(genericDao.update(entity, session).orElseThrow(() -> new IdNotFoundException(entity.getId())),
-                    getModelClass());
-        }
+        E entity = modelMapper.map(model, getEntityClass());
+        return modelMapper.map(genericDao.update(entity).orElseThrow(() -> new IdNotFoundException(entity.getId())),
+                getModelClass());
     }
 
     protected abstract Class<M> getModelClass();
