@@ -1,6 +1,9 @@
 package com.code.to.learn.web.config;
 
 import com.code.to.learn.core.parser.Parser;
+import com.code.to.learn.web.config.handler.CustomUrlAuthenticationFailureHandler;
+import com.code.to.learn.web.config.handler.CustomUrlAuthenticationSuccessHandler;
+import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,13 +32,16 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final ModelMapper modelMapper;
     private final Parser parser;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService, ModelMapper modelMapper, Parser parser) {
+    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService,
+                                     ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.modelMapper = modelMapper;
         this.parser = parser;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -73,7 +79,6 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
-        config.addExposedHeader("Set-Cookie");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
@@ -93,11 +98,11 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
-        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser);
+        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, sessionFactory);
     }
 
     private SimpleUrlAuthenticationFailureHandler getFailureHandler() {
-        return new SimpleUrlAuthenticationFailureHandler();
+        return new CustomUrlAuthenticationFailureHandler(sessionFactory);
     }
 
 }
