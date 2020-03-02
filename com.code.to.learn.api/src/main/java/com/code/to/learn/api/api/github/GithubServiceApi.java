@@ -8,5 +8,5 @@ public interface GithubServiceApi {
 
     ResponseEntity<GithubUserResponseModel> getGithubUserInfo(String username);
 
-    ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String loggedUserUsername, String code);
+    ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String username, String code);
 }

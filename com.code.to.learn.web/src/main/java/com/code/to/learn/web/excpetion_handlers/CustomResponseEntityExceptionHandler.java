@@ -1,6 +1,6 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.excpetion_handlers;
 
-import com.code.to.learn.api.model.error.ErrorResponse;
+import com.code.to.learn.api.model.error.ApiErrorResponse;
 import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.SessionFactory;
@@ -33,13 +33,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                                                                   HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
         DatabaseSessionUtil.closeSessionWithRollback(sessionFactory);
-        ErrorResponse errorResponse = new ErrorResponse.Builder()
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .message(getErrorMessage(exception))
                 .code(HttpStatus.BAD_REQUEST.value())
                 .type(exception.getClass().getSimpleName())
                 .build();
         return ResponseEntity.badRequest()
-                .body(parser.serialize(errorResponse));
+                .body(parser.serialize(apiErrorResponse));
     }
 
     private String getErrorMessage(MethodArgumentNotValidException exception) {

@@ -17,7 +17,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     private String phoneNumber;
     private String password;
     private String email;
-    private GithubAccessTokenServiceModel githubAccessTokenServiceModel;
+    private GithubAccessTokenServiceModel githubAccessToken;
     private LocalDate birthDate;
     private List<CourseServiceModel> courses;
     private List<CourseServiceModel> coursesThatTeaches;
@@ -76,12 +76,12 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
         this.email = email;
     }
 
-    public GithubAccessTokenServiceModel getGithubAccessTokenServiceModel() {
-        return githubAccessTokenServiceModel;
+    public GithubAccessTokenServiceModel getGithubAccessToken() {
+        return githubAccessToken;
     }
 
-    public void setGithubAccessTokenServiceModel(GithubAccessTokenServiceModel githubAccessTokenServiceModel) {
-        this.githubAccessTokenServiceModel = githubAccessTokenServiceModel;
+    public void setGithubAccessToken(GithubAccessTokenServiceModel githubAccessToken) {
+        this.githubAccessToken = githubAccessToken;
     }
 
     public LocalDate getBirthDate() {

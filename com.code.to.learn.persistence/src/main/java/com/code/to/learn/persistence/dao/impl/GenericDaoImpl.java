@@ -66,6 +66,12 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
     }
 
     @Override
+    public Optional<E> merge(E entity) {
+        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).merge(entity);
+        return Optional.of(entity);
+    }
+
+    @Override
     public long count() {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();

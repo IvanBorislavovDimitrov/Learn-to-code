@@ -19,5 +19,7 @@ public interface GenericDao<E extends IdEntity> {
 
     Optional<E> update(E entity);
 
+    Optional<E> merge(E entity);
+
     long count();
 }

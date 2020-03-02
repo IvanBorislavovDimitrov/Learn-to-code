@@ -10,7 +10,6 @@ import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
-import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.web.client.ResilientHttpClient;
@@ -25,6 +24,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,27 +57,41 @@ public class GithubServiceApiImpl implements GithubServiceApi {
 
     @Override
     public ResponseEntity<GithubUserResponseModel> getGithubUserInfo(String username) {
-        HttpGet userRequest = new HttpGet(getUsernameResource(username));
+        UserServiceModel userServiceModel = getRequiredUser(username);
+        GithubAccessTokenServiceModel githubAccessTokenServiceModel = userServiceModel.getGithubAccessToken();
+        if (githubAccessTokenServiceModel == null) {
+            throw new GithubException(MessageFormat.format(Messages.NO_GITHUB_ACCESS_TOKEN_FOR_USER, username));
+        }
+        HttpGet userRequest = new HttpGet(getUsernameResource());
+        userRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessTokenServiceModel.getAccessToken());
         HttpResponse userResponse = resilientHttpClient.execute(userRequest);
         if (userResponse.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
-            throw new NotFoundException(Messages.USER_NOT_FOUND, username);
+            throw new GithubException(MessageFormat.format(Messages.USER_NOT_FOUND, username));
+        }
+        if (userResponse.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
+            throw new GithubException(MessageFormat.format(Messages.ACCESS_TOKEN_FOR_USER_HAS_EXPIRED, username));
         }
         GithubUserResponseModel githubUserResponseModel = parser.deserialize(UncheckedEntityUtils.getResponseBody(userResponse), GithubUserResponseModel.class);
         return ResponseEntity.ok(githubUserResponseModel);
     }
 
     @Override
-    public ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String loggedUserUsername, String code) {
-        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(loggedUserUsername);
-        if (!optionalUserServiceModel.isPresent()) {
-            throw new GithubException(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, loggedUserUsername), Collections.emptyMap());
-        }
+    public ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String username, String code) {
+        UserServiceModel userServiceModel = getRequiredUser(username);
         HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
-        return processAccessTokenForUser(optionalUserServiceModel.get(), accessTokenResponse);
+        return processAccessTokenForUser(userServiceModel, accessTokenResponse);
     }
 
-    private String getUsernameResource(String username) {
-        return environment.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USERS_RESOURCE + "/" + username;
+    private String getUsernameResource() {
+        return environment.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USER_RESOURCE;
+    }
+
+    private UserServiceModel getRequiredUser(String username) {
+        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(username);
+        if (!optionalUserServiceModel.isPresent()) {
+            throw new GithubException(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, username), Collections.emptyMap());
+        }
+        return optionalUserServiceModel.get();
     }
 
     private HttpResponse executeAccessTokenRequest(String code) {
@@ -103,9 +117,9 @@ public class GithubServiceApiImpl implements GithubServiceApi {
         }
     }
 
-    private ResponseEntity<GithubAccessToken> processAccessTokenForUser(UserServiceModel optionalUserServiceModel, HttpResponse accessTokenResponse) {
+    private ResponseEntity<GithubAccessToken> processAccessTokenForUser(UserServiceModel userServiceModel, HttpResponse accessTokenResponse) {
         GithubAccessToken githubAccessToken = parseGithubAccessTokenResponse(accessTokenResponse);
-        setGithubAccessTokenForUser(optionalUserServiceModel, githubAccessToken);
+        setGithubAccessTokenForUser(userServiceModel, githubAccessToken);
         return ResponseEntity.ok(githubAccessToken);
     }
 
@@ -141,10 +155,11 @@ public class GithubServiceApiImpl implements GithubServiceApi {
         return GithubAccessToken.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
     }
 
-    private void setGithubAccessTokenForUser(UserServiceModel optionalUserServiceModel, GithubAccessToken githubAccessToken) {
+    private void setGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessToken githubAccessToken) {
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = modelMapper.map(githubAccessToken, GithubAccessTokenServiceModel.class);
-        optionalUserServiceModel.setGithubAccessTokenServiceModel(githubAccessTokenServiceModel);
-        userService.update(optionalUserServiceModel);
+        userServiceModel.setGithubAccessToken(githubAccessTokenServiceModel);
+        userService.update(userServiceModel);
     }
+
 
 }

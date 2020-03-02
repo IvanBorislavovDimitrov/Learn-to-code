@@ -53,7 +53,7 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
     @Override
     public M update(M model) {
         E entity = modelMapper.map(model, getEntityClass());
-        return modelMapper.map(genericDao.update(entity).orElseThrow(() -> new IdNotFoundException(entity.getId())),
+        return modelMapper.map(genericDao.merge(entity).orElseThrow(() -> new IdNotFoundException(entity.getId())),
                 getModelClass());
     }
 

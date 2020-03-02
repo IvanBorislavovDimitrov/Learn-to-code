@@ -1,12 +1,12 @@
 package com.code.to.learn.api.model.error;
 
-public class ErrorResponse {
+public class ApiErrorResponse {
 
     private int code;
     private String type;
     private String message;
 
-    private ErrorResponse() {
+    private ApiErrorResponse() {
 
     }
 
@@ -23,25 +23,25 @@ public class ErrorResponse {
     }
 
     public static class Builder {
-        private ErrorResponse errorResponse = new ErrorResponse();
+        private ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
 
         public Builder code(int status) {
-            errorResponse.code = status;
+            apiErrorResponse.code = status;
             return this;
         }
 
         public Builder type(String type) {
-            errorResponse.type = type;
+            apiErrorResponse.type = type;
             return this;
         }
 
         public Builder message(String message) {
-            errorResponse.message = message;
+            apiErrorResponse.message = message;
             return this;
         }
 
-        public ErrorResponse build() {
-            return errorResponse;
+        public ApiErrorResponse build() {
+            return apiErrorResponse;
         }
 
     }

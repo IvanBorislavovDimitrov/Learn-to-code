@@ -42,20 +42,19 @@ public class User extends IdEntity implements UserDetails {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
 
-    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Course.class)
+    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Course.class)
     private List<Course> courses;
 
-    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "teacher")
+    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "teacher")
     private List<Course> coursesThatTeaches;
 
-    @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.ALL, targetEntity = Course.class, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.MERGE, targetEntity = Course.class, fetch = FetchType.LAZY)
     private List<Course> coursesInCart;
 
-    // TODO: If LAZY fetch is required do not return User while logging
     @ManyToMany(targetEntity = Role.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "users")
     private List<Role> roles;
 
