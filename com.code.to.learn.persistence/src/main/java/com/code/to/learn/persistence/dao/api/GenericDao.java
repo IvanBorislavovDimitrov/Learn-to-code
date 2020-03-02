@@ -18,4 +18,6 @@ public interface GenericDao<E extends IdEntity> {
     Optional<E> delete(E entity);
 
     Optional<E> update(E entity);
+
+    long count();
 }

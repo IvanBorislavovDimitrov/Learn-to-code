@@ -21,7 +21,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
 
     @PostConstruct
     public void init() {
-        if (findAll().isEmpty()) {
+        if (count() == 0) {
             createRoles();
         }
         DatabaseSessionUtil.closeSessionWithCommit(getSessionFactory());

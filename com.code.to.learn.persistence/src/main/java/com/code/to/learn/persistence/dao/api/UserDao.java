@@ -12,5 +12,4 @@ public interface UserDao extends GenericDao<User> {
 
     Optional<User> findByPhoneNumber(String phoneNumber);
 
-    long findUsersCount();
 }

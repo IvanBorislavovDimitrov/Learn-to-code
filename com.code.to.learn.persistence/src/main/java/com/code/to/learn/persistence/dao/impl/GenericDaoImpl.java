@@ -65,6 +65,17 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
         return Optional.of(entity);
     }
 
+    @Override
+    public long count() {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<E> root = criteriaQuery.from(getDomainClassType());
+        criteriaQuery.select(criteriaBuilder.count(root));
+        return ((Optional<Long>) getOrEmpty(session, criteriaQuery)).get();
+    }
+
+
     protected Optional<E> findByField(String field, Object value) {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();

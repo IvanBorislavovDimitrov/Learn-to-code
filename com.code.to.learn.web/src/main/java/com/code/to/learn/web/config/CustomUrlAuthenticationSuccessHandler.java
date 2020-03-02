@@ -1,10 +1,12 @@
 package com.code.to.learn.web.config;
 
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.domain.entity.User;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -27,6 +29,7 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         User user = (User) authentication.getPrincipal();
         UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         setResponseBody(response, userResponseModel);
     }
 

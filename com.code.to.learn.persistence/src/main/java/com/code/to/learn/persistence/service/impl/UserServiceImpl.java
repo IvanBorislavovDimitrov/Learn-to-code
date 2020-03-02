@@ -59,7 +59,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public long findUsersCount() {
-        return userDao.findUsersCount();
+        return userDao.count();
     }
 
     @Override

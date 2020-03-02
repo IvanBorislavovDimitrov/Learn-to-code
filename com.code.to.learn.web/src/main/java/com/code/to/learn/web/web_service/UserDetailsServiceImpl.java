@@ -1,6 +1,7 @@
 package com.code.to.learn.web.web_service;
 
-import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.persistence.dao.api.UserDao;
+import com.code.to.learn.persistence.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,16 +13,16 @@ import java.util.Optional;
 @Component(value = "userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserDao userDao;
 
     @Autowired
-    public UserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
+    public UserDetailsServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<? extends UserDetails> userDetails = userService.findByUsername(username);
+        Optional<User> userDetails = userDao.findByUsername(username);
         return userDetails.orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }
