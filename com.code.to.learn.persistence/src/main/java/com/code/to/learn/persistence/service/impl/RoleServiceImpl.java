@@ -39,7 +39,7 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, RoleServiceModel> 
         if (!optionalRole.isPresent()) {
             return Optional.empty();
         }
-        RoleServiceModel roleServiceModel = modelMapper.map(optionalRole.get(), RoleServiceModel.class);
+        RoleServiceModel roleServiceModel = toOutput(optionalRole.get());
         return Optional.of(roleServiceModel);
     }
 }

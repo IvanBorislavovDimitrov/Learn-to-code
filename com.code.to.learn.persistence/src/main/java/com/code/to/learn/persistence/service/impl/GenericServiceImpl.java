@@ -5,17 +5,19 @@ import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
 import com.code.to.learn.persistence.service.api.GenericService;
+import com.code.to.learn.util.mapper.ExtendableMapper;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class GenericServiceImpl<E extends IdEntity, M extends IdServiceModel> implements GenericService<M> {
+public abstract class GenericServiceImpl<E extends IdEntity, M extends IdServiceModel> extends ExtendableMapper<E, M> implements GenericService<M> {
 
     protected final ModelMapper modelMapper;
     private final GenericDao<E> genericDao;
 
     protected GenericServiceImpl(GenericDao<E> genericDao, ModelMapper modelMapper) {
+        super(modelMapper);
         this.genericDao = genericDao;
         this.modelMapper = modelMapper;
     }
@@ -57,7 +59,18 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
                 getModelClass());
     }
 
-    protected abstract Class<M> getModelClass();
+    @Override
+    protected Class<E> getInputClass() {
+        return getEntityClass();
+    }
+
+    @Override
+    protected Class<M> getOutputClass() {
+        return getModelClass();
+    }
 
     protected abstract Class<E> getEntityClass();
+
+    protected abstract Class<M> getModelClass();
+
 }

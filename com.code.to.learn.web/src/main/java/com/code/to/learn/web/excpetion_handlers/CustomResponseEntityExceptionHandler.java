@@ -1,7 +1,7 @@
 package com.code.to.learn.web.excpetion_handlers;
 
 import com.code.to.learn.api.model.error.ApiErrorResponse;
-import com.code.to.learn.core.parser.Parser;
+import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

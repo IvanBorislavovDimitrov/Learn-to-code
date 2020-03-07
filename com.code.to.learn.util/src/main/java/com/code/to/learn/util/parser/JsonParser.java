@@ -1,4 +1,4 @@
-package com.code.to.learn.core.parser;
+package com.code.to.learn.util.parser;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

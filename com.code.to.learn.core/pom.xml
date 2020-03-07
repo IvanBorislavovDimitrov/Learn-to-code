@@ -19,5 +19,10 @@
             <artifactId>com.code.to.learn.persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.learn.to.code</groupId>
+            <artifactId>com.code.to.learn.util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

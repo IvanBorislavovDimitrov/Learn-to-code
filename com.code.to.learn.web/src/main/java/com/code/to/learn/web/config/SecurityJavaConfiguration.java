@@ -1,6 +1,6 @@
 package com.code.to.learn.web.config;
 
-import com.code.to.learn.core.parser.Parser;
+import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.web.config.handler.CustomUrlAuthenticationFailureHandler;
 import com.code.to.learn.web.config.handler.CustomUrlAuthenticationSuccessHandler;
 import org.hibernate.SessionFactory;

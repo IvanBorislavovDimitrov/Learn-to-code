@@ -13,4 +13,6 @@ public interface UserServiceApi {
     ResponseEntity<List<UserResponseModel>> findAllUsers();
 
     ResponseEntity<UserResponseModel> findUser(String username);
+
+    ResponseEntity<List<UserResponseModel>> findUsersByUsernameContaining(String username);
 }

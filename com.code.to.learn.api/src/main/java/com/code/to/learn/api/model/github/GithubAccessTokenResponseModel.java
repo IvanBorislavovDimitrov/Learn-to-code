@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-public class GithubAccessToken {
+public class GithubAccessTokenResponseModel {
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -12,12 +12,12 @@ public class GithubAccessToken {
     @JsonProperty("token_type")
     private String type;
 
-    public static GithubAccessToken fromAccessTokenQueryParameters(Map<String, String> accessTokenQueryParameters) {
-        GithubAccessToken githubAccessToken = new GithubAccessToken();
-        githubAccessToken.setAccessToken(accessTokenQueryParameters.get("access_token"));
-        githubAccessToken.setScope(accessTokenQueryParameters.get("scope"));
-        githubAccessToken.setType(accessTokenQueryParameters.get("token_type"));
-        return githubAccessToken;
+    public static GithubAccessTokenResponseModel fromAccessTokenQueryParameters(Map<String, String> accessTokenQueryParameters) {
+        GithubAccessTokenResponseModel githubAccessTokenResponseModel = new GithubAccessTokenResponseModel();
+        githubAccessTokenResponseModel.setAccessToken(accessTokenQueryParameters.get("access_token"));
+        githubAccessTokenResponseModel.setScope(accessTokenQueryParameters.get("scope"));
+        githubAccessTokenResponseModel.setType(accessTokenQueryParameters.get("token_type"));
+        return githubAccessTokenResponseModel;
     }
 
     public String getAccessToken() {

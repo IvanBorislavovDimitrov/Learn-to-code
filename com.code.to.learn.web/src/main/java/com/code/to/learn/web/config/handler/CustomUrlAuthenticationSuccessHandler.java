@@ -1,7 +1,7 @@
 package com.code.to.learn.web.config.handler;
 
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.core.parser.Parser;
+import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;

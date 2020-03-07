@@ -1,17 +1,18 @@
 package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.github.GithubServiceApi;
-import com.code.to.learn.api.model.github.GithubAccessToken;
+import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.environment.Environment;
-import com.code.to.learn.core.parser.Parser;
 import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.util.mapper.ExtendableMapper;
+import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.web.client.ResilientHttpClient;
 import com.code.to.learn.web.client.UncheckedEntityUtils;
 import org.apache.http.HttpResponse;
@@ -35,22 +36,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class GithubServiceApiImpl implements GithubServiceApi {
+public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServiceModel, GithubAccessTokenResponseModel> implements GithubServiceApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiImpl.class);
 
     private final Parser parser;
     private final ResilientHttpClient resilientHttpClient;
-    private final ModelMapper modelMapper;
     private final Environment environment;
     private final UserService userService;
 
     @Autowired
     public GithubServiceApiImpl(Parser parser, ResilientHttpClient resilientHttpClient,
                                 ModelMapper modelMapper, Environment environment, UserService userService) {
+        super(modelMapper);
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
-        this.modelMapper = modelMapper;
         this.environment = environment;
         this.userService = userService;
     }
@@ -76,7 +76,7 @@ public class GithubServiceApiImpl implements GithubServiceApi {
     }
 
     @Override
-    public ResponseEntity<GithubAccessToken> requestAccessTokenForUser(String username, String code) {
+    public ResponseEntity<GithubAccessTokenResponseModel> requestAccessTokenForUser(String username, String code) {
         UserServiceModel userServiceModel = getRequiredUser(username);
         HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
         return processAccessTokenForUser(userServiceModel, accessTokenResponse);
@@ -117,13 +117,13 @@ public class GithubServiceApiImpl implements GithubServiceApi {
         }
     }
 
-    private ResponseEntity<GithubAccessToken> processAccessTokenForUser(UserServiceModel userServiceModel, HttpResponse accessTokenResponse) {
-        GithubAccessToken githubAccessToken = parseGithubAccessTokenResponse(accessTokenResponse);
-        setGithubAccessTokenForUser(userServiceModel, githubAccessToken);
-        return ResponseEntity.ok(githubAccessToken);
+    private ResponseEntity<GithubAccessTokenResponseModel> processAccessTokenForUser(UserServiceModel userServiceModel, HttpResponse accessTokenResponse) {
+        GithubAccessTokenResponseModel githubAccessTokenResponseModel = parseGithubAccessTokenResponse(accessTokenResponse);
+        setGithubAccessTokenForUser(userServiceModel, githubAccessTokenResponseModel);
+        return ResponseEntity.ok(githubAccessTokenResponseModel);
     }
 
-    private GithubAccessToken parseGithubAccessTokenResponse(HttpResponse accessTokenResponse) {
+    private GithubAccessTokenResponseModel parseGithubAccessTokenResponse(HttpResponse accessTokenResponse) {
         String accessTokenParametersQuery = UncheckedEntityUtils.getResponseBody(accessTokenResponse);
         List<String> rawQueryParameters = Arrays.asList(accessTokenParametersQuery.split("&"));
         Map<String, String> githubAccessTokenQueryParameters = getGithubAccessTokenParameters(rawQueryParameters);
@@ -151,15 +151,24 @@ public class GithubServiceApiImpl implements GithubServiceApi {
         }
     }
 
-    private GithubAccessToken mapToGithubAccessToken(Map<String, String> githubAccessTokenQueryParameters) {
-        return GithubAccessToken.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
+    private GithubAccessTokenResponseModel mapToGithubAccessToken(Map<String, String> githubAccessTokenQueryParameters) {
+        return GithubAccessTokenResponseModel.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
     }
 
-    private void setGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessToken githubAccessToken) {
-        GithubAccessTokenServiceModel githubAccessTokenServiceModel = modelMapper.map(githubAccessToken, GithubAccessTokenServiceModel.class);
+    private void setGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessTokenResponseModel githubAccessTokenResponseModel) {
+        GithubAccessTokenServiceModel githubAccessTokenServiceModel = toInput(githubAccessTokenResponseModel);
         userServiceModel.setGithubAccessToken(githubAccessTokenServiceModel);
         userService.update(userServiceModel);
     }
 
 
+    @Override
+    protected Class<GithubAccessTokenServiceModel> getInputClass() {
+        return GithubAccessTokenServiceModel.class;
+    }
+
+    @Override
+    protected Class<GithubAccessTokenResponseModel> getOutputClass() {
+        return GithubAccessTokenResponseModel.class;
+    }
 }

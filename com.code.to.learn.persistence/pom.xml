@@ -12,11 +12,15 @@
 	<properties>
 		<hibernate.version>5.4.10.Final</hibernate.version>
 		<postgres.version>42.2.9</postgres.version>
-		<model.mapper.version>2.3.5</model.mapper.version>
 		<reflections.version>0.9.12</reflections.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.learn.to.code</groupId>
+			<artifactId>com.code.to.learn.util</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -28,15 +32,11 @@
 			<version>${postgres.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>${model.mapper.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 			<version>${reflections.version}</version>
 		</dependency>
+
 
 	</dependencies>
 

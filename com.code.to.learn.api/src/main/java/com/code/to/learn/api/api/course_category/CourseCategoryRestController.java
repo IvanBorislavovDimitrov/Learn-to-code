@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/course-categories")
+@RequestMapping(value = "/course-categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseCategoryRestController {
 
     private final CourseCategoryServiceApi courseCategoryServiceApi;
@@ -23,7 +23,7 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add")
     public ResponseEntity<CourseCategoryResponseModel> add(@RequestBody @Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
     }

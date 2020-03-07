@@ -99,6 +99,10 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
         }
     }
 
+    protected String buildContainsExpression(String value) {
+        return "%" + value + "%";
+    }
+
     private Optional<?> getSingleResult(Session session, CriteriaQuery<?> criteriaQuery) {
         return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
     }

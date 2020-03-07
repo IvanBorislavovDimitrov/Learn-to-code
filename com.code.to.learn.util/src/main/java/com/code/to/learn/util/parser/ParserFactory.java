@@ -1,6 +1,6 @@
-package com.code.to.learn.core.parser;
+package com.code.to.learn.util.parser;
 
-import com.code.to.learn.core.parser.exception.InvalidParserTypeException;
+import com.code.to.learn.util.parser.exception.InvalidParserTypeException;
 
 public final class ParserFactory {
 

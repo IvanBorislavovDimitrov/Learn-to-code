@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -27,7 +28,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public void registerUser(UserServiceModel userServiceModel) {
-        User user = modelMapper.map(userServiceModel, User.class);
+        User user = toInput(userServiceModel);
         updateRolesForUser(user);
         userDao.persist(user);
     }
@@ -53,13 +54,19 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
         if (!user.isPresent()) {
             return Optional.empty();
         }
-        UserServiceModel userServiceModel = modelMapper.map(user.get(), UserServiceModel.class);
+        UserServiceModel userServiceModel = toOutput(user.get());
         return Optional.of(userServiceModel);
     }
 
     @Override
     public long findUsersCount() {
         return userDao.count();
+    }
+
+    @Override
+    public List<UserServiceModel> findUsersByUsernameContaining(String username) {
+        List<User> users = userDao.findUsersByUsernameContaining(username);
+        return toOutput(users);
     }
 
     @Override

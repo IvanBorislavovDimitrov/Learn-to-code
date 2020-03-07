@@ -26,6 +26,7 @@
         <module>com.code.to.learn.api</module>
         <module>com.code.to.learn.persistence</module>
         <module>com.code.to.learn.core</module>
+        <module>com.code.to.learn.util</module>
     </modules>
 
     <build>

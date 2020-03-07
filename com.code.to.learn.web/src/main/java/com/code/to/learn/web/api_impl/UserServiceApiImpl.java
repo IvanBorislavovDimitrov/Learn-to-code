@@ -11,6 +11,7 @@ import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.util.mapper.ExtendableMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceApiImpl implements UserServiceApi {
+public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserResponseModel> implements UserServiceApi {
 
-    private final ModelMapper modelMapper;
     private final UserValidator userValidator;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -35,7 +35,7 @@ public class UserServiceApiImpl implements UserServiceApi {
 
     @Autowired
     public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService, PasswordEncoder passwordEncoder, RoleService roleService) {
-        this.modelMapper = modelMapper;
+        super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -61,13 +61,19 @@ public class UserServiceApiImpl implements UserServiceApi {
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);
-        UserResponseModel userResponseModel = modelMapper.map(userServiceModel, UserResponseModel.class);
+        UserResponseModel userResponseModel = toOutput(userServiceModel);
         return ResponseEntity.ok(userResponseModel);
+    }
+
+    @Override
+    public ResponseEntity<List<UserResponseModel>> findUsersByUsernameContaining(String username) {
+        List<UserServiceModel> userServiceModels = userService.findUsersByUsernameContaining(username);
+        return ResponseEntity.ok(toOutput(userServiceModels));
     }
 
     public List<UserResponseModel> findUsers() {
         return userService.findAll().stream()
-                .map(userServiceModel -> modelMapper.map(userServiceModel, UserResponseModel.class))
+                .map(this::toOutput)
                 .collect(Collectors.toList());
     }
 
@@ -76,12 +82,12 @@ public class UserServiceApiImpl implements UserServiceApi {
         if (!optionalUserServiceModel.isPresent()) {
             throw new NotFoundException(Messages.USER_NOT_FOUND, username);
         }
-        return modelMapper.map(optionalUserServiceModel.get(), UserResponseModel.class);
+        return toOutput(optionalUserServiceModel.get());
     }
 
     private UserServiceModel toUserServiceModelWithEncodedPassword(UserBindingModel userBindingModel) {
         UserBindingModel encodedPasswordUserBindingModel = getUserBindingModelWithEncodedPassword(userBindingModel);
-        return modelMapper.map(encodedPasswordUserBindingModel, UserServiceModel.class);
+        return getMapper().map(encodedPasswordUserBindingModel, UserServiceModel.class);
     }
 
     private UserBindingModel getUserBindingModelWithEncodedPassword(UserBindingModel userBindingModel) {
@@ -112,4 +118,13 @@ public class UserServiceApiImpl implements UserServiceApi {
         userServiceModel.setBirthDate(birthDate);
     }
 
+    @Override
+    protected Class<UserServiceModel> getInputClass() {
+        return UserServiceModel.class;
+    }
+
+    @Override
+    protected Class<UserResponseModel> getOutputClass() {
+        return UserResponseModel.class;
+    }
 }

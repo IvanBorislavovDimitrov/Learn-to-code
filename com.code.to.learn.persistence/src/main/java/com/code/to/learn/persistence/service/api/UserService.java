@@ -1,5 +1,6 @@
 package com.code.to.learn.persistence.service.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
@@ -17,4 +18,6 @@ public interface UserService extends GenericService<UserServiceModel> {
     Optional<UserServiceModel> findByUsername(String username);
 
     long findUsersCount();
+
+    List<UserServiceModel> findUsersByUsernameContaining(String username);
 }

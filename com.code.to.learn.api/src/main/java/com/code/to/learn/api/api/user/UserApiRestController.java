@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserApiRestController {
 
     private final UserServiceApi userServiceApi;
@@ -25,8 +25,7 @@ public class UserApiRestController {
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(value = "/register",
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register")
     public ResponseEntity<UserResponseModel> register(@RequestBody @Valid UserBindingModel userBindingModel) {
         return userServiceApi.register(userBindingModel);
     }
@@ -42,15 +41,20 @@ public class UserApiRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping()
     public ResponseEntity<List<UserResponseModel>> getAllUsers() {
         return userServiceApi.findAllUsers();
     }
 
-    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/user")
     public ResponseEntity<UserResponseModel> getLoggedInUser() {
         String username = usernameGetter.getLoggedInUserUsername();
         return userServiceApi.findUser(username);
+    }
+
+    @GetMapping(value = "/filter/username")
+    public ResponseEntity<List<UserResponseModel>> getUsersContaining(@RequestParam String username) {
+        return userServiceApi.findUsersByUsernameContaining(username);
     }
 
 }
