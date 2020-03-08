@@ -47,25 +47,25 @@ public class Course extends GenericEntity<Course> {
     @Lob
     private String description;
 
-    @ManyToOne(targetEntity = CourseCategory.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(targetEntity = CourseCategory.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private CourseCategory category;
 
-    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinTable(name = "attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "attendant_id", referencedColumnName = "id"))
     private List<User> attendants = new ArrayList<>();
 
-    @ManyToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher;
 
-    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinTable(name = "future_attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "future_attendants_id", referencedColumnName = "id"))
     private List<User> futureAttendants = new ArrayList<>();
 
-    @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
+    @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course")
     private List<Homework> homework = new ArrayList<>();
 
     public String getName() {

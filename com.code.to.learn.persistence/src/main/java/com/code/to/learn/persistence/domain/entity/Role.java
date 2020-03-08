@@ -16,11 +16,7 @@ public class Role extends GenericEntity<Role> {
     @Column(name = NAME, nullable = false, unique = true)
     private UserRole name;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class, cascade = {
-            CascadeType.PERSIST,
-    })
-    @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.EAGER, mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 
     public UserRole getName() {

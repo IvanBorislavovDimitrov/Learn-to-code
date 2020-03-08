@@ -43,22 +43,22 @@ public class User extends GenericEntity<User> implements UserDetails {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
     private GithubAccessToken githubAccessToken;
 
-    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Course.class)
+    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, targetEntity = Course.class)
     private List<Course> courses = new ArrayList<>();
 
-    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "teacher")
+    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, mappedBy = "teacher")
     private List<Course> coursesThatTeaches = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.MERGE, targetEntity = Course.class, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "futureAttendants", targetEntity = Course.class, fetch = FetchType.LAZY)
     private List<Course> coursesInCart = new ArrayList<>();
 
-    @ManyToMany(targetEntity = Role.class, cascade = {
-            CascadeType.PERSIST,
-    }, fetch = FetchType.EAGER, mappedBy = "users")
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
 
     public String getFirstName() {
