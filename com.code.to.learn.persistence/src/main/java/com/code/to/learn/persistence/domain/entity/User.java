@@ -43,7 +43,7 @@ public class User extends GenericEntity<User> implements UserDetails {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
     private GithubAccessToken githubAccessToken;
 

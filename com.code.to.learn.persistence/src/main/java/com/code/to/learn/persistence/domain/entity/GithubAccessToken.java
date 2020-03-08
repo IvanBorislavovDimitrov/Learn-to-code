@@ -19,7 +19,7 @@ public class GithubAccessToken extends GenericEntity<GithubAccessToken> {
     @Column(name = TOKEN_TYPE)
     private String tokenType;
 
-    @OneToOne(mappedBy = "githubAccessToken", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "githubAccessToken", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User accessTokenOwner;
 
     public String getAccessToken() {
