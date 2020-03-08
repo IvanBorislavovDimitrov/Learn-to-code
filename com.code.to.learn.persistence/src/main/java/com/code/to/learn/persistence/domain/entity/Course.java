@@ -5,11 +5,12 @@ import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "courses")
-public class Course extends IdEntity {
+public class Course extends GenericEntity<Course> {
 
     private static final String NAME = "name";
     private static final String START_DATE = "start_date";
@@ -53,7 +54,7 @@ public class Course extends IdEntity {
     @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "attendant_id", referencedColumnName = "id"))
-    private List<User> attendants;
+    private List<User> attendants = new ArrayList<>();
 
     @ManyToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id", nullable = false)
@@ -62,10 +63,10 @@ public class Course extends IdEntity {
     @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "future_attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "future_attendants_id", referencedColumnName = "id"))
-    private List<User> futureAttendants;
+    private List<User> futureAttendants = new ArrayList<>();
 
     @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
-    private List<Homework> homework;
+    private List<Homework> homework = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -169,5 +170,23 @@ public class Course extends IdEntity {
 
     public void setHomework(List<Homework> homework) {
         this.homework = homework;
+    }
+
+    @Override
+    public Course merge(Course course) {
+        setName(course.getName());
+        setStartDate(course.getStartDate());
+        setEndDate(course.getEndDate());
+        setDurationInWeeks(course.getDurationInWeeks());
+        setCredits(course.getCredits());
+        setFormOfEducation(course.getFormOfEducation());
+        setPrice(course.getPrice());
+        setDescription(course.getDescription());
+        setCategory(course.getCategory());
+        setAttendants(course.getAttendants());
+        setTeacher(course.getTeacher());
+        setFutureAttendants(course.getFutureAttendants());
+        setHomework(course.getHomework());
+        return this;
     }
 }

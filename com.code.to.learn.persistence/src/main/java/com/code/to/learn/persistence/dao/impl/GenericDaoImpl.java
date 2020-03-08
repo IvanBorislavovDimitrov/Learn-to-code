@@ -1,7 +1,7 @@
 package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
-import com.code.to.learn.persistence.domain.entity.IdEntity;
+import com.code.to.learn.persistence.domain.entity.GenericEntity;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E> {
+public abstract class GenericDaoImpl<E extends GenericEntity> implements GenericDao<E> {
 
     protected final SessionFactory sessionFactory;
 
@@ -35,12 +35,13 @@ public abstract class GenericDaoImpl<E extends IdEntity> implements GenericDao<E
 
     @Override
     public Optional<E> findById(String id) {
-        return findByField(IdEntity.ID, id);
+        return findByField(GenericEntity.ID, id);
     }
 
     @Override
     public void persist(E entity) {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).persist(entity);
+        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory)
+                .persist(entity);
     }
 
     @Override

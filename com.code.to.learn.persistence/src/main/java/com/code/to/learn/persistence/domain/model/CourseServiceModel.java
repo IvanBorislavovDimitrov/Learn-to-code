@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CourseServiceModel extends IdServiceModel {
+public class CourseServiceModel extends GenericServiceModel {
 
     private String name;
     private LocalDate startDate;

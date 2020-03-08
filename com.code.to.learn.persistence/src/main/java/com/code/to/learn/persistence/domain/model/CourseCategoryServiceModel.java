@@ -2,7 +2,7 @@ package com.code.to.learn.persistence.domain.model;
 
 import java.util.List;
 
-public class CourseCategoryServiceModel extends IdServiceModel {
+public class CourseCategoryServiceModel extends GenericServiceModel {
 
     private String name;
     private List<CourseServiceModel> courses;

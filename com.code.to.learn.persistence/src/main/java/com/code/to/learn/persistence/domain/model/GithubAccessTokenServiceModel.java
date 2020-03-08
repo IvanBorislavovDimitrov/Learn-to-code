@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.domain.model;
 
-public class GithubAccessTokenServiceModel extends IdServiceModel {
+public class GithubAccessTokenServiceModel extends GenericServiceModel {
 
     private String accessToken;
     private String scope;

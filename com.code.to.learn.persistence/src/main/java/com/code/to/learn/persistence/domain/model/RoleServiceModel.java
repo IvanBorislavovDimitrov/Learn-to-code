@@ -2,7 +2,7 @@ package com.code.to.learn.persistence.domain.model;
 
 import java.util.List;
 
-public class RoleServiceModel extends IdServiceModel {
+public class RoleServiceModel extends GenericServiceModel {
 
     private String name;
     private List<UserServiceModel> users;

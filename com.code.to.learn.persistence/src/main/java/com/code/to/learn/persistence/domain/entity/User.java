@@ -6,13 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User extends IdEntity implements UserDetails {
+public class User extends GenericEntity<User> implements UserDetails {
 
     public static final String USERNAME = "username";
     public static final String EMAIL = "email";
@@ -42,21 +43,23 @@ public class User extends IdEntity implements UserDetails {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
     private GithubAccessToken githubAccessToken;
 
     @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, cascade = CascadeType.MERGE, targetEntity = Course.class)
-    private List<Course> courses;
+    private List<Course> courses = new ArrayList<>();
 
     @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "teacher")
-    private List<Course> coursesThatTeaches;
+    private List<Course> coursesThatTeaches = new ArrayList<>();
 
     @ManyToMany(mappedBy = "futureAttendants", cascade = CascadeType.MERGE, targetEntity = Course.class, fetch = FetchType.LAZY)
-    private List<Course> coursesInCart;
+    private List<Course> coursesInCart = new ArrayList<>();
 
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "users")
-    private List<Role> roles;
+    @ManyToMany(targetEntity = Role.class, cascade = {
+            CascadeType.PERSIST,
+    }, fetch = FetchType.EAGER, mappedBy = "users")
+    private List<Role> roles = new ArrayList<>();
 
     public String getFirstName() {
         return firstName;
@@ -153,6 +156,10 @@ public class User extends IdEntity implements UserDetails {
         return coursesThatTeaches;
     }
 
+    public void setCoursesThatTeaches(List<Course> coursesThatTeaches) {
+        this.coursesThatTeaches = coursesThatTeaches;
+    }
+
     public LocalDate getBirthDate() {
         return birthDate;
     }
@@ -175,5 +182,20 @@ public class User extends IdEntity implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public User merge(User user) {
+        setUsername(user.getUsername());
+        setPhoneNumber(user.getPhoneNumber());
+        setPassword(user.getPassword());
+        setEmail(user.getEmail());
+        setBirthDate(user.getBirthDate());
+        setGithubAccessToken(user.getGithubAccessToken());
+        setCourses(user.getCourses());
+        setCoursesThatTeaches(user.getCoursesThatTeaches());
+        setCoursesInCart(user.getCoursesInCart());
+        setRoles(user.getRoles());
+        return this;
     }
 }

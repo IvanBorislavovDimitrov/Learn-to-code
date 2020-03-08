@@ -1,17 +1,18 @@
 package com.code.to.learn.persistence.service.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
-import com.code.to.learn.persistence.domain.entity.IdEntity;
-import com.code.to.learn.persistence.domain.model.IdServiceModel;
+import com.code.to.learn.persistence.domain.entity.GenericEntity;
+import com.code.to.learn.persistence.domain.model.GenericServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
 import com.code.to.learn.persistence.service.api.GenericService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class GenericServiceImpl<E extends IdEntity, M extends IdServiceModel> extends ExtendableMapper<E, M> implements GenericService<M> {
+public abstract class GenericServiceImpl<E extends GenericEntity<E>, M extends GenericServiceModel> extends ExtendableMapper<E, M> implements GenericService<M> {
 
     protected final ModelMapper modelMapper;
     private final GenericDao<E> genericDao;
@@ -54,9 +55,13 @@ public abstract class GenericServiceImpl<E extends IdEntity, M extends IdService
 
     @Override
     public M update(M model) {
-        E entity = modelMapper.map(model, getEntityClass());
-        return modelMapper.map(genericDao.merge(entity).orElseThrow(() -> new IdNotFoundException(entity.getId())),
-                getModelClass());
+        Optional<E> entity = genericDao.findById(model.getId());
+        if (!entity.isPresent()) {
+            throw new IdNotFoundException(model.getId());
+        }
+        E mappedEntity = toInput(model);
+        E updatedEntity = entity.get().merge(mappedEntity);
+        return toOutput(genericDao.update(updatedEntity).get());
     }
 
     @Override

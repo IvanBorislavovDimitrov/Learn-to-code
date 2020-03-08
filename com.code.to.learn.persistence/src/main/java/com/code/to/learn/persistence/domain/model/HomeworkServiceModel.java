@@ -1,6 +1,6 @@
 package com.code.to.learn.persistence.domain.model;
 
-public class HomeworkServiceModel extends IdServiceModel {
+public class HomeworkServiceModel extends GenericServiceModel {
 
     private String name;
     private CourseServiceModel course;

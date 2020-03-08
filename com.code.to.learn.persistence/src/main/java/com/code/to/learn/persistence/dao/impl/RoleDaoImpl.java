@@ -35,7 +35,6 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
         }
     }
 
-
     @Override
     protected Class<Role> getDomainClassType() {
         return Role.class;

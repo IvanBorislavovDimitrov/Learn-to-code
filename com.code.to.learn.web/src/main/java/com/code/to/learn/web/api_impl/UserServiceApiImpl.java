@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -71,18 +72,43 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
         return ResponseEntity.ok(toOutput(userServiceModels));
     }
 
-    public List<UserResponseModel> findUsers() {
+    @Override
+    public ResponseEntity<UserResponseModel> changeUserRoles(String username, List<String> roles) {
+        UserServiceModel userServiceModel = getByUsername(username);
+        userServiceModel.setRoles(toRoleServiceModels(roles));
+        UserServiceModel updatedUserServiceModel = userService.update(userServiceModel);
+        return ResponseEntity.ok(toOutput(updatedUserServiceModel));
+    }
+
+    private List<UserResponseModel> findUsers() {
         return userService.findAll().stream()
                 .map(this::toOutput)
                 .collect(Collectors.toList());
     }
 
-    public UserResponseModel findByUsername(String username) {
+    private UserResponseModel findByUsername(String username) {
+        UserServiceModel userServiceModel = getByUsername(username);
+        return toOutput(userServiceModel);
+    }
+
+    private UserServiceModel getByUsername(String username) {
         Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(username);
         if (!optionalUserServiceModel.isPresent()) {
             throw new NotFoundException(Messages.USER_NOT_FOUND, username);
         }
-        return toOutput(optionalUserServiceModel.get());
+        return optionalUserServiceModel.get();
+    }
+
+    private List<RoleServiceModel> toRoleServiceModels(List<String> roles) {
+        List<RoleServiceModel> roleServiceModels = new ArrayList<>();
+        for (String role : roles) {
+            Optional<RoleServiceModel> optionalRoleServiceModel = roleService.findByName(role);
+            if (!optionalRoleServiceModel.isPresent()) {
+                continue;
+            }
+            roleServiceModels.add(optionalRoleServiceModel.get());
+        }
+        return roleServiceModels;
     }
 
     private UserServiceModel toUserServiceModelWithEncodedPassword(UserBindingModel userBindingModel) {
@@ -103,11 +129,9 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
         long usersCount = userService.findUsersCount();
         if (usersCount == 0) {
             List<RoleServiceModel> roles = roleService.findAll();
-            roles.forEach(role -> role.getUsers().add(userServiceModel));
             userServiceModel.setRoles(roles);
         } else {
             RoleServiceModel roleServiceModel = roleService.findByName(UserRole.USER.toString()).get();
-            roleServiceModel.getUsers().add(userServiceModel);
             userServiceModel.setRoles(Collections.singletonList(roleServiceModel));
         }
     }

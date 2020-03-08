@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "homework")
-public class Homework extends IdEntity {
+public class Homework extends GenericEntity<Homework> {
 
     private static final String NAME = "name";
 
@@ -29,5 +29,12 @@ public class Homework extends IdEntity {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @Override
+    public Homework merge(Homework homework) {
+        setName(homework.getName());
+        setCourse(homework.getCourse());
+        return this;
     }
 }

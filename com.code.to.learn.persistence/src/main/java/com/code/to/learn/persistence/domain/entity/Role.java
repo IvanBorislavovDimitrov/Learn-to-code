@@ -3,22 +3,25 @@ package com.code.to.learn.persistence.domain.entity;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "roles")
-public class Role extends IdEntity {
+public class Role extends GenericEntity<Role> {
 
     public static final String NAME = "name";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = NAME, nullable = false)
+    @Column(name = NAME, nullable = false, unique = true)
     private UserRole name;
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = User.class, cascade = {
+            CascadeType.PERSIST,
+    })
     @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public UserRole getName() {
         return name;
@@ -39,5 +42,12 @@ public class Role extends IdEntity {
     @Override
     public String toString() {
         return name.toString();
+    }
+
+    @Override
+    public Role merge(Role role) {
+        setName(role.getName());
+        setUsers(role.getUsers());
+        return this;
     }
 }

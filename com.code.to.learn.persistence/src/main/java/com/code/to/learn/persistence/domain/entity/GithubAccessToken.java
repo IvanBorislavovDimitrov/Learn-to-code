@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "github_access_tokens")
-public class GithubAccessToken extends IdEntity {
+public class GithubAccessToken extends GenericEntity<GithubAccessToken> {
 
     private static final String ACCESS_TOKEN = "access_token";
     private static final String SCOPE = "scope";
@@ -52,5 +52,13 @@ public class GithubAccessToken extends IdEntity {
 
     public void setAccessTokenOwner(User accessTokenOwner) {
         this.accessTokenOwner = accessTokenOwner;
+    }
+
+    @Override
+    public GithubAccessToken merge(GithubAccessToken githubAccessToken) {
+        setAccessToken(githubAccessToken.getAccessToken());
+        setScope(githubAccessToken.getScope());
+        setTokenType(githubAccessToken.getTokenType());
+        return this;
     }
 }
