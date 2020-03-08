@@ -22,7 +22,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-// TODO: Close connection login
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = "com.code.to.learn")
@@ -62,7 +61,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users/logout", "/users/all", "/github/**")
                 .authenticated()
-                .antMatchers("/api/admin/**")
+                .antMatchers("/api/admin/**", "/users/change-roles/**")
                 .hasRole("ADMIN")
                 .and()
                 .formLogin()

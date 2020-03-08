@@ -131,7 +131,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
             List<RoleServiceModel> roles = roleService.findAll();
             userServiceModel.setRoles(roles);
         } else {
-            RoleServiceModel roleServiceModel = roleService.findByName(UserRole.USER.toString()).get();
+            RoleServiceModel roleServiceModel = roleService.findByName(UserRole.ROLE_USER.toString()).get();
             userServiceModel.setRoles(Collections.singletonList(roleServiceModel));
         }
     }

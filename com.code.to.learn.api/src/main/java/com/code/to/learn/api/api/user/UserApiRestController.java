@@ -6,7 +6,6 @@ import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -59,7 +58,6 @@ public class UserApiRestController {
     }
 
     @PutMapping(value = "change-roles/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseModel> changeUserRoles(@PathVariable String username, @RequestParam List<String> roles) {
         return userServiceApi.changeUserRoles(username, roles);
     }
