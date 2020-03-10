@@ -41,7 +41,7 @@ public class UserApiRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<UserResponseModel>> getAllUsers() {
         return userServiceApi.findAllUsers();
     }

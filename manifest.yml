@@ -1,0 +1,12 @@
+  
+---
+applications:
+- name: learn-to-code
+  memory: 2GB
+  disk_quota: 2GB
+  random-route: true
+  path: \com.code.to.learn.web\target\com.code.to.learn.web-0.0.1-SNAPSHOT.war
+  env:
+    SPRING_PROFILES_ACTIVE: cloud,postgresql
+  services:
+  - learn-to-code-database

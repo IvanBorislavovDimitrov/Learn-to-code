@@ -13,9 +13,20 @@
 		<hibernate.version>5.4.10.Final</hibernate.version>
 		<postgres.version>42.2.9</postgres.version>
 		<reflections.version>0.9.12</reflections.version>
+		<spring.cloud.version>2.0.7.RELEASE</spring.cloud.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-spring-service-connector</artifactId>
+			<version>${spring.cloud.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-cloudfoundry-connector</artifactId>
+			<version>${spring.cloud.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.learn.to.code</groupId>
 			<artifactId>com.code.to.learn.util</artifactId>
