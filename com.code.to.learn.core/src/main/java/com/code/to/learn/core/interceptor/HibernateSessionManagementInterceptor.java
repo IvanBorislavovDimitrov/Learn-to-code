@@ -1,4 +1,4 @@
-package com.code.to.learn.persistence.interceptor;
+package com.code.to.learn.core.interceptor;
 
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.SessionFactory;

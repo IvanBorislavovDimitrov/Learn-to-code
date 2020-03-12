@@ -91,7 +91,7 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_DIALECT, applicationConfiguration.getHibernateDialect());
             properties.setProperty(HIBERNATE_CONNECTION_DRIVER_CLASS, "org.postgresql.Driver");
             properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "30");
-            properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "create");
+            properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "update");
             properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, "class");
             properties.setProperty(HIBERNATE_SHOW_SQL, "true");
             properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "20");

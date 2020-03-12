@@ -1,6 +1,6 @@
 package com.code.to.learn.web.config;
 
-import com.code.to.learn.persistence.interceptor.HibernateSessionManagementInterceptor;
+import com.code.to.learn.core.interceptor.HibernateSessionManagementInterceptor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
