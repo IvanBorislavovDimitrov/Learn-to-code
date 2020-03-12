@@ -4,7 +4,7 @@ import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.constant.Constants;
-import com.code.to.learn.core.environment.Environment;
+import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
@@ -42,16 +42,16 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
 
     private final Parser parser;
     private final ResilientHttpClient resilientHttpClient;
-    private final Environment environment;
+    private final ApplicationConfiguration applicationConfiguration;
     private final UserService userService;
 
     @Autowired
     public GithubServiceApiImpl(Parser parser, ResilientHttpClient resilientHttpClient,
-                                ModelMapper modelMapper, Environment environment, UserService userService) {
+                                ModelMapper modelMapper, ApplicationConfiguration applicationConfiguration, UserService userService) {
         super(modelMapper);
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
-        this.environment = environment;
+        this.applicationConfiguration = applicationConfiguration;
         this.userService = userService;
     }
 
@@ -83,7 +83,7 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
     }
 
     private String getUsernameResource() {
-        return environment.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USER_RESOURCE;
+        return applicationConfiguration.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USER_RESOURCE;
     }
 
     private UserServiceModel getRequiredUser(String username) {
@@ -95,7 +95,7 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
     }
 
     private HttpResponse executeAccessTokenRequest(String code) {
-        HttpPost accessTokenRequest = new HttpPost(environment.getGithubAccessTokenUrl());
+        HttpPost accessTokenRequest = new HttpPost(applicationConfiguration.getGithubAccessTokenUrl());
         List<NameValuePair> parameters = getAccessTokenParameters(code);
         setFormEntity(accessTokenRequest, parameters);
         return resilientHttpClient.execute(accessTokenRequest);
@@ -103,8 +103,8 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
 
     private List<NameValuePair> getAccessTokenParameters(String code) {
         List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair(Constants.CLIENT_ID_KEY, environment.getClientIdValue()));
-        parameters.add(new BasicNameValuePair(Constants.CLIENT_SECRET_KEY, environment.getClientSecretValue()));
+        parameters.add(new BasicNameValuePair(Constants.CLIENT_ID_KEY, applicationConfiguration.getClientIdValue()));
+        parameters.add(new BasicNameValuePair(Constants.CLIENT_SECRET_KEY, applicationConfiguration.getClientSecretValue()));
         parameters.add(new BasicNameValuePair(Constants.AUTHENTICATION_CODE, code));
         return parameters;
     }
