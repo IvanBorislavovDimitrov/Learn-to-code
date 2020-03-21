@@ -1,4 +1,4 @@
-package com.code.to.learn.web.client;
+package com.code.to.learn.core.client;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;

@@ -23,6 +23,8 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_DBCP_MIN_IDLE_NAME = "HIBERNATE_DBCP_MIN_IDLE";
     private static final String HIBERNATE_DBCP_MAX_WAIT_MILLIS_NAME = "HIBERNATE_DBCP_MAX_WAIT_MILLIS";
     private static final String HIBERNATE_SESSION_CONTEXT_CLASS_NAME = "HIBERNATE_SESSION_CONTEXT_CLASS";
+    private static final String DROPBOX_CLIENT_IDENTIFIER_NAME = "DROPBOX_CLIENT_IDENTIFIER_NAME";
+    private static final String DROPBOX_ACCESS_TOKEN_NAME = "DROPBOX_ACCESS_TOKEN";
 
     // Variable default values
     private static final String CLIENT_ID_VALUE = "5b2f3c2f8bb2f09aa59d";
@@ -42,7 +44,8 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_DBCP_MIN_IDLE_VALUE = "0";
     private static final String HIBERNATE_DBCP_MAX_WAIT_MILLIS_VALUE = "-1";
     private static final String HIBERNATE_SESSION_CONTEXT_CLASS_VALUE = "org.hibernate.context.internal.ThreadLocalSessionContext";
-
+    private static final String DROPBOX_CLIENT_IDENTIFIER_VALUE = "dropbox/learn-to-code";
+    private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAAGCBG9tH2zJkc2iUIf8pYdekaLvYk2mTY-LWBoEsP6Q5z";
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -110,6 +113,14 @@ public class ApplicationConfiguration {
 
     public String getHibernateSessionContext() {
         return getOrDefault(HIBERNATE_SESSION_CONTEXT_CLASS_NAME, HIBERNATE_SESSION_CONTEXT_CLASS_VALUE);
+    }
+
+    public String getDropboxAccessToken() {
+        return getOrDefault(DROPBOX_ACCESS_TOKEN_NAME, DROPBOX_ACCESS_TOKEN_VALUE);
+    }
+
+    public String getDropboxClientIdentifier() {
+        return getOrDefault(DROPBOX_CLIENT_IDENTIFIER_NAME, DROPBOX_CLIENT_IDENTIFIER_VALUE);
     }
 
     @SuppressWarnings("unchecked")

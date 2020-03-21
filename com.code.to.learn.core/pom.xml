@@ -8,6 +8,10 @@
     </parent>
     <artifactId>com.code.to.learn.core</artifactId>
 
+    <properties>
+        <dropbox.client.version>3.1.3</dropbox.client.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.learn.to.code</groupId>
@@ -23,6 +27,11 @@
             <groupId>com.learn.to.code</groupId>
             <artifactId>com.code.to.learn.util</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dropbox.core</groupId>
+            <artifactId>dropbox-core-sdk</artifactId>
+            <version>${dropbox.client.version}</version>
         </dependency>
     </dependencies>
 </project>

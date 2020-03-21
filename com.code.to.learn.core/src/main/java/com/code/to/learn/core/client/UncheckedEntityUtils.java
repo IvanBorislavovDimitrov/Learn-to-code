@@ -1,4 +1,4 @@
-package com.code.to.learn.web.client;
+package com.code.to.learn.core.client;
 
 import com.code.to.learn.persistence.exception.basic.LCException;
 import org.apache.http.HttpResponse;

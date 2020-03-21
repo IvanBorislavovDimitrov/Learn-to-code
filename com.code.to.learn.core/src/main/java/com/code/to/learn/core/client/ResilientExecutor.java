@@ -1,6 +1,6 @@
-package com.code.to.learn.web.client;
+package com.code.to.learn.core.client;
 
-import com.code.to.learn.web.message.Messages;
+import com.code.to.learn.core.constant.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
