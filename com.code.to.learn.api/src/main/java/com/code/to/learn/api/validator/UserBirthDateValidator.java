@@ -23,7 +23,7 @@ public class UserBirthDateValidator implements ConstraintValidator<NotBefore, St
         if (date == null) {
             return false;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(date, formatter);
         LocalDate notBeforeDate = LocalDate.parse(notBefore);
         return birthDate.compareTo(notBeforeDate) > 0;

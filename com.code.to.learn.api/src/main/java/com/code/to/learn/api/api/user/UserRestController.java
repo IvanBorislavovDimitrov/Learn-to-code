@@ -9,24 +9,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserApiRestController {
+public class UserRestController {
 
     private final UserServiceApi userServiceApi;
     private final UsernameGetter usernameGetter;
 
     @Autowired
-    public UserApiRestController(UserServiceApi userServiceApi, UsernameGetter usernameGetter) {
+    public UserRestController(UserServiceApi userServiceApi, UsernameGetter usernameGetter) {
         this.userServiceApi = userServiceApi;
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<UserResponseModel> register(@RequestBody @Valid UserBindingModel userBindingModel) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         return userServiceApi.register(userBindingModel);
     }
 

@@ -5,10 +5,10 @@ import com.code.to.learn.api.validator.annotation.EmailConstraint;
 import com.code.to.learn.api.validator.annotation.NotBefore;
 import com.code.to.learn.api.validator.annotation.PasswordConstraint;
 import com.code.to.learn.api.validator.annotation.PhoneNumberConstraint;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 public class UserBindingModel {
 
@@ -44,6 +44,8 @@ public class UserBindingModel {
     @NotBefore(date = Constants.NOT_BEFORE_DATE)
     private String birthDate;
 
+    private MultipartFile profilePicture;
+
     public UserBindingModel() {
         // Required by ModelMapper
     }
@@ -57,6 +59,7 @@ public class UserBindingModel {
         setConfirmPassword(userBindingModel.getConfirmPassword());
         setEmail(userBindingModel.getEmail());
         setBirthDate(userBindingModel.getBirthDate());
+        setProfilePicture(userBindingModel.getProfilePicture());
     }
 
     public String getFirstName() {
@@ -121,5 +124,13 @@ public class UserBindingModel {
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public MultipartFile getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(MultipartFile profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
