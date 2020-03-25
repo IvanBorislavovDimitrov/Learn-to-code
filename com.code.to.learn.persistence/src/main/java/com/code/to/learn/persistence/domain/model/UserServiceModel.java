@@ -23,6 +23,7 @@ public class UserServiceModel extends GenericServiceModel implements UserDetails
     private List<CourseServiceModel> coursesThatTeaches;
     private List<CourseServiceModel> coursesInCart;
     private List<RoleServiceModel> roles;
+    private String profilePictureName;
 
     public UserServiceModel() {
         // Required by ModelMapper
@@ -122,6 +123,14 @@ public class UserServiceModel extends GenericServiceModel implements UserDetails
 
     public void setRoles(List<RoleServiceModel> roles) {
         this.roles = roles;
+    }
+
+    public String getProfilePictureName() {
+        return profilePictureName;
+    }
+
+    public void setProfilePictureName(String profilePictureName) {
+        this.profilePictureName = profilePictureName;
     }
 
     @Override

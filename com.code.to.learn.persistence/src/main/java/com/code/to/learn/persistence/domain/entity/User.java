@@ -21,6 +21,7 @@ public class User extends GenericEntity<User> implements UserDetails {
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String PASSWORD = "password";
+    private static final String PROFILE_PICTURE_NAME = "profile_picture_name";
 
     @Column(length = 100, nullable = false, name = FIRST_NAME)
     private String firstName;
@@ -42,6 +43,10 @@ public class User extends GenericEntity<User> implements UserDetails {
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
+
+    @Column(name = PROFILE_PICTURE_NAME)
+    private String profilePictureName;
+
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
@@ -83,6 +88,14 @@ public class User extends GenericEntity<User> implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getProfilePictureName() {
+        return profilePictureName;
+    }
+
+    public void setProfilePictureName(String profilePictureName) {
+        this.profilePictureName = profilePictureName;
     }
 
     @Override

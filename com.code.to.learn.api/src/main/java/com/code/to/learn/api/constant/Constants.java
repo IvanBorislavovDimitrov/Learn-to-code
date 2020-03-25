@@ -11,4 +11,6 @@ public class Constants {
 
     public static final String NOT_BEFORE_DATE = "1900-01-01";
 
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+
 }

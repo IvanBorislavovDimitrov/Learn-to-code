@@ -3,21 +3,29 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.core.dropbox.DropboxClient;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,6 +34,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
+import static com.code.to.learn.web.constants.Constants.PROFILE_PICTURE_EXTENSION;
+
 @Service
 public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserResponseModel> implements UserServiceApi {
 
@@ -33,14 +44,17 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final DropboxClient dropboxClient;
 
     @Autowired
-    public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
+                              PasswordEncoder passwordEncoder, RoleService roleService, DropboxClient dropboxClient) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.dropboxClient = dropboxClient;
     }
 
     @Override
@@ -58,12 +72,35 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     @Override
     public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
-        UserServiceModel userServiceModel = toUserServiceModelWithEncodedPassword(userBindingModel);
+        UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
+        uploadUserProfilePicture(userBindingModel.getProfilePicture(), userServiceModel.getProfilePictureName());
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);
         UserResponseModel userResponseModel = toOutput(userServiceModel);
         return ResponseEntity.ok(userResponseModel);
+    }
+
+    private void uploadUserProfilePicture(MultipartFile profilePicture, String profilePictureName) {
+        InputStream inputStream = getInputStream(profilePicture);
+        File file = null;
+        try {
+            file = new File(profilePictureName);
+            FileUtils.copyInputStreamToFile(inputStream, file);
+            dropboxClient.uploadFile(file);
+        } catch (IOException e) {
+            throw new LCException(e.getMessage(), e);
+        } finally {
+            FileUtils.deleteQuietly(file);
+        }
+    }
+
+    private InputStream getInputStream(MultipartFile multipartFile) {
+        try {
+            return multipartFile.getInputStream();
+        } catch (IOException e) {
+            throw new LCException(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -111,9 +148,12 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
         return roleServiceModels;
     }
 
-    private UserServiceModel toUserServiceModelWithEncodedPassword(UserBindingModel userBindingModel) {
+    private UserServiceModel toUserServiceModel(UserBindingModel userBindingModel) {
         UserBindingModel encodedPasswordUserBindingModel = getUserBindingModelWithEncodedPassword(userBindingModel);
-        return getMapper().map(encodedPasswordUserBindingModel, UserServiceModel.class);
+        UserServiceModel userServiceModel = getMapper().map(encodedPasswordUserBindingModel, UserServiceModel.class);
+        String extension = FilenameUtils.getExtension(userBindingModel.getProfilePicture().getOriginalFilename());
+        userServiceModel.setProfilePictureName(userServiceModel.getUsername() + PROFILE_PICTURE_EXTENSION + "." + extension);
+        return userServiceModel;
     }
 
     private UserBindingModel getUserBindingModelWithEncodedPassword(UserBindingModel userBindingModel) {
@@ -137,7 +177,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     }
 
     private void convertAndSetDateToUser(UserBindingModel userBindingModel, UserServiceModel userServiceModel) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
         LocalDate birthDate = LocalDate.parse(userBindingModel.getBirthDate(), formatter);
         userServiceModel.setBirthDate(birthDate);
     }

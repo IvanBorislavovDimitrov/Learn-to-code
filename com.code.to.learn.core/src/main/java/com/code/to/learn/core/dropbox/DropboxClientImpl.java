@@ -6,6 +6,7 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.users.FullAccount;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +33,9 @@ public class DropboxClientImpl implements DropboxClient {
 
     @Override
     public FileMetadata uploadFile(File file) {
-        String filename = file.getAbsolutePath();
-        try (InputStream inputStream = new FileInputStream(filename)) {
+        String absoluteFilePath = file.getAbsolutePath();
+        String filename = FilenameUtils.getName(absoluteFilePath);
+        try (InputStream inputStream = new FileInputStream(absoluteFilePath)) {
             return client.files().uploadBuilder(insertFrontSlash(filename))
                     .uploadAndFinish(inputStream);
         } catch (IOException | DbxException e) {
