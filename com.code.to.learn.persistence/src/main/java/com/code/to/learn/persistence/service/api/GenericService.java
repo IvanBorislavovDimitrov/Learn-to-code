@@ -2,9 +2,9 @@ package com.code.to.learn.persistence.service.api;
 
 import java.util.List;
 
-import com.code.to.learn.persistence.domain.model.GenericServiceModel;
+import com.code.to.learn.persistence.domain.model.IdServiceModel;
 
-public interface GenericService<M extends GenericServiceModel> {
+public interface GenericService<M extends IdServiceModel> {
 
     List<M> findAll();
 

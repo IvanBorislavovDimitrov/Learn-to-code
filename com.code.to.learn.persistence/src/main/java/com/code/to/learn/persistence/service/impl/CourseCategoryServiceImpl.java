@@ -8,24 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-// TODO: Refactor -> Classes that have a name should extend a common predecessor
 @Service
-public class CourseCategoryServiceImpl extends GenericServiceImpl<CourseCategory, CourseCategoryServiceModel> implements CourseCategoryService {
-
-    private final CourseCategoryDao courseCategoryDao;
+public class CourseCategoryServiceImpl extends NamedElementServiceImpl<CourseCategory, CourseCategoryServiceModel> implements CourseCategoryService {
 
     @Autowired
     protected CourseCategoryServiceImpl(CourseCategoryDao courseCategoryDao, ModelMapper modelMapper) {
         super(courseCategoryDao, modelMapper);
-        this.courseCategoryDao = courseCategoryDao;
-    }
-
-    @Override
-    public Optional<CourseCategoryServiceModel> findByName(String courseCategoryName) {
-        Optional<CourseCategory> optionalCourseCategory = courseCategoryDao.findByName(courseCategoryName);
-        return optionalCourseCategory.map(this::toOutput);
     }
 
     @Override

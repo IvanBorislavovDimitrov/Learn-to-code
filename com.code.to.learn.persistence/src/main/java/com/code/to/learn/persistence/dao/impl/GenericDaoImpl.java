@@ -1,7 +1,7 @@
 package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
-import com.code.to.learn.persistence.domain.entity.GenericEntity;
+import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GenericDaoImpl<E extends GenericEntity<E>> implements GenericDao<E> {
+public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDao<E> {
 
     protected final SessionFactory sessionFactory;
 
@@ -35,7 +35,7 @@ public abstract class GenericDaoImpl<E extends GenericEntity<E>> implements Gene
 
     @Override
     public Optional<E> findById(String id) {
-        return findByField(GenericEntity.ID, id);
+        return findByField(IdEntity.ID, id);
     }
 
     @Override
@@ -82,8 +82,8 @@ public abstract class GenericDaoImpl<E extends GenericEntity<E>> implements Gene
         return ((Optional<Long>) getOrEmpty(session, criteriaQuery)).get();
     }
 
-
-    protected Optional<E> findByField(String field, Object value) {
+    @Override
+    public Optional<E> findByField(String field, Object value) {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());

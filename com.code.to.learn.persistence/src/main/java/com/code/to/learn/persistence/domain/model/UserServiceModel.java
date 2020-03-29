@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserServiceModel extends GenericServiceModel implements UserDetails {
+public class UserServiceModel extends IdServiceModel implements UserDetails {
 
     private String firstName;
     private String lastName;

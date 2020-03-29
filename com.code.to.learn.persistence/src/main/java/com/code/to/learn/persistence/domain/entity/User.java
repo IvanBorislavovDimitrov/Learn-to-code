@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User extends GenericEntity<User> implements UserDetails {
+public class User extends IdEntity<User> implements UserDetails {
 
     public static final String USERNAME = "username";
     public static final String EMAIL = "email";
@@ -48,7 +48,7 @@ public class User extends GenericEntity<User> implements UserDetails {
     private String profilePictureName;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
+    @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
 
     @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, targetEntity = Course.class)

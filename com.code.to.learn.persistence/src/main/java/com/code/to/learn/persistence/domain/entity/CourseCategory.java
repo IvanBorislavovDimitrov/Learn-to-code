@@ -1,5 +1,7 @@
 package com.code.to.learn.persistence.domain.entity;
 
+import com.code.to.learn.persistence.domain.generic.NamedElement;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -9,16 +11,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "course_categories")
-public class CourseCategory extends GenericEntity<CourseCategory> {
+public class CourseCategory extends IdEntity<CourseCategory> implements NamedElement {
 
-    public static final String NAME = "name";
-
-    @Column(name = NAME, nullable = false)
+    @Column(name = NAME, nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Course> courses = new ArrayList<>();
 
+    @Override
     public String getName() {
         return name;
     }

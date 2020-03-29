@@ -1,11 +1,11 @@
 package com.code.to.learn.persistence.dao.api;
 
-import com.code.to.learn.persistence.domain.entity.GenericEntity;
+import com.code.to.learn.persistence.domain.entity.IdEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface GenericDao<E extends GenericEntity<E>> {
+public interface GenericDao<E extends IdEntity<E>> {
 
     List<E> findAll();
 
@@ -20,6 +20,8 @@ public interface GenericDao<E extends GenericEntity<E>> {
     Optional<E> update(E entity);
 
     Optional<E> merge(E entity);
+
+    Optional<E> findByField(String fieldName, Object value);
 
     long count();
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-public class Role extends GenericEntity<Role> {
+public class Role extends IdEntity<Role> {
 
     public static final String NAME = "name";
 

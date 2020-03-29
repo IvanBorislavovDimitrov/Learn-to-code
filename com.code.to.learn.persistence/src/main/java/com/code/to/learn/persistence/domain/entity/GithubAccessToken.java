@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "github_access_tokens")
-public class GithubAccessToken extends GenericEntity<GithubAccessToken> {
+public class GithubAccessToken extends IdEntity<GithubAccessToken> {
 
     private static final String ACCESS_TOKEN = "access_token";
     private static final String SCOPE = "scope";

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CourseServiceImpl extends GenericServiceImpl<Course, CourseServiceModel> implements CourseService {
+public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseServiceModel> implements CourseService {
 
     private final CourseDao courseDao;
 

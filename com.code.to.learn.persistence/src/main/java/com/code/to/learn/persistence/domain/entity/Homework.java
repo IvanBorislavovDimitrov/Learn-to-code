@@ -1,12 +1,12 @@
 package com.code.to.learn.persistence.domain.entity;
 
+import com.code.to.learn.persistence.domain.generic.NamedElement;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "homework")
-public class Homework extends GenericEntity<Homework> {
-
-    private static final String NAME = "name";
+public class Homework extends IdEntity<Homework> implements NamedElement {
 
     @Column(name = NAME, nullable = false)
     private String name;
@@ -15,6 +15,7 @@ public class Homework extends GenericEntity<Homework> {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @Override
     public String getName() {
         return name;
     }

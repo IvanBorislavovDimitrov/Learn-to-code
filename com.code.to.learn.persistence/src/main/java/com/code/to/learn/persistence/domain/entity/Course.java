@@ -1,5 +1,6 @@
 package com.code.to.learn.persistence.domain.entity;
 
+import com.code.to.learn.persistence.domain.generic.NamedElement;
 import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
 
 import javax.persistence.*;
@@ -10,9 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "courses")
-public class Course extends GenericEntity<Course> {
+public class Course extends IdEntity<Course> implements NamedElement {
 
-    public static final String NAME = "name";
     private static final String START_DATE = "start_date";
     private static final String END_DATE = "end_date";
     private static final String DURATION_IN_WEEKS = "duration_in_weeks";
@@ -72,6 +72,7 @@ public class Course extends GenericEntity<Course> {
     @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<Homework> homework = new ArrayList<>();
 
+    @Override
     public String getName() {
         return name;
     }

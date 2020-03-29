@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class GenericEntity<T extends GenericEntity<T>> {
+public abstract class IdEntity<T extends IdEntity<T>> {
 
     public static final String ID = "id";
 

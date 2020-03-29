@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HomeworkServiceImpl extends GenericServiceImpl<Homework, HomeworkServiceModel> implements HomeworkService {
+public class HomeworkServiceImpl extends NamedElementServiceImpl<Homework, HomeworkServiceModel> implements HomeworkService {
 
     @Autowired
     public HomeworkServiceImpl(HomeworkDao homeworkDao, ModelMapper modelMapper) {

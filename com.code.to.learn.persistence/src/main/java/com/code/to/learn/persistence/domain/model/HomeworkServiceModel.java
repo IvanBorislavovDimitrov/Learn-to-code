@@ -1,10 +1,13 @@
 package com.code.to.learn.persistence.domain.model;
 
-public class HomeworkServiceModel extends GenericServiceModel {
+import com.code.to.learn.persistence.domain.generic.NamedElement;
+
+public class HomeworkServiceModel extends IdServiceModel implements NamedElement {
 
     private String name;
     private CourseServiceModel course;
 
+    @Override
     public String getName() {
         return name;
     }

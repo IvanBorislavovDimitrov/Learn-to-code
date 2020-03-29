@@ -1,12 +1,13 @@
 package com.code.to.learn.persistence.domain.model;
 
 import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
+import com.code.to.learn.persistence.domain.generic.NamedElement;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CourseServiceModel extends GenericServiceModel {
+public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     private String name;
     private LocalDate startDate;
@@ -23,6 +24,7 @@ public class CourseServiceModel extends GenericServiceModel {
     private String videoName;
     private CourseCategoryServiceModel courseCategory;
 
+    @Override
     public String getName() {
         return name;
     }
