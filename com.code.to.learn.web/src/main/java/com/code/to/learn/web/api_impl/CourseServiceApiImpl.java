@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
@@ -80,6 +81,11 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         }
         courseServiceModel.setCourseCategory(courseCategoryServiceModel.get());
         return courseServiceModel;
+    }
+
+    @Override
+    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count) {
+        return ResponseEntity.ok(toOutput(courseService.findLatestCourses(count)));
     }
 
     @Override

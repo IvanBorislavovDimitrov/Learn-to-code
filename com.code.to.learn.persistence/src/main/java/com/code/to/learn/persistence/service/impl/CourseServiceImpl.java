@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseServiceModel> implements CourseService {
 
@@ -22,6 +24,11 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     @Override
     public boolean isNameTaken(String courseName) {
         return courseDao.findByName(courseName).isPresent();
+    }
+
+    @Override
+    public List<CourseServiceModel> findLatestCourses(int count) {
+        return toOutput(courseDao.findLatestCourses(count));
     }
 
     @Override

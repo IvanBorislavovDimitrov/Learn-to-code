@@ -13,7 +13,7 @@ public class Role extends IdEntity<Role> {
     public static final String NAME = "name";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = NAME, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private UserRole name;
 
     @ManyToMany(targetEntity = User.class, fetch = FetchType.EAGER, mappedBy = "roles")

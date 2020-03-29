@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "course_categories")
 public class CourseCategory extends IdEntity<CourseCategory> implements NamedElement {
 
-    @Column(name = NAME, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category")

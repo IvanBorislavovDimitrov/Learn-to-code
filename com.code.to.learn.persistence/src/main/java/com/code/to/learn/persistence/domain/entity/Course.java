@@ -13,46 +13,38 @@ import java.util.List;
 @Table(name = "courses")
 public class Course extends IdEntity<Course> implements NamedElement {
 
-    private static final String START_DATE = "start_date";
-    private static final String END_DATE = "end_date";
-    private static final String DURATION_IN_WEEKS = "duration_in_weeks";
-    private static final String CREDITS = "credits";
-    private static final String FORM_OF_EDUCATION = "formOfEducation";
-    private static final String PRICE = "price";
-    private static final String DESCRIPTION = "description";
-    private static final String VIDEO_NAME = "video_name";
-    private static final String THUMBNAIL_NAME = "thumbnail_name";
+    public static final String START_DATE = "startDate";
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;
 
-    @Column(name = START_DATE, nullable = false)
+    @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column(name = END_DATE, nullable = false)
+    @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(name = DURATION_IN_WEEKS, nullable = false)
+    @Column(nullable = false)
     private int durationInWeeks;
 
-    @Column(name = CREDITS, nullable = false)
+    @Column(nullable = false)
     private int credits;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = FORM_OF_EDUCATION, nullable = false)
+    @Column(nullable = false)
     private FormOfEducation formOfEducation;
 
-    @Column(name = PRICE, nullable = false)
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(name = DESCRIPTION, nullable = false)
+    @Column(nullable = false)
     @Lob
     private String description;
 
-    @Column(name = VIDEO_NAME, nullable = false)
+    @Column(nullable = false)
     private String videoName;
 
-    @Column(name = THUMBNAIL_NAME, nullable = false)
+    @Column(nullable = false)
     private String thumbnailName;
 
     @ManyToOne(targetEntity = CourseCategory.class, fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)

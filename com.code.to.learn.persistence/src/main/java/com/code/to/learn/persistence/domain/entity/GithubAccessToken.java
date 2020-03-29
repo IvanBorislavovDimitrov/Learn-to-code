@@ -6,17 +6,13 @@ import javax.persistence.*;
 @Table(name = "github_access_tokens")
 public class GithubAccessToken extends IdEntity<GithubAccessToken> {
 
-    private static final String ACCESS_TOKEN = "access_token";
-    private static final String SCOPE = "scope";
-    private static final String TOKEN_TYPE = "token_type";
-
-    @Column(name = ACCESS_TOKEN, nullable = false)
+    @Column(nullable = false, unique = true)
     private String accessToken;
 
-    @Column(name = SCOPE)
+    @Basic
     private String scope;
 
-    @Column(name = TOKEN_TYPE)
+    @Basic
     private String tokenType;
 
     @OneToOne(mappedBy = "githubAccessToken", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

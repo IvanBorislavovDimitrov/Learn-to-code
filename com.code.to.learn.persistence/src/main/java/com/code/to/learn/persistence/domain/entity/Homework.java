@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "homework")
-public class Homework extends IdEntity<Homework> implements NamedElement {
+public class    Homework extends IdEntity<Homework> implements NamedElement {
 
     @Column(name = NAME, nullable = false)
     private String name;

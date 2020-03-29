@@ -18,15 +18,11 @@ public class User extends IdEntity<User> implements UserDetails {
     public static final String USERNAME = "username";
     public static final String EMAIL = "email";
     public static final String PHONE_NUMBER = "phoneNumber";
-    private static final String FIRST_NAME = "firstName";
-    private static final String LAST_NAME = "lastName";
-    private static final String PASSWORD = "password";
-    private static final String PROFILE_PICTURE_NAME = "profile_picture_name";
 
-    @Column(length = 100, nullable = false, name = FIRST_NAME)
+    @Column(length = 100, nullable = false)
     private String firstName;
 
-    @Column(length = 100, nullable = false, name = LAST_NAME)
+    @Column(length = 100, nullable = false)
     private String lastName;
 
     @Column(length = 100, nullable = false, name = USERNAME)
@@ -35,16 +31,16 @@ public class User extends IdEntity<User> implements UserDetails {
     @Column(length = 100, nullable = false, unique = true, name = PHONE_NUMBER)
     private String phoneNumber;
 
-    @Column(length = 100, nullable = false, name = PASSWORD)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(length = 100, nullable = false, name = EMAIL)
     private String email;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = PROFILE_PICTURE_NAME)
+    @Basic
     private String profilePictureName;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
