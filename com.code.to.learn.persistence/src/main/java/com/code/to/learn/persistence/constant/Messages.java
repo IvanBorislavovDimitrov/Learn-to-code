@@ -12,7 +12,7 @@ public final class Messages {
     public static final String NO_GITHUB_ACCESS_TOKEN_FOR_USER = "No github access token for user: \"{0}\" found";
     public static final String ACCESS_TOKEN_FOR_USER_HAS_EXPIRED = "Access token for user with username \"{0}\" has expired";
     public static final String COURSE_NAME_IS_TAKEN = "Course name is taken: {0}";
-    public static final String COURSE_NOT_FOUND = "Course not found: {0}";
+    public static final String CATEGORY_NOT_FOUND = "Category not found: {0}";
 
     private Messages() {
 

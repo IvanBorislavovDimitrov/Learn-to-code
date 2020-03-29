@@ -8,9 +8,7 @@ import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
-import com.code.to.learn.persistence.exception.user.UserException;
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -71,7 +69,7 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         courseServiceModel.setEndDate(LocalDate.parse(courseBindingModel.getEndDate(), formatter));
         Optional<CourseCategoryServiceModel> courseCategoryServiceModel = courseCategoryService.findByName(courseBindingModel.getCategoryName());
         if (!courseCategoryServiceModel.isPresent()) {
-            throw new NotFoundException(Messages.COURSE_NOT_FOUND, courseBindingModel.getName());
+            throw new NotFoundException(Messages.CATEGORY_NOT_FOUND, courseBindingModel.getCategoryName());
         }
         courseServiceModel.setCourseCategory(courseCategoryServiceModel.get());
         return courseServiceModel;

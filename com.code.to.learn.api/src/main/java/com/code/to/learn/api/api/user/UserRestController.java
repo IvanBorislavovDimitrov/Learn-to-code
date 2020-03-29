@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserRestController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
+    public ResponseEntity<UserResponseModel> register(@Valid UserBindingModel userBindingModel) {
         return userServiceApi.register(userBindingModel);
     }
 

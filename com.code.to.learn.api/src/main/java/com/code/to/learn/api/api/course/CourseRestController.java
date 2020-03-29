@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/courses", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseRestController {
@@ -21,7 +23,7 @@ public class CourseRestController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CourseResponseModel> addCourse(CourseBindingModel courseBindingModel) {
+    public ResponseEntity<CourseResponseModel> addCourse(@Valid CourseBindingModel courseBindingModel) {
         return courseServiceApi.addCourse(courseBindingModel);
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategoryServiceModel, CourseCategoryResponseModel> implements CourseCategoryServiceApi {
 
@@ -28,6 +30,12 @@ public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategor
         courseCategoryService.save(courseCategoryServiceModel);
         CourseCategoryResponseModel courseCategoryResponseModel = toOutput(courseCategoryServiceModel);
         return ResponseEntity.ok(courseCategoryResponseModel);
+    }
+
+    @Override
+    public ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories() {
+        List<CourseCategoryServiceModel> categoryServiceModels = courseCategoryService.findAll();
+        return ResponseEntity.ok(toOutput(categoryServiceModels));
     }
 
     @Override
