@@ -3,6 +3,8 @@ package com.code.to.learn.web.util;
 import com.code.to.learn.core.dropbox.DropboxClient;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,11 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 @Component
 public class MultipartFileUploader {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultipartFileUploader.class);
 
     private final DropboxClient dropboxClient;
     private final Executor executor;
@@ -38,6 +43,7 @@ public class MultipartFileUploader {
         File file = null;
         try {
             file = new File(fileToUpload.getFilename());
+            LOGGER.info(MessageFormat.format("Uploading file to Dropbox: {0}", fileToUpload.getFilename()));
             FileUtils.copyInputStreamToFile(inputStream, file);
             dropboxClient.uploadFile(file);
         } catch (IOException e) {
