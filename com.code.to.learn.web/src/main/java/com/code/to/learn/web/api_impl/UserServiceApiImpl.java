@@ -3,7 +3,6 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.core.dropbox.DropboxClient;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
@@ -13,6 +12,7 @@ import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
+import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.MultipartFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -43,7 +43,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
 
     @Autowired
     public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
-                              PasswordEncoder passwordEncoder, RoleService roleService, DropboxClient dropboxClient, MultipartFileUploader multipartFileUploader) {
+                              PasswordEncoder passwordEncoder, RoleService roleService, MultipartFileUploader multipartFileUploader) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
@@ -68,7 +68,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
         UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
-        multipartFileUploader.uploadFile(userBindingModel.getProfilePicture(), userServiceModel.getProfilePictureName());
+        multipartFileUploader.uploadFileAsync(new FileToUpload(userServiceModel.getProfilePictureName(), userBindingModel.getProfilePicture()));
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);

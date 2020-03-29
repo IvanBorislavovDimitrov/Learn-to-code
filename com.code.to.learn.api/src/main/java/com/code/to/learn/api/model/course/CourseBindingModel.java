@@ -42,6 +42,9 @@ public class CourseBindingModel {
     @NotNull
     private MultipartFile video;
 
+    @NotNull
+    private MultipartFile thumbnail;
+
     public String getName() {
         return name;
     }
@@ -128,5 +131,13 @@ public class CourseBindingModel {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public MultipartFile getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(MultipartFile thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

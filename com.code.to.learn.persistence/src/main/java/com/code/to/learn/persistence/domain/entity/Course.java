@@ -1,7 +1,7 @@
 package com.code.to.learn.persistence.domain.entity;
 
-import com.code.to.learn.persistence.domain.generic.NamedElement;
 import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
+import com.code.to.learn.persistence.domain.generic.NamedElement;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,6 +21,7 @@ public class Course extends IdEntity<Course> implements NamedElement {
     private static final String PRICE = "price";
     private static final String DESCRIPTION = "description";
     private static final String VIDEO_NAME = "video_name";
+    private static final String THUMBNAIL_NAME = "thumbnail_name";
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;
@@ -50,6 +51,9 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
     @Column(name = VIDEO_NAME, nullable = false)
     private String videoName;
+
+    @Column(name = THUMBNAIL_NAME, nullable = false)
+    private String thumbnailName;
 
     @ManyToOne(targetEntity = CourseCategory.class, fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id", nullable = false)
@@ -185,6 +189,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.videoName = videoName;
     }
 
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -201,6 +213,7 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setFutureAttendants(course.getFutureAttendants());
         setHomework(course.getHomework());
         setVideoName(course.getVideoName());
+        setThumbnailName(course.getThumbnailName());
         return this;
     }
 }

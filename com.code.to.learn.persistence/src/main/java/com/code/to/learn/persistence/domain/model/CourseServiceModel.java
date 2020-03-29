@@ -23,6 +23,7 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private List<HomeworkServiceModel> homework;
     private String videoName;
     private CourseCategoryServiceModel courseCategory;
+    private String thumbnailName;
 
     @Override
     public String getName() {
@@ -135,5 +136,13 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setCourseCategory(CourseCategoryServiceModel courseCategory) {
         this.courseCategory = courseCategory;
+    }
+
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
     }
 }

@@ -13,6 +13,7 @@ import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
+import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.MultipartFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -22,10 +23,12 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
 import static com.code.to.learn.web.constants.Constants.COURSE_VIDEO_EXTENSION;
+import static com.code.to.learn.web.constants.Constants.THUMBNAIL_FILE_EXTENSION;
 
 @Component
 public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
@@ -50,15 +53,19 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     public ResponseEntity<CourseResponseModel> addCourse(CourseBindingModel courseBindingModel) {
         courseValidator.validateCourseBindingModel(courseBindingModel);
         CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel);
-        multipartFileUploader.uploadFile(courseBindingModel.getVideo(), courseServiceModel.getVideoName());
+        FileToUpload thumbnail = new FileToUpload(courseServiceModel.getThumbnailName(), courseBindingModel.getThumbnail());
+        FileToUpload video = new FileToUpload(courseServiceModel.getVideoName(), courseBindingModel.getVideo());
+        multipartFileUploader.uploadFilesAsync(Arrays.asList(thumbnail, video));
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
     private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel) {
         CourseServiceModel courseServiceModel = getMapper().map(courseBindingModel, CourseServiceModel.class);
-        String extension = FilenameUtils.getExtension(courseBindingModel.getVideo().getOriginalFilename());
-        courseServiceModel.setVideoName(courseBindingModel.getName() + COURSE_VIDEO_EXTENSION + "." + extension);
+        String videoFileExtension = FilenameUtils.getExtension(courseBindingModel.getVideo().getOriginalFilename());
+        courseServiceModel.setVideoName(courseBindingModel.getName() + COURSE_VIDEO_EXTENSION + "." + videoFileExtension);
+        String thumbnailFileExtension = FilenameUtils.getExtension(courseBindingModel.getThumbnail().getOriginalFilename());
+        courseServiceModel.setThumbnailName(courseBindingModel.getName() + THUMBNAIL_FILE_EXTENSION + "." + thumbnailFileExtension);
         Optional<UserServiceModel> teacher = userService.findByUsername(courseBindingModel.getTeacherName());
         if (!teacher.isPresent()) {
             throw new NotFoundException(Messages.USER_NOT_FOUND, courseBindingModel.getTeacherName());

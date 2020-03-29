@@ -10,22 +10,34 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 @Component
 public class MultipartFileUploader {
 
     private final DropboxClient dropboxClient;
+    private final Executor executor;
 
     @Autowired
-    public MultipartFileUploader(DropboxClient dropboxClient) {
+    public MultipartFileUploader(DropboxClient dropboxClient, Executor executor) {
         this.dropboxClient = dropboxClient;
+        this.executor = executor;
     }
 
-    public void uploadFile(MultipartFile multipartFile, String filename) {
-        InputStream inputStream = getInputStream(multipartFile);
+    public void uploadFilesAsync(List<FileToUpload> filesToUpload) {
+        filesToUpload.forEach(this::uploadFileAsync);
+    }
+
+    public void uploadFileAsync(FileToUpload fileToUpload) {
+        executor.execute(() -> uploadFile(fileToUpload));
+    }
+
+    private void uploadFile(FileToUpload fileToUpload) {
+        InputStream inputStream = getInputStream(fileToUpload.getFile());
         File file = null;
         try {
-            file = new File(filename);
+            file = new File(fileToUpload.getFilename());
             FileUtils.copyInputStreamToFile(inputStream, file);
             dropboxClient.uploadFile(file);
         } catch (IOException e) {
