@@ -11,9 +11,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class CourseServiceImpl extends GenericServiceImpl<Course, CourseServiceModel> implements CourseService {
 
+    private final CourseDao courseDao;
+
     @Autowired
     public CourseServiceImpl(CourseDao courseDao, ModelMapper modelMapper) {
         super(courseDao, modelMapper);
+        this.courseDao = courseDao;
+    }
+
+    @Override
+    public boolean isNameTaken(String courseName) {
+        return courseDao.findByName(courseName).isPresent();
     }
 
     @Override

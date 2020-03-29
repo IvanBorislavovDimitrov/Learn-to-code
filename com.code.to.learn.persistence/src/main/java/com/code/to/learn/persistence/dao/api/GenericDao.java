@@ -5,7 +5,7 @@ import com.code.to.learn.persistence.domain.entity.GenericEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenericDao<E extends GenericEntity> {
+public interface GenericDao<E extends GenericEntity<E>> {
 
     List<E> findAll();
 

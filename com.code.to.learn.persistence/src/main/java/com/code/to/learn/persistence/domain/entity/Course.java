@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "courses")
 public class Course extends GenericEntity<Course> {
 
-    private static final String NAME = "name";
+    public static final String NAME = "name";
     private static final String START_DATE = "start_date";
     private static final String END_DATE = "end_date";
     private static final String DURATION_IN_WEEKS = "duration_in_weeks";
@@ -20,6 +20,7 @@ public class Course extends GenericEntity<Course> {
     private static final String FORM_OF_EDUCATION = "formOfEducation";
     private static final String PRICE = "price";
     private static final String DESCRIPTION = "description";
+    private static final String VIDEO_NAME = "video_name";
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;
@@ -43,29 +44,32 @@ public class Course extends GenericEntity<Course> {
     @Column(name = PRICE, nullable = false)
     private BigDecimal price;
 
-    @Column(name = DESCRIPTION)
+    @Column(name = DESCRIPTION, nullable = false)
     @Lob
     private String description;
 
-    @ManyToOne(targetEntity = CourseCategory.class, fetch = FetchType.EAGER, optional = false)
+    @Column(name = VIDEO_NAME, nullable = false)
+    private String videoName;
+
+    @ManyToOne(targetEntity = CourseCategory.class, fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id", nullable = false)
     private CourseCategory category;
 
-    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "attendant_id", referencedColumnName = "id"))
     private List<User> attendants = new ArrayList<>();
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher;
 
-    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "future_attendants_courses", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "future_attendants_id", referencedColumnName = "id"))
     private List<User> futureAttendants = new ArrayList<>();
 
-    @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course")
+    @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<Homework> homework = new ArrayList<>();
 
     public String getName() {
@@ -172,6 +176,14 @@ public class Course extends GenericEntity<Course> {
         this.homework = homework;
     }
 
+    public String getVideoName() {
+        return videoName;
+    }
+
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -187,6 +199,7 @@ public class Course extends GenericEntity<Course> {
         setTeacher(course.getTeacher());
         setFutureAttendants(course.getFutureAttendants());
         setHomework(course.getHomework());
+        setVideoName(course.getVideoName());
         return this;
     }
 }

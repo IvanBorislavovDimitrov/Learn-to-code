@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class CourseCategoryDaoImpl extends GenericDaoImpl<CourseCategory> implements CourseCategoryDao {
 
@@ -17,5 +19,10 @@ public class CourseCategoryDaoImpl extends GenericDaoImpl<CourseCategory> implem
     @Override
     protected Class<CourseCategory> getDomainClassType() {
         return CourseCategory.class;
+    }
+
+    @Override
+    public Optional<CourseCategory> findByName(String courseName) {
+        return findByField(CourseCategory.NAME, courseName);
     }
 }

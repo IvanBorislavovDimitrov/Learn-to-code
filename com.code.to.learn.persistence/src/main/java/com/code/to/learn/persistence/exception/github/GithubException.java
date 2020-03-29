@@ -1,9 +1,11 @@
 package com.code.to.learn.persistence.exception.github;
 
+import com.code.to.learn.persistence.exception.basic.LCException;
+
 import java.util.Collections;
 import java.util.Map;
 
-public class GithubException extends RuntimeException {
+public class GithubException extends LCException {
 
     private final Map<String, String> accessTokenQueryParameters;
 

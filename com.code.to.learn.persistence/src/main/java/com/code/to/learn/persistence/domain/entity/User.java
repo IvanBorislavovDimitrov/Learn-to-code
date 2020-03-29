@@ -47,7 +47,6 @@ public class User extends GenericEntity<User> implements UserDetails {
     @Column(name = PROFILE_PICTURE_NAME)
     private String profilePictureName;
 
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = GenericEntity.ID)
     private GithubAccessToken githubAccessToken;
@@ -209,6 +208,7 @@ public class User extends GenericEntity<User> implements UserDetails {
         setCoursesThatTeaches(user.getCoursesThatTeaches());
         setCoursesInCart(user.getCoursesInCart());
         setRoles(user.getRoles());
+        setProfilePictureName(user.getProfilePictureName());
         return this;
     }
 }

@@ -74,6 +74,10 @@ public abstract class GenericServiceImpl<E extends GenericEntity<E>, M extends G
         return getModelClass();
     }
 
+    protected GenericDao<E> getGenericDao() {
+        return genericDao;
+    }
+
     protected abstract Class<E> getEntityClass();
 
     protected abstract Class<M> getModelClass();

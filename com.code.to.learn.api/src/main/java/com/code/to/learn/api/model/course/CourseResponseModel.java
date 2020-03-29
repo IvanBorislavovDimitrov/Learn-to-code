@@ -1,9 +1,12 @@
-package com.code.to.learn.api.model.user;
+package com.code.to.learn.api.model.course;
+
+import com.code.to.learn.api.model.course_category.CourseCategoryResponseModel;
+import com.code.to.learn.api.model.user.UserResponseModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class CourseBindingModel {
+public class CourseResponseModel {
 
     private String name;
     private LocalDate startDate;
@@ -13,6 +16,8 @@ public class CourseBindingModel {
     private String formOfEducation;
     private BigDecimal price;
     private String description;
+    private UserResponseModel teacher;
+    private CourseCategoryResponseModel category;
 
     public String getName() {
         return name;
@@ -76,5 +81,21 @@ public class CourseBindingModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UserResponseModel getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(UserResponseModel teacher) {
+        this.teacher = teacher;
+    }
+
+    public CourseCategoryResponseModel getCategory() {
+        return category;
+    }
+
+    public void setCategory(CourseCategoryResponseModel category) {
+        this.category = category;
     }
 }

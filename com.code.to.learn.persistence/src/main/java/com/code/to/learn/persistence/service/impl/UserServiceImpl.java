@@ -46,11 +46,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     @Override
     public Optional<UserServiceModel> findByUsername(String username) {
         Optional<User> user = userDao.findByUsername(username);
-        if (!user.isPresent()) {
-            return Optional.empty();
-        }
-        UserServiceModel userServiceModel = toOutput(user.get());
-        return Optional.of(userServiceModel);
+        return user.map(this::toOutput);
     }
 
     @Override

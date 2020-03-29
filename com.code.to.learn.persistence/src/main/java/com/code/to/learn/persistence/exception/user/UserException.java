@@ -1,16 +1,14 @@
 package com.code.to.learn.persistence.exception.user;
 
-public abstract class UserException extends RuntimeException {
+import com.code.to.learn.persistence.exception.basic.LCException;
 
-    protected UserException() {
-        super();
+public class UserException extends LCException {
+
+    public UserException(String message, Object... args) {
+        super(message, args);
     }
 
-    protected UserException(String message) {
-        super(message);
-    }
-
-    protected UserException(String message, Throwable cause) {
+    public UserException(String message, Throwable cause) {
         super(message, cause);
     }
 

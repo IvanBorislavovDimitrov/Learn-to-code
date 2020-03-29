@@ -9,23 +9,18 @@ import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
-import org.apache.commons.io.FileUtils;
+import com.code.to.learn.web.util.MultipartFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,17 +39,17 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final DropboxClient dropboxClient;
+    private final MultipartFileUploader multipartFileUploader;
 
     @Autowired
     public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
-                              PasswordEncoder passwordEncoder, RoleService roleService, DropboxClient dropboxClient) {
+                              PasswordEncoder passwordEncoder, RoleService roleService, DropboxClient dropboxClient, MultipartFileUploader multipartFileUploader) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.dropboxClient = dropboxClient;
+        this.multipartFileUploader = multipartFileUploader;
     }
 
     @Override
@@ -73,7 +68,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
         UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
-        uploadUserProfilePicture(userBindingModel.getProfilePicture(), userServiceModel.getProfilePictureName());
+        multipartFileUploader.uploadFile(userBindingModel.getProfilePicture(), userServiceModel.getProfilePictureName());
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);
@@ -81,27 +76,6 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
         return ResponseEntity.ok(userResponseModel);
     }
 
-    private void uploadUserProfilePicture(MultipartFile profilePicture, String profilePictureName) {
-        InputStream inputStream = getInputStream(profilePicture);
-        File file = null;
-        try {
-            file = new File(profilePictureName);
-            FileUtils.copyInputStreamToFile(inputStream, file);
-            dropboxClient.uploadFile(file);
-        } catch (IOException e) {
-            throw new LCException(e.getMessage(), e);
-        } finally {
-            FileUtils.deleteQuietly(file);
-        }
-    }
-
-    private InputStream getInputStream(MultipartFile multipartFile) {
-        try {
-            return multipartFile.getInputStream();
-        } catch (IOException e) {
-            throw new LCException(e.getMessage(), e);
-        }
-    }
 
     @Override
     public ResponseEntity<List<UserResponseModel>> findUsersByUsernameContaining(String username) {

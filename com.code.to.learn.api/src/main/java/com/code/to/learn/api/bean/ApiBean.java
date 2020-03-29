@@ -1,4 +1,4 @@
-package com.code.to.learn.api.api.bean;
+package com.code.to.learn.api.bean;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

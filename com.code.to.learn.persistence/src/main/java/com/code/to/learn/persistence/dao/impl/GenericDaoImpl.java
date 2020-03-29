@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GenericDaoImpl<E extends GenericEntity> implements GenericDao<E> {
+public abstract class GenericDaoImpl<E extends GenericEntity<E>> implements GenericDao<E> {
 
     protected final SessionFactory sessionFactory;
 

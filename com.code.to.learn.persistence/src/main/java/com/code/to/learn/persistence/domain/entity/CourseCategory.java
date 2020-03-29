@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "course_categories")
 public class CourseCategory extends GenericEntity<CourseCategory> {
 
-    private static final String NAME = "name";
+    public static final String NAME = "name";
 
     @Column(name = NAME, nullable = false)
     private String name;

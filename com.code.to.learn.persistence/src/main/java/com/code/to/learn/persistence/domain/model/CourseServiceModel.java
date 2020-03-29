@@ -20,6 +20,8 @@ public class CourseServiceModel extends GenericServiceModel {
     private UserServiceModel teacher;
     private List<UserServiceModel> futureAttendants;
     private List<HomeworkServiceModel> homework;
+    private String videoName;
+    private CourseCategoryServiceModel courseCategory;
 
     public String getName() {
         return name;
@@ -115,5 +117,21 @@ public class CourseServiceModel extends GenericServiceModel {
 
     public void setHomework(List<HomeworkServiceModel> homework) {
         this.homework = homework;
+    }
+
+    public String getVideoName() {
+        return videoName;
+    }
+
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
+    }
+
+    public CourseCategoryServiceModel getCourseCategory() {
+        return courseCategory;
+    }
+
+    public void setCourseCategory(CourseCategoryServiceModel courseCategory) {
+        this.courseCategory = courseCategory;
     }
 }
