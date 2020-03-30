@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +36,8 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> root = criteriaQuery.from(getDomainClassType());
+        criteriaQuery.select(root);
         criteriaQuery.orderBy(criteriaBuilder.desc(root.get(START_DATE)));
-        criteriaQuery.select(criteriaQuery.from(getDomainClassType()));
         Query<Course> latestCoursesQuery = session.createQuery(criteriaQuery);
         latestCoursesQuery.setMaxResults(count);
         return latestCoursesQuery.getResultList();
