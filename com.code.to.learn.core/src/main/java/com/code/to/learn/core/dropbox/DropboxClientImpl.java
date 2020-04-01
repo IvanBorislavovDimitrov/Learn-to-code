@@ -54,10 +54,10 @@ public class DropboxClientImpl implements DropboxClient {
     }
 
     @Override
-    public FileMetadata getFile(String filename, File path) {
+    public FileMetadata getFile(String filename, File file) {
         try {
             DbxDownloader<FileMetadata> fileToDownload = client.files().download(insertFrontSlash(filename));
-            FileOutputStream fileOutputStream = new FileOutputStream(path);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
             return fileToDownload.download(fileOutputStream);
         } catch (DbxException | IOException e) {
             throw new LCException(e.getMessage(), e);

@@ -30,4 +30,6 @@ public class CourseRestController {
     public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count) {
         return courseServiceApi.getLatestCourses(count);
     }
+
+
 }

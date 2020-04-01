@@ -11,5 +11,5 @@ public interface DropboxClient {
 
     FileMetadata uploadFile(File file);
 
-    FileMetadata getFile(String filename, File path);
+    FileMetadata getFile(String filename, File file);
 }
