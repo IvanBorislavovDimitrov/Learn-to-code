@@ -26,7 +26,7 @@ public class CourseRestController {
         return courseServiceApi.addCourse(courseBindingModel);
     }
 
-    @GetMapping(value = "/latest")
+    @GetMapping(value = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count) {
         return courseServiceApi.getLatestCourses(count);
     }

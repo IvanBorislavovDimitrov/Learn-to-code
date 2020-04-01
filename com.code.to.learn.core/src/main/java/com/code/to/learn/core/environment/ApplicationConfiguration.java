@@ -47,7 +47,7 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_SESSION_CONTEXT_CLASS_VALUE = "org.hibernate.context.internal.ThreadLocalSessionContext";
     private static final String DROPBOX_CLIENT_IDENTIFIER_VALUE = "dropbox/learn-to-code";
     private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAAGCBG9tH2zJkc2iUIf8pYdekaLvYk2mTY-LWBoEsP6Q5z";
-    private static final int THREAD_POOL_SIZE_VALUE = 3;
+    private static final int THREAD_POOL_SIZE_VALUE = 5;
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);

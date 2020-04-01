@@ -18,6 +18,7 @@ public class CourseResponseModel {
     private String description;
     private UserResponseModel teacher;
     private CourseCategoryResponseModel category;
+    private String base64Thumbnail;
 
     public String getName() {
         return name;
@@ -97,5 +98,13 @@ public class CourseResponseModel {
 
     public void setCategory(CourseCategoryResponseModel category) {
         this.category = category;
+    }
+
+    public String getBase64Thumbnail() {
+        return base64Thumbnail;
+    }
+
+    public void setBase64Thumbnail(String base64Thumbnail) {
+        this.base64Thumbnail = base64Thumbnail;
     }
 }
