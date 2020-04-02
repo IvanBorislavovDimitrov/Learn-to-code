@@ -9,15 +9,16 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.UUID;
 
 @Component
-public class FileGetter {
+public class RemoteStorageFileGetter {
 
     private final DropboxClient dropboxClient;
 
     @Autowired
-    public FileGetter(DropboxClient dropboxClient) {
+    public RemoteStorageFileGetter(DropboxClient dropboxClient) {
         this.dropboxClient = dropboxClient;
     }
 
@@ -34,5 +35,8 @@ public class FileGetter {
         }
     }
 
+    public InputStream getFileStream(String name) {
+        return dropboxClient.getFileAsInputStream(name);
+    }
 
 }

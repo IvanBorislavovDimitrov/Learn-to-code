@@ -14,9 +14,9 @@ import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
-import com.code.to.learn.web.util.FileGetter;
+import com.code.to.learn.web.util.RemoteStorageFileGetter;
 import com.code.to.learn.web.util.FileToUpload;
-import com.code.to.learn.web.util.MultipartFileUploader;
+import com.code.to.learn.web.util.RemoteStorageFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,25 +39,25 @@ import static com.code.to.learn.web.constants.Constants.THUMBNAIL_FILE_EXTENSION
 public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
 
     private final CourseService courseService;
-    private final MultipartFileUploader multipartFileUploader;
+    private final RemoteStorageFileUploader remoteStorageFileUploader;
     private final CourseValidator courseValidator;
     private final UserService userService;
     private final CourseCategoryService courseCategoryService;
     private final ExecutorService executorService;
-    private final FileGetter fileGetter;
+    private final RemoteStorageFileGetter remoteStorageFileGetter;
 
     @Autowired
-    public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, MultipartFileUploader multipartFileUploader,
+    public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileUploader remoteStorageFileUploader,
                                 CourseValidator courseValidator, UserService userService,
-                                CourseCategoryService courseCategoryService, ExecutorService executorService, FileGetter fileGetter) {
+                                CourseCategoryService courseCategoryService, ExecutorService executorService, RemoteStorageFileGetter remoteStorageFileGetter) {
         super(modelMapper);
         this.courseService = courseService;
-        this.multipartFileUploader = multipartFileUploader;
+        this.remoteStorageFileUploader = remoteStorageFileUploader;
         this.courseValidator = courseValidator;
         this.userService = userService;
         this.courseCategoryService = courseCategoryService;
         this.executorService = executorService;
-        this.fileGetter = fileGetter;
+        this.remoteStorageFileGetter = remoteStorageFileGetter;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel);
         FileToUpload thumbnail = new FileToUpload(courseServiceModel.getThumbnailName(), courseBindingModel.getThumbnail());
         FileToUpload video = new FileToUpload(courseServiceModel.getVideoName(), courseBindingModel.getVideo());
-        multipartFileUploader.uploadFilesAsync(Arrays.asList(thumbnail, video));
+        remoteStorageFileUploader.uploadFilesAsync(Arrays.asList(thumbnail, video));
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
@@ -106,7 +106,7 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
 
     private CourseResponseModel toCourseResponseModel(CourseServiceModel courseServiceModel) {
         CourseResponseModel courseResponseModel = toOutput(courseServiceModel);
-        byte[] thumbnailContent = fileGetter.getImageResource(courseServiceModel.getThumbnailName());
+        byte[] thumbnailContent = remoteStorageFileGetter.getImageResource(courseServiceModel.getThumbnailName());
         String base64ThumbnailContent = Base64.getEncoder().encodeToString(thumbnailContent);
         courseResponseModel.setBase64Thumbnail(base64ThumbnailContent);
         return courseResponseModel;

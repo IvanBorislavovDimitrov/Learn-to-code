@@ -4,6 +4,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.users.FullAccount;
 
 import java.io.File;
+import java.io.InputStream;
 
 public interface DropboxClient {
 
@@ -12,4 +13,6 @@ public interface DropboxClient {
     FileMetadata uploadFile(File file);
 
     FileMetadata getFile(String filename, File file);
+
+    InputStream getFileAsInputStream(String filename);
 }

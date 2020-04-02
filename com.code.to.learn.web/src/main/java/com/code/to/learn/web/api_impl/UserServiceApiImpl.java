@@ -13,7 +13,7 @@ import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.web.util.FileToUpload;
-import com.code.to.learn.web.util.MultipartFileUploader;
+import com.code.to.learn.web.util.RemoteStorageFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +39,17 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final MultipartFileUploader multipartFileUploader;
+    private final RemoteStorageFileUploader remoteStorageFileUploader;
 
     @Autowired
     public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
-                              PasswordEncoder passwordEncoder, RoleService roleService, MultipartFileUploader multipartFileUploader) {
+                              PasswordEncoder passwordEncoder, RoleService roleService, RemoteStorageFileUploader remoteStorageFileUploader) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.multipartFileUploader = multipartFileUploader;
+        this.remoteStorageFileUploader = remoteStorageFileUploader;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
         UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
-        multipartFileUploader.uploadFileAsync(new FileToUpload(userServiceModel.getProfilePictureName(), userBindingModel.getProfilePicture()));
+        remoteStorageFileUploader.uploadFileAsync(new FileToUpload(userServiceModel.getProfilePictureName(), userBindingModel.getProfilePicture()));
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);

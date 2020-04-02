@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration
@@ -21,7 +21,7 @@ public class WebBean {
     }
 
     @Bean(name = "threadPoolExecutor")
-    public Executor threadPoolExecutor() {
+    public ExecutorService threadPoolExecutor() {
         return Executors.newFixedThreadPool(configuration.getThreadPoolSize());
     }
 

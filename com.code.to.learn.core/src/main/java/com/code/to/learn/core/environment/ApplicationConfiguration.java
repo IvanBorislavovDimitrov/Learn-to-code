@@ -26,6 +26,7 @@ public class ApplicationConfiguration {
     private static final String DROPBOX_CLIENT_IDENTIFIER_NAME = "DROPBOX_CLIENT_IDENTIFIER_NAME";
     private static final String DROPBOX_ACCESS_TOKEN_NAME = "DROPBOX_ACCESS_TOKEN";
     private static final String THREAD_POOL_SIZE_NAME = "THEAD_POOL_SIZE";
+    private static final String ASYNC_EXECUTOR_THREADS_COUNT_NAME = "ASYNC_EXECUTOR_THREADS_COUNT";
 
     // Variable default values
     private static final String CLIENT_ID_VALUE = "5b2f3c2f8bb2f09aa59d";
@@ -48,6 +49,7 @@ public class ApplicationConfiguration {
     private static final String DROPBOX_CLIENT_IDENTIFIER_VALUE = "dropbox/learn-to-code";
     private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAAGCBG9tH2zJkc2iUIf8pYdekaLvYk2mTY-LWBoEsP6Q5z";
     private static final int THREAD_POOL_SIZE_VALUE = 5;
+    private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -127,6 +129,10 @@ public class ApplicationConfiguration {
 
     public int getThreadPoolSize() {
         return getOrDefault(THREAD_POOL_SIZE_NAME, THREAD_POOL_SIZE_VALUE);
+    }
+
+    public int getAsyncExecutorThreadsCount() {
+        return getOrDefault(ASYNC_EXECUTOR_THREADS_COUNT_NAME, ASYNC_EXECUTOR_THREADS_COUNT_VALUE);
     }
 
     @SuppressWarnings("unchecked")

@@ -5,6 +5,7 @@ import com.dropbox.core.DbxDownloader;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.WriteMode;
 import com.dropbox.core.v2.users.FullAccount;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,29 @@ public class DropboxClientImpl implements DropboxClient {
         String filename = FilenameUtils.getName(absoluteFilePath);
         try (InputStream inputStream = new FileInputStream(absoluteFilePath)) {
             return client.files().uploadBuilder(insertFrontSlash(filename))
+                    .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(inputStream);
         } catch (IOException | DbxException e) {
+            throw new LCException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public FileMetadata getFile(String filename, File file) {
+        try {
+            DbxDownloader<FileMetadata> fileToDownload = client.files().download(insertFrontSlash(filename));
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            return fileToDownload.download(fileOutputStream);
+        } catch (DbxException | IOException e) {
+            throw new LCException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public InputStream getFileAsInputStream(String filename) {
+        try {
+            return client.files().download(insertFrontSlash(filename)).getInputStream();
+        } catch (DbxException e) {
             throw new LCException(e.getMessage(), e);
         }
     }
@@ -53,14 +75,4 @@ public class DropboxClientImpl implements DropboxClient {
         return "/" + filename;
     }
 
-    @Override
-    public FileMetadata getFile(String filename, File file) {
-        try {
-            DbxDownloader<FileMetadata> fileToDownload = client.files().download(insertFrontSlash(filename));
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            return fileToDownload.download(fileOutputStream);
-        } catch (DbxException | IOException e) {
-            throw new LCException(e.getMessage(), e);
-        }
-    }
 }

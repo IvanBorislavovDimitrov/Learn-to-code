@@ -15,19 +15,20 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 @Component
-public class MultipartFileUploader {
+public class RemoteStorageFileUploader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultipartFileUploader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteStorageFileUploader.class);
 
     private final DropboxClient dropboxClient;
-    private final Executor executor;
+    private final ExecutorService executorService;
 
     @Autowired
-    public MultipartFileUploader(DropboxClient dropboxClient, Executor executor) {
+    public RemoteStorageFileUploader(DropboxClient dropboxClient, ExecutorService executorService) {
         this.dropboxClient = dropboxClient;
-        this.executor = executor;
+        this.executorService = executorService;
     }
 
     public void uploadFilesAsync(List<FileToUpload> filesToUpload) {
@@ -35,7 +36,7 @@ public class MultipartFileUploader {
     }
 
     public void uploadFileAsync(FileToUpload fileToUpload) {
-        executor.execute(() -> uploadFile(fileToUpload));
+        executorService.execute(() -> uploadFile(fileToUpload));
     }
 
     private void uploadFile(FileToUpload fileToUpload) {
