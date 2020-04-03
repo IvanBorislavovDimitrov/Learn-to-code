@@ -14,8 +14,8 @@ import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
-import com.code.to.learn.web.util.RemoteStorageFileGetter;
 import com.code.to.learn.web.util.FileToUpload;
+import com.code.to.learn.web.util.RemoteStorageFileGetter;
 import com.code.to.learn.web.util.RemoteStorageFileUploader;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -94,9 +94,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
-    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count) {
+    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails) {
         List<CourseServiceModel> courseServiceModels = courseService.findLatestCourses(count);
         List<Future<CourseResponseModel>> courseResponseModelTasks = new ArrayList<>();
+        if (!loadThumbnails) {
+            return ResponseEntity.ok(toOutput(courseServiceModels));
+        }
         for (CourseServiceModel courseServiceModel : courseServiceModels) {
             Future<CourseResponseModel> courseResponseModelTask = executorService.submit(() -> toCourseResponseModel(courseServiceModel));
             courseResponseModelTasks.add(courseResponseModelTask);
@@ -124,6 +127,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         } catch (InterruptedException | ExecutionException e) {
             throw new LCException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public ResponseEntity<List<CourseResponseModel>> getCoursesByPage(int page) {
+        List<CourseServiceModel> courseServiceModels = courseService.findCoursesByPage(page, 3);
+        return ResponseEntity.ok(toOutput(courseServiceModels));
     }
 
     @Override

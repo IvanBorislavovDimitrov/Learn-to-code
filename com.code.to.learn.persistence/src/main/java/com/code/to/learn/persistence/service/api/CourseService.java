@@ -10,4 +10,6 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
     boolean isNameTaken(String courseName);
 
     List<CourseServiceModel> findLatestCourses(int count);
+
+    List<CourseServiceModel> findCoursesByPage(int page, int maxResults);
 }

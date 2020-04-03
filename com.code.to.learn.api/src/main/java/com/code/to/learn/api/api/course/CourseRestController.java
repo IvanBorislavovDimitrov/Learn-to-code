@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/courses", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/courses")
 public class CourseRestController {
 
     private final CourseServiceApi courseServiceApi;
@@ -21,15 +21,19 @@ public class CourseRestController {
         this.courseServiceApi = courseServiceApi;
     }
 
-    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseResponseModel> addCourse(@Valid CourseBindingModel courseBindingModel) {
         return courseServiceApi.addCourse(courseBindingModel);
     }
 
     @GetMapping(value = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count) {
-        return courseServiceApi.getLatestCourses(count);
+    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count, @RequestParam(defaultValue = "false") boolean loadThumbnails) {
+        return courseServiceApi.getLatestCourses(count, loadThumbnails);
     }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CourseResponseModel>> getCourses(@RequestParam(defaultValue = "1") int page) {
+        return courseServiceApi.getCoursesByPage(page - 1);
+    }
 
 }

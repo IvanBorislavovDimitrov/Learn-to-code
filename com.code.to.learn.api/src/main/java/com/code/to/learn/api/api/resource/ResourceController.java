@@ -37,7 +37,7 @@ public class ResourceController {
         InputStream videoInputStream = resourceServiceApi.openFileStream(name);
         BufferedInputStream bufferedVideoInputStream = new BufferedInputStream(videoInputStream);
         StreamingResponseBody streamingResponseBody = outputStream -> {
-            byte[] read = new byte[4096];
+            byte[] read = new byte[8192];
             int len;
             while ((len = bufferedVideoInputStream.read(read)) != -1) {
                 outputStream.write(read, 0, len);

@@ -32,6 +32,11 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     @Override
+    public List<CourseServiceModel> findCoursesByPage(int page, int maxResults) {
+        return toOutput(courseDao.findCoursesByPage(page, maxResults));
+    }
+
+    @Override
     protected Class<CourseServiceModel> getModelClass() {
         return CourseServiceModel.class;
     }

@@ -10,6 +10,8 @@ public interface CourseServiceApi {
 
     ResponseEntity<CourseResponseModel> addCourse(CourseBindingModel courseBindingModel);
 
-    ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count);
+    ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails);
+
+    ResponseEntity<List<CourseResponseModel>> getCoursesByPage(int page);
 
 }

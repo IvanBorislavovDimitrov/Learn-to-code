@@ -32,15 +32,27 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public List<Course> findLatestCourses(int count) {
+        Query<Course> latestCoursesQuery = getCoursesOrderedByStartDate();
+        latestCoursesQuery.setMaxResults(count);
+        return latestCoursesQuery.getResultList();
+    }
+
+    @Override
+    public List<Course> findCoursesByPage(int page, int maxResults) {
+        Query<Course> latestCoursesQuery = getCoursesOrderedByStartDate();
+        latestCoursesQuery.setFirstResult(page * maxResults);
+        latestCoursesQuery.setMaxResults(maxResults);
+        return latestCoursesQuery.getResultList();
+    }
+
+    private Query<Course> getCoursesOrderedByStartDate() {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> root = criteriaQuery.from(getDomainClassType());
         criteriaQuery.select(root);
         criteriaQuery.orderBy(criteriaBuilder.desc(root.get(START_DATE)));
-        Query<Course> latestCoursesQuery = session.createQuery(criteriaQuery);
-        latestCoursesQuery.setMaxResults(count);
-        return latestCoursesQuery.getResultList();
+        return session.createQuery(criteriaQuery);
     }
 
     @Override
