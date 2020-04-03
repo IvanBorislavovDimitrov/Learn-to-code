@@ -27,6 +27,7 @@ public class ApplicationConfiguration {
     private static final String DROPBOX_ACCESS_TOKEN_NAME = "DROPBOX_ACCESS_TOKEN";
     private static final String THREAD_POOL_SIZE_NAME = "THEAD_POOL_SIZE";
     private static final String ASYNC_EXECUTOR_THREADS_COUNT_NAME = "ASYNC_EXECUTOR_THREADS_COUNT";
+    private static final String MAX_COURSES_ON_PAGE_NAME = "MAX_COURSES_ON_PAGE";
 
     // Variable default values
     private static final String CLIENT_ID_VALUE = "5b2f3c2f8bb2f09aa59d";
@@ -50,6 +51,7 @@ public class ApplicationConfiguration {
     private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAAGCBG9tH2zJkc2iUIf8pYdekaLvYk2mTY-LWBoEsP6Q5z";
     private static final int THREAD_POOL_SIZE_VALUE = 5;
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
+    private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -133,6 +135,10 @@ public class ApplicationConfiguration {
 
     public int getAsyncExecutorThreadsCount() {
         return getOrDefault(ASYNC_EXECUTOR_THREADS_COUNT_NAME, ASYNC_EXECUTOR_THREADS_COUNT_VALUE);
+    }
+
+    public int getMaxCoursesOnPage() {
+        return getOrDefault(MAX_COURSES_ON_PAGE_NAME, MAX_COURSES_ON_PAGE_VALUE);
     }
 
     @SuppressWarnings("unchecked")

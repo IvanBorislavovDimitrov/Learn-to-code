@@ -36,4 +36,6 @@ public class CourseRestController {
         return courseServiceApi.getCoursesByPage(page - 1);
     }
 
+
+
 }

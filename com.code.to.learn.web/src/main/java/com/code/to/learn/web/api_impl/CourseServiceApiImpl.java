@@ -3,6 +3,7 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.course.CourseServiceApi;
 import com.code.to.learn.api.model.course.CourseBindingModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
+import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.CourseValidator;
 import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
@@ -45,11 +46,13 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     private final CourseCategoryService courseCategoryService;
     private final ExecutorService executorService;
     private final RemoteStorageFileGetter remoteStorageFileGetter;
+    private final ApplicationConfiguration configuration;
 
     @Autowired
     public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileUploader remoteStorageFileUploader,
                                 CourseValidator courseValidator, UserService userService,
-                                CourseCategoryService courseCategoryService, ExecutorService executorService, RemoteStorageFileGetter remoteStorageFileGetter) {
+                                CourseCategoryService courseCategoryService, ExecutorService executorService,
+                                RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration) {
         super(modelMapper);
         this.courseService = courseService;
         this.remoteStorageFileUploader = remoteStorageFileUploader;
@@ -58,6 +61,7 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         this.courseCategoryService = courseCategoryService;
         this.executorService = executorService;
         this.remoteStorageFileGetter = remoteStorageFileGetter;
+        this.configuration = configuration;
     }
 
     @Override
@@ -96,15 +100,19 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     @Override
     public ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails) {
         List<CourseServiceModel> courseServiceModels = courseService.findLatestCourses(count);
+        return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, loadThumbnails));
+    }
+
+    private List<CourseResponseModel> toCourseResponseModels(List<CourseServiceModel> courseServiceModels, boolean loadThumbnails) {
         List<Future<CourseResponseModel>> courseResponseModelTasks = new ArrayList<>();
         if (!loadThumbnails) {
-            return ResponseEntity.ok(toOutput(courseServiceModels));
+            return toOutput(courseServiceModels);
         }
         for (CourseServiceModel courseServiceModel : courseServiceModels) {
             Future<CourseResponseModel> courseResponseModelTask = executorService.submit(() -> toCourseResponseModel(courseServiceModel));
             courseResponseModelTasks.add(courseResponseModelTask);
         }
-        return ResponseEntity.ok(waitCourseResponseModelTasksToBeExecuted(courseResponseModelTasks));
+        return waitCourseResponseModelTasksToBeExecuted(courseResponseModelTasks);
     }
 
     private CourseResponseModel toCourseResponseModel(CourseServiceModel courseServiceModel) {
@@ -131,8 +139,8 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
 
     @Override
     public ResponseEntity<List<CourseResponseModel>> getCoursesByPage(int page) {
-        List<CourseServiceModel> courseServiceModels = courseService.findCoursesByPage(page, 3);
-        return ResponseEntity.ok(toOutput(courseServiceModels));
+        List<CourseServiceModel> courseServiceModels = courseService.findCoursesByPage(page, configuration.getMaxCoursesOnPage());
+        return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, true));
     }
 
     @Override
