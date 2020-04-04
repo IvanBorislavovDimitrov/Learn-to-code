@@ -32,10 +32,10 @@ public class CourseRestController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CourseResponseModel>> getCourses(@RequestParam(defaultValue = "1") int page) {
-        return courseServiceApi.getCoursesByPage(page - 1);
+    public ResponseEntity<List<CourseResponseModel>> getCourses(@RequestParam(defaultValue = "1") int page,
+                                                                @RequestParam(required = false) String name,
+                                                                @RequestParam(required = false) String category) {
+        return courseServiceApi.getCourses(page - 1, name, category);
     }
-
-
 
 }

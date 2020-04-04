@@ -11,5 +11,5 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
 
     List<CourseServiceModel> findLatestCourses(int count);
 
-    List<CourseServiceModel> findCoursesByPage(int page, int maxResults);
+    List<CourseServiceModel> findCourses(int page, int maxResults, String name, String category);
 }

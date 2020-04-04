@@ -138,8 +138,8 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
-    public ResponseEntity<List<CourseResponseModel>> getCoursesByPage(int page) {
-        List<CourseServiceModel> courseServiceModels = courseService.findCoursesByPage(page, configuration.getMaxCoursesOnPage());
+    public ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category) {
+        List<CourseServiceModel> courseServiceModels = courseService.findCourses(page, configuration.getMaxCoursesOnPage(), name, category);
         return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, true));
     }
 

@@ -12,6 +12,6 @@ public interface CourseServiceApi {
 
     ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails);
 
-    ResponseEntity<List<CourseResponseModel>> getCoursesByPage(int page);
+    ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category);
 
 }
