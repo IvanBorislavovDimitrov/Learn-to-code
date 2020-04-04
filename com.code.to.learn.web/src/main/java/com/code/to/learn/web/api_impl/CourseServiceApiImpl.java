@@ -2,6 +2,7 @@ package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.course.CourseServiceApi;
 import com.code.to.learn.api.model.course.CourseBindingModel;
+import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.CourseValidator;
@@ -141,6 +142,11 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     public ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category) {
         List<CourseServiceModel> courseServiceModels = courseService.findCourses(page, configuration.getMaxCoursesOnPage(), name, category);
         return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, true));
+    }
+
+    @Override
+    public ResponseEntity<CoursePagesResponseModel> getPagesCount() {
+        return ResponseEntity.ok(new CoursePagesResponseModel(courseService.count() / configuration.getMaxCoursesOnPage() + 1));
     }
 
     @Override

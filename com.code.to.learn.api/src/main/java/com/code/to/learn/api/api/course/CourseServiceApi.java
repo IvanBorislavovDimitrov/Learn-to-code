@@ -1,6 +1,7 @@
 package com.code.to.learn.api.api.course;
 
 import com.code.to.learn.api.model.course.CourseBindingModel;
+import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
 import org.springframework.http.ResponseEntity;
 
@@ -13,5 +14,7 @@ public interface CourseServiceApi {
     ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails);
 
     ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category);
+
+    ResponseEntity<CoursePagesResponseModel> getPagesCount();
 
 }

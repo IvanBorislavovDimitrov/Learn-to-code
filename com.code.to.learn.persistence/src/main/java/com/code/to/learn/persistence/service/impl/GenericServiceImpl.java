@@ -65,6 +65,11 @@ public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServ
     }
 
     @Override
+    public long count() {
+        return genericDao.count();
+    }
+
+    @Override
     protected Class<E> getInputClass() {
         return getEntityClass();
     }

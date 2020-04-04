@@ -1,6 +1,7 @@
 package com.code.to.learn.api.api.course;
 
 import com.code.to.learn.api.model.course.CourseBindingModel;
+import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -36,6 +37,11 @@ public class CourseRestController {
                                                                 @RequestParam(required = false) String name,
                                                                 @RequestParam(required = false) String category) {
         return courseServiceApi.getCourses(page - 1, name, category);
+    }
+
+    @GetMapping(value = "/pages-count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CoursePagesResponseModel> getPagesCount() {
+        return courseServiceApi.getPagesCount();
     }
 
 }
