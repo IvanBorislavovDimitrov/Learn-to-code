@@ -15,6 +15,6 @@ public interface CourseServiceApi {
 
     ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category);
 
-    ResponseEntity<CoursePagesResponseModel> getPagesCount();
+    ResponseEntity<CoursePagesResponseModel> getPagesCount(String courseName);
 
 }

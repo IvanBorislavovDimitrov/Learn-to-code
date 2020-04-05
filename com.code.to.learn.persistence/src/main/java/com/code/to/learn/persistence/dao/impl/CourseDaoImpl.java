@@ -75,6 +75,18 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
     }
 
     @Override
+    public long countByNameLike(String name) {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Course> root = criteriaQuery.from(getDomainClassType());
+        Predicate like = criteriaBuilder.like(criteriaBuilder.lower(root.get(Course.NAME)), buildContainsExpression(name.toLowerCase()));
+        criteriaQuery.where(like);
+        criteriaQuery.select(criteriaBuilder.count(root));
+        return session.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    @Override
     protected Class<Course> getDomainClassType() {
         return Course.class;
     }

@@ -12,4 +12,6 @@ public interface CourseDao extends GenericDao<Course> {
     List<Course> findLatestCourses(int count);
 
     List<Course> findCourses(int page, int maxResults, String name, String category);
+
+    long countByNameLike(String name);
 }

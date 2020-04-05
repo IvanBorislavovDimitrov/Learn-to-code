@@ -37,6 +37,11 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     @Override
+    public long countByNameLike(String name) {
+        return courseDao.countByNameLike(name);
+    }
+
+    @Override
     protected Class<CourseServiceModel> getModelClass() {
         return CourseServiceModel.class;
     }

@@ -40,8 +40,8 @@ public class CourseRestController {
     }
 
     @GetMapping(value = "/pages-count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CoursePagesResponseModel> getPagesCount() {
-        return courseServiceApi.getPagesCount();
+    public ResponseEntity<CoursePagesResponseModel> getPagesCount(@RequestParam(required = false) String courseName) {
+        return courseServiceApi.getPagesCount(courseName);
     }
 
 }

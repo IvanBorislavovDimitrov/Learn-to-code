@@ -145,8 +145,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
-    public ResponseEntity<CoursePagesResponseModel> getPagesCount() {
-        return ResponseEntity.ok(new CoursePagesResponseModel(courseService.count() / configuration.getMaxCoursesOnPage() + 1));
+    public ResponseEntity<CoursePagesResponseModel> getPagesCount(String courseName) {
+        if (courseName == null) {
+            return ResponseEntity.ok(new CoursePagesResponseModel(courseService.count() / configuration.getMaxCoursesOnPage() + 1));
+        }
+        long coursesCount = courseService.countByNameLike(courseName);
+        return ResponseEntity.ok(new CoursePagesResponseModel(coursesCount / configuration.getMaxCoursesOnPage() + 1));
     }
 
     @Override

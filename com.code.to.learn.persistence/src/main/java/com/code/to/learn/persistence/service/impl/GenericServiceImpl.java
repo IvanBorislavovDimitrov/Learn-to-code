@@ -1,6 +1,7 @@
 package com.code.to.learn.persistence.service.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
+import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.IdNotFoundException;
