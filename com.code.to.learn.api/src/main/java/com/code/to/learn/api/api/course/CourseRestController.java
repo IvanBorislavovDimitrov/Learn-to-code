@@ -22,7 +22,7 @@ public class CourseRestController {
         this.courseServiceApi = courseServiceApi;
     }
 
-    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseResponseModel> addCourse(@Valid CourseBindingModel courseBindingModel) {
         return courseServiceApi.addCourse(courseBindingModel);
     }

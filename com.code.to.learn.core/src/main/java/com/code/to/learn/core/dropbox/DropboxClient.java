@@ -10,7 +10,7 @@ public interface DropboxClient {
 
     FullAccount getCurrentAccount();
 
-    FileMetadata uploadFile(File file);
+    FileMetadata uploadFile(InputStream inputStream, String filename);
 
     FileMetadata getFile(String filename, File file);
 
