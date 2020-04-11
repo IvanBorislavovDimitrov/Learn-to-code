@@ -25,3 +25,4 @@ rebel.xml
 /.springBeans
 /.gradletasknamecache
 *.classpath
+com.code.to.learn.web/src/main/webapp/WEB-INF/

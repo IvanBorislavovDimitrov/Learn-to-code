@@ -1,4 +1,4 @@
-package com.code.to.learn.persistence.exception;
+package com.code.to.learn.persistence.exception.basic;
 
 import java.text.MessageFormat;
 

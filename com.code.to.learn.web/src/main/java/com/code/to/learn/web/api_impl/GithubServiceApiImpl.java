@@ -3,6 +3,8 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
+import com.code.to.learn.core.client.ResilientHttpClient;
+import com.code.to.learn.core.client.UncheckedEntityUtils;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.persistence.constant.Messages;
@@ -18,9 +20,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import com.code.to.learn.core.client.ResilientExecutor;
-import com.code.to.learn.core.client.ResilientHttpClient;
-import com.code.to.learn.core.client.UncheckedEntityUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -33,7 +32,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +60,7 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
 
     @Override
     public ResponseEntity<GithubUserResponseModel> getGithubUserInfo(String username) {
-        UserServiceModel userServiceModel = getRequiredUser(username);
+        UserServiceModel userServiceModel = userService.findByUsername(username);
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = userServiceModel.getGithubAccessToken();
         if (githubAccessTokenServiceModel == null) {
             throw new GithubException(MessageFormat.format(Messages.NO_GITHUB_ACCESS_TOKEN_FOR_USER, username));
@@ -78,21 +80,13 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
 
     @Override
     public ResponseEntity<GithubAccessTokenResponseModel> requestAccessTokenForUser(String username, String code) {
-        UserServiceModel userServiceModel = getRequiredUser(username);
+        UserServiceModel userServiceModel = userService.findByUsername(username);
         HttpResponse accessTokenResponse = executeAccessTokenRequest(code);
         return processAccessTokenForUser(userServiceModel, accessTokenResponse);
     }
 
     private String getUsernameResource() {
         return applicationConfiguration.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.USER_RESOURCE;
-    }
-
-    private UserServiceModel getRequiredUser(String username) {
-        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(username);
-        if (!optionalUserServiceModel.isPresent()) {
-            throw new GithubException(MessageFormat.format(Messages.USER_WITH_THE_FOLLOWING_USERNAME_NOT_FOUND, username), Collections.emptyMap());
-        }
-        return optionalUserServiceModel.get();
     }
 
     private HttpResponse executeAccessTokenRequest(String code) {

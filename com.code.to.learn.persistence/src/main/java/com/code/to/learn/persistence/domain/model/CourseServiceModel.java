@@ -21,7 +21,7 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private UserServiceModel teacher;
     private List<UserServiceModel> futureAttendants;
     private List<HomeworkServiceModel> homework;
-    private String videoName;
+    private List<CourseVideoServiceModel> videosNames;
     private CourseCategoryServiceModel courseCategory;
     private String thumbnailName;
 
@@ -122,12 +122,12 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
         this.homework = homework;
     }
 
-    public String getVideoName() {
-        return videoName;
+    public List<CourseVideoServiceModel> getVideosNames() {
+        return videosNames;
     }
 
-    public void setVideoName(String videoName) {
-        this.videoName = videoName;
+    public void setVideosNames(List<CourseVideoServiceModel> videosNames) {
+        this.videosNames = videosNames;
     }
 
     public CourseCategoryServiceModel getCourseCategory() {
@@ -144,5 +144,34 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setThumbnailName(String thumbnailName) {
         this.thumbnailName = thumbnailName;
+    }
+
+    public static class CourseVideoServiceModel {
+        private String videoTitle;
+        private String videoFullName;
+
+        public CourseVideoServiceModel() {
+        }
+
+        public CourseVideoServiceModel(String videoTitle, String videoFullName) {
+            this.videoTitle = videoTitle;
+            this.videoFullName = videoFullName;
+        }
+
+        public String getVideoTitle() {
+            return videoTitle;
+        }
+
+        public void setVideoTitle(String videoTitle) {
+            this.videoTitle = videoTitle;
+        }
+
+        public String getVideoFullName() {
+            return videoFullName;
+        }
+
+        public void setVideoFullName(String videoFullName) {
+            this.videoFullName = videoFullName;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.code.to.learn.persistence.service.impl;
 import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.basic.NameNotFoundException;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
-    public Optional<UserServiceModel> findByUsername(String username) {
+    public UserServiceModel findByUsername(String username) {
         Optional<User> user = userDao.findByUsername(username);
-        return user.map(this::toOutput);
+        if (!user.isPresent()) {
+            throw new NameNotFoundException(username);
+        }
+        return user.map(this::toOutput).get();
     }
 
     @Override

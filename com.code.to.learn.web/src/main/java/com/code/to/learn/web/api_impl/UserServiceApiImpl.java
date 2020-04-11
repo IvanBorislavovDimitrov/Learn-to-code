@@ -4,11 +4,9 @@ import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.core.validator.UserValidator;
-import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
-import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
@@ -23,10 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
@@ -76,7 +72,6 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
         return ResponseEntity.ok(userResponseModel);
     }
 
-
     @Override
     public ResponseEntity<List<UserResponseModel>> findUsersByUsernameContaining(String username) {
         List<UserServiceModel> userServiceModels = userService.findUsersByUsernameContaining(username);
@@ -85,7 +80,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
 
     @Override
     public ResponseEntity<UserResponseModel> changeUserRoles(String username, List<String> roles) {
-        UserServiceModel userServiceModel = getByUsername(username);
+        UserServiceModel userServiceModel = userService.findByUsername(username);
         userServiceModel.setRoles(toRoleServiceModels(roles));
         UserServiceModel updatedUserServiceModel = userService.update(userServiceModel);
         return ResponseEntity.ok(toOutput(updatedUserServiceModel));
@@ -98,28 +93,14 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     }
 
     private UserResponseModel findByUsername(String username) {
-        UserServiceModel userServiceModel = getByUsername(username);
+        UserServiceModel userServiceModel = userService.findByUsername(username);
         return toOutput(userServiceModel);
     }
 
-    private UserServiceModel getByUsername(String username) {
-        Optional<UserServiceModel> optionalUserServiceModel = userService.findByUsername(username);
-        if (!optionalUserServiceModel.isPresent()) {
-            throw new NotFoundException(Messages.USER_NOT_FOUND, username);
-        }
-        return optionalUserServiceModel.get();
-    }
-
     private List<RoleServiceModel> toRoleServiceModels(List<String> roles) {
-        List<RoleServiceModel> roleServiceModels = new ArrayList<>();
-        for (String role : roles) {
-            Optional<RoleServiceModel> optionalRoleServiceModel = roleService.findByName(role);
-            if (!optionalRoleServiceModel.isPresent()) {
-                continue;
-            }
-            roleServiceModels.add(optionalRoleServiceModel.get());
-        }
-        return roleServiceModels;
+        return roles.stream()
+                .map(roleService::findByName)
+                .collect(Collectors.toList());
     }
 
     private UserServiceModel toUserServiceModel(UserBindingModel userBindingModel) {
@@ -145,7 +126,7 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
             List<RoleServiceModel> roles = roleService.findAll();
             userServiceModel.setRoles(roles);
         } else {
-            RoleServiceModel roleServiceModel = roleService.findByName(UserRole.ROLE_USER.toString()).get();
+            RoleServiceModel roleServiceModel = roleService.findByName(UserRole.ROLE_USER.toString());
             userServiceModel.setRoles(Collections.singletonList(roleServiceModel));
         }
     }

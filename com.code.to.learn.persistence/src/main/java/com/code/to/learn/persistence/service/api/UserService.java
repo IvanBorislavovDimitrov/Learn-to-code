@@ -15,7 +15,7 @@ public interface UserService extends GenericService<UserServiceModel> {
 
     boolean isPhoneNumberTaken(String phoneNumber);
 
-    Optional<UserServiceModel> findByUsername(String username);
+    UserServiceModel findByUsername(String username);
 
     long findUsersCount();
 

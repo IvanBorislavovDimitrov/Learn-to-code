@@ -9,12 +9,14 @@ import java.util.List;
 
 public interface CourseServiceApi {
 
-    ResponseEntity<CourseResponseModel> addCourse(CourseBindingModel courseBindingModel);
+    ResponseEntity<CourseResponseModel> add(CourseBindingModel courseBindingModel);
 
-    ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails);
+    ResponseEntity<List<CourseResponseModel>> getLatest(int count, boolean loadThumbnails);
 
-    ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category);
+    ResponseEntity<List<CourseResponseModel>> getByPageNameCategory(int page, String name, String category);
 
     ResponseEntity<CoursePagesResponseModel> getPagesCount(String courseName);
+
+    ResponseEntity<CourseResponseModel> get(String name);
 
 }

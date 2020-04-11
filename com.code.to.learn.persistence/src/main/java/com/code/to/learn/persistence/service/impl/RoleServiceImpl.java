@@ -4,6 +4,7 @@ import com.code.to.learn.persistence.dao.api.RoleDao;
 import com.code.to.learn.persistence.domain.entity.Role;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
+import com.code.to.learn.persistence.exception.basic.NameNotFoundException;
 import com.code.to.learn.persistence.service.api.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,12 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, RoleServiceModel> 
     }
 
     @Override
-    public Optional<RoleServiceModel> findByName(String name) {
+    public RoleServiceModel findByName(String name) {
         UserRole role = UserRole.valueOf(name);
         Optional<Role> optionalRole = roleDao.findByName(role);
         if (!optionalRole.isPresent()) {
-            return Optional.empty();
+            throw new NameNotFoundException(name);
         }
-        RoleServiceModel roleServiceModel = toOutput(optionalRole.get());
-        return Optional.of(roleServiceModel);
+        return toOutput(optionalRole.get());
     }
 }

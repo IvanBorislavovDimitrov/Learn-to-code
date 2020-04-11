@@ -41,8 +41,9 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @Lob
     private String description;
 
-    @Column(nullable = false)
-    private String videoName;
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(name = ID))
+    private List<CourseVideo> videosNames;
 
     @Column(nullable = false)
     private String thumbnailName;
@@ -173,12 +174,12 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.homework = homework;
     }
 
-    public String getVideoName() {
-        return videoName;
+    public List<CourseVideo> getVideosNames() {
+        return videosNames;
     }
 
-    public void setVideoName(String videoName) {
-        this.videoName = videoName;
+    public void setVideosNames(List<CourseVideo> videosNames) {
+        this.videosNames = videosNames;
     }
 
     public String getThumbnailName() {
@@ -204,8 +205,41 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setTeacher(course.getTeacher());
         setFutureAttendants(course.getFutureAttendants());
         setHomework(course.getHomework());
-        setVideoName(course.getVideoName());
+        setVideosNames(course.getVideosNames());
         setThumbnailName(course.getThumbnailName());
         return this;
+    }
+
+    @Embeddable
+    public static class CourseVideo {
+
+        @Column(nullable = false)
+        private String videoTitle;
+        @Column(nullable = false)
+        private String videoFullName;
+
+        public CourseVideo() {
+        }
+
+        public CourseVideo(String videoTitle, String videoFullName) {
+            this.videoTitle = videoTitle;
+            this.videoFullName = videoFullName;
+        }
+
+        public String getVideoTitle() {
+            return videoTitle;
+        }
+
+        public void setVideoTitle(String videoTitle) {
+            this.videoTitle = videoTitle;
+        }
+
+        public String getVideoFullName() {
+            return videoFullName;
+        }
+
+        public void setVideoFullName(String videoFullName) {
+            this.videoFullName = videoFullName;
+        }
     }
 }

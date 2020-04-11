@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CourseBindingModel {
 
@@ -40,7 +43,10 @@ public class CourseBindingModel {
     private String categoryName;
 
     @NotNull
-    private MultipartFile video;
+    private List<String> videosNames;
+
+    @NotNull
+    private List<MultipartFile> videos;
 
     @NotNull
     private MultipartFile thumbnail;
@@ -117,12 +123,12 @@ public class CourseBindingModel {
         this.teacherName = teacherName;
     }
 
-    public MultipartFile getVideo() {
-        return video;
+    public List<MultipartFile> getVideos() {
+        return videos;
     }
 
-    public void setVideo(MultipartFile video) {
-        this.video = video;
+    public void setVideos(List<MultipartFile> videos) {
+        this.videos = videos;
     }
 
     public String getCategoryName() {
@@ -139,5 +145,24 @@ public class CourseBindingModel {
 
     public void setThumbnail(MultipartFile thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public List<String> getVideosNames() {
+        return videosNames;
+    }
+
+    public void setVideosNames(List<String> videosNames) {
+        this.videosNames = videosNames;
+    }
+
+    public Map<String, MultipartFile> getVideosToUpload() {
+        if (videos.size() != videosNames.size()) {
+            throw new IllegalArgumentException("Videos and videos' names do no match!");
+        }
+        Map<String, MultipartFile> videosToUpload = new HashMap<>();
+        for (int i = 0; i < videosNames.size(); i++) {
+            videosToUpload.put(videosNames.get(i), videos.get(i));
+        }
+        return videosToUpload;
     }
 }

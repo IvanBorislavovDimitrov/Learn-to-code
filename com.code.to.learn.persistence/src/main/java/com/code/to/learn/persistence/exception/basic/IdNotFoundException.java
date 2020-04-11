@@ -1,6 +1,6 @@
-package com.code.to.learn.persistence.exception;
+package com.code.to.learn.persistence.exception.basic;
 
-public class IdNotFoundException extends PersistenceExcption {
+public class IdNotFoundException extends NotFoundException {
 
     private static final String ID_NOT_FOUND = "ID: {0} not found";
 

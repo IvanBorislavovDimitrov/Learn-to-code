@@ -7,8 +7,10 @@ import com.code.to.learn.util.parser.Parser;
 import org.hibernate.SessionFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+@ControllerAdvice
 public class GenericNotFoundExceptionHandler {
 
     private final Parser parser;

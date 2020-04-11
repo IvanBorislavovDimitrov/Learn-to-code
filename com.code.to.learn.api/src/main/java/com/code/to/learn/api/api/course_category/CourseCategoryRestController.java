@@ -21,7 +21,7 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping
     public ResponseEntity<CourseCategoryResponseModel> add(@RequestBody @Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
     }

@@ -6,12 +6,10 @@ import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.CourseValidator;
-import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
-import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -24,18 +22,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
-import static com.code.to.learn.web.constants.Constants.COURSE_VIDEO_EXTENSION;
-import static com.code.to.learn.web.constants.Constants.THUMBNAIL_FILE_EXTENSION;
+import static com.code.to.learn.web.constants.Constants.*;
 
 @Component
 public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
@@ -66,40 +66,60 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
-    public ResponseEntity<CourseResponseModel> addCourse(CourseBindingModel courseBindingModel) {
+    public ResponseEntity<CourseResponseModel> add(CourseBindingModel courseBindingModel) {
         courseValidator.validateCourseBindingModel(courseBindingModel);
         CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel);
-        FileToUpload thumbnail = new FileToUpload(courseServiceModel.getThumbnailName(), courseBindingModel.getThumbnail());
-        FileToUpload video = new FileToUpload(courseServiceModel.getVideoName(), courseBindingModel.getVideo());
-        remoteStorageFileUploader.uploadFilesAsync(Arrays.asList(thumbnail, video));
+        List<FileToUpload> filesToUpload = getFilesToUpload(courseBindingModel);
+        remoteStorageFileUploader.uploadFilesAsync(filesToUpload);
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
     private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel) {
         CourseServiceModel courseServiceModel = getMapper().map(courseBindingModel, CourseServiceModel.class);
-        String videoFileExtension = FilenameUtils.getExtension(courseBindingModel.getVideo().getOriginalFilename());
-        courseServiceModel.setVideoName(courseBindingModel.getName() + COURSE_VIDEO_EXTENSION + "." + videoFileExtension);
-        String thumbnailFileExtension = FilenameUtils.getExtension(courseBindingModel.getThumbnail().getOriginalFilename());
-        courseServiceModel.setThumbnailName(courseBindingModel.getName() + THUMBNAIL_FILE_EXTENSION + "." + thumbnailFileExtension);
-        Optional<UserServiceModel> teacher = userService.findByUsername(courseBindingModel.getTeacherName());
-        if (!teacher.isPresent()) {
-            throw new NotFoundException(Messages.USER_NOT_FOUND, courseBindingModel.getTeacherName());
-        }
-        courseServiceModel.setTeacher(teacher.get());
+        courseServiceModel.setVideosNames(getVideosNames(courseBindingModel));
+        courseServiceModel.setThumbnailName(getThumbnailName(courseBindingModel));
+        UserServiceModel teacher = userService.findByUsername(courseBindingModel.getTeacherName());
+        courseServiceModel.setTeacher(teacher);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
         courseServiceModel.setStartDate(LocalDate.parse(courseBindingModel.getStartDate(), formatter));
         courseServiceModel.setEndDate(LocalDate.parse(courseBindingModel.getEndDate(), formatter));
-        Optional<CourseCategoryServiceModel> courseCategoryServiceModel = courseCategoryService.findByName(courseBindingModel.getCategoryName());
-        if (!courseCategoryServiceModel.isPresent()) {
-            throw new NotFoundException(Messages.CATEGORY_NOT_FOUND, courseBindingModel.getCategoryName());
-        }
-        courseServiceModel.setCourseCategory(courseCategoryServiceModel.get());
+        CourseCategoryServiceModel courseCategoryServiceModel = courseCategoryService.findByName(courseBindingModel.getCategoryName());
+        courseServiceModel.setCourseCategory(courseCategoryServiceModel);
         return courseServiceModel;
     }
 
+    private List<FileToUpload> getFilesToUpload(CourseBindingModel courseBindingModel) {
+        List<FileToUpload> filesToUploads = new ArrayList<>();
+        courseBindingModel.getVideosToUpload().forEach((videoName, videoFile) -> {
+            FileToUpload fileToUpload = new FileToUpload(getVideoFileName(courseBindingModel.getName(), videoName, videoFile), videoFile);
+            filesToUploads.add(fileToUpload);
+        });
+        FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
+        filesToUploads.add(thumbnail);
+        return filesToUploads;
+    }
+
+    private String getVideoFileName(String courseName, String videoName, MultipartFile videoFile) {
+        String videoFileExtension = FilenameUtils.getExtension(videoFile.getOriginalFilename());
+        return courseName + DELIMITER + videoName + COURSE_VIDEO_EXTENSION + "." + videoFileExtension;
+    }
+
+    private List<CourseServiceModel.CourseVideoServiceModel> getVideosNames(CourseBindingModel courseBindingModel) {
+        return courseBindingModel.getVideosToUpload().entrySet()
+                .stream()
+                .map(videoToUpload -> new CourseServiceModel.CourseVideoServiceModel(videoToUpload.getKey(),
+                        getVideoFileName(courseBindingModel.getName(), videoToUpload.getKey(), videoToUpload.getValue())))
+                .collect(Collectors.toList());
+    }
+
+    private String getThumbnailName(CourseBindingModel courseBindingModel) {
+        String thumbnailFileExtension = FilenameUtils.getExtension(courseBindingModel.getThumbnail().getOriginalFilename());
+        return courseBindingModel.getName() + THUMBNAIL_FILE_EXTENSION + "." + thumbnailFileExtension;
+    }
+
     @Override
-    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(int count, boolean loadThumbnails) {
+    public ResponseEntity<List<CourseResponseModel>> getLatest(int count, boolean loadThumbnails) {
         List<CourseServiceModel> courseServiceModels = courseService.findLatestCourses(count);
         return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, loadThumbnails));
     }
@@ -139,9 +159,15 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
-    public ResponseEntity<List<CourseResponseModel>> getCourses(int page, String name, String category) {
+    public ResponseEntity<List<CourseResponseModel>> getByPageNameCategory(int page, String name, String category) {
         List<CourseServiceModel> courseServiceModels = courseService.findCourses(page, configuration.getMaxCoursesOnPage(), name, category);
         return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, true));
+    }
+
+    @Override
+    public ResponseEntity<CourseResponseModel> get(String name) {
+        CourseServiceModel courseServiceModel = courseService.findByName(name);
+        return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
     @Override
