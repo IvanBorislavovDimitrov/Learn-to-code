@@ -20,7 +20,7 @@ public class CourseResponseModel {
     private UserResponseModel teacher;
     private CourseCategoryResponseModel category;
     private String base64Thumbnail;
-    List<CourseVideoResponseModel> videosNames;
+    private List<CourseVideoResponseModel> videosNames;
 
     public String getName() {
         return name;

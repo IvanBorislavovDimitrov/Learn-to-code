@@ -11,6 +11,7 @@ public class UserResponseModel {
     private String email;
     private List<String> roles;
     private String description;
+    private String profilePictureName;
 
     public String getUsername() {
         return username;
@@ -66,5 +67,13 @@ public class UserResponseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProfilePictureName() {
+        return profilePictureName;
+    }
+
+    public void setProfilePictureName(String profilePictureName) {
+        this.profilePictureName = profilePictureName;
     }
 }
