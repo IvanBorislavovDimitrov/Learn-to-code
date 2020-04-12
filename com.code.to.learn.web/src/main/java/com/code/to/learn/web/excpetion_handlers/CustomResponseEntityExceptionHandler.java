@@ -4,6 +4,8 @@ import com.code.to.learn.api.model.error.ApiErrorResponse;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import com.code.to.learn.util.parser.Parser;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomResponseEntityExceptionHandler.class);
 
     private static final String DEFAULT_CONSTRAINT_VALIDATION_MESSAGE = "There is no error message for the validation";
 
@@ -38,6 +42,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                 .code(HttpStatus.BAD_REQUEST.value())
                 .type(exception.getClass().getSimpleName())
                 .build();
+        LOGGER.error(exception.getMessage(), exception);
         return ResponseEntity.badRequest()
                 .body(parser.serialize(apiErrorResponse));
     }

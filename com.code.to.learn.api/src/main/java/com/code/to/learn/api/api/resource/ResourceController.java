@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
+
+import static com.code.to.learn.api.constant.Constants.RESOURCE_BUFFER_SIZE;
 
 @Controller
 @RequestMapping(value = "/resource")
@@ -32,12 +36,13 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/videos/{name:.*}", produces = "video/mp4")
-    @Async(value = "asyncTaskExecutor")
-    public CompletableFuture<StreamingResponseBody> getVideoResource(@PathVariable String name) {
+    @Async
+    public CompletableFuture<StreamingResponseBody> getVideoResource(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
         InputStream videoInputStream = resourceServiceApi.openFileStream(name);
         BufferedInputStream bufferedVideoInputStream = new BufferedInputStream(videoInputStream);
         StreamingResponseBody streamingResponseBody = outputStream -> {
-            byte[] read = new byte[8192];
+            byte[] read = new byte[RESOURCE_BUFFER_SIZE];
             int len;
             while ((len = bufferedVideoInputStream.read(read)) != -1) {
                 outputStream.write(read, 0, len);

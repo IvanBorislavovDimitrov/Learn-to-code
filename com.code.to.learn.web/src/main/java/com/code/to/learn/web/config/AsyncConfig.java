@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.Executors;
 
+import static com.code.to.learn.web.constants.Constants.ASYNC_TIMEOUT;
+
 @Configuration
 @ComponentScan("com.code.to.learn")
 @EnableAsync
@@ -31,6 +33,7 @@ public class AsyncConfig implements AsyncConfigurer {
             @Override
             public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
                 configurer.setTaskExecutor(getTaskExecutor());
+                configurer.setDefaultTimeout(ASYNC_TIMEOUT);
             }
         };
     }

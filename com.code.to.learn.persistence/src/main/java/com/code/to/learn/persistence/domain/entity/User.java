@@ -43,6 +43,9 @@ public class User extends IdEntity<User> implements UserDetails {
     @Basic
     private String profilePictureName;
 
+    @Lob
+    private String description;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
@@ -192,6 +195,14 @@ public class User extends IdEntity<User> implements UserDetails {
         this.roles = roles;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public User merge(User user) {
         setUsername(user.getUsername());
@@ -205,6 +216,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setCoursesInCart(user.getCoursesInCart());
         setRoles(user.getRoles());
         setProfilePictureName(user.getProfilePictureName());
+        setDescription(user.getDescription());
         return this;
     }
 }

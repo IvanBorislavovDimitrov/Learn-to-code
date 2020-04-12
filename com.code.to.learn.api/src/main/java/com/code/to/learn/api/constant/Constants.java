@@ -14,4 +14,6 @@ public class Constants {
 
     public static final String DATE_PATTERN = "yyyy-MM-dd";
 
+    public static final int RESOURCE_BUFFER_SIZE = 4 * 1024;
+
 }

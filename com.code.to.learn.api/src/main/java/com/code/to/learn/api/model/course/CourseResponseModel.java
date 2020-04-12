@@ -5,6 +5,7 @@ import com.code.to.learn.api.model.user.UserResponseModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class CourseResponseModel {
 
@@ -19,6 +20,7 @@ public class CourseResponseModel {
     private UserResponseModel teacher;
     private CourseCategoryResponseModel category;
     private String base64Thumbnail;
+    List<CourseVideoResponseModel> videosNames;
 
     public String getName() {
         return name;
@@ -106,5 +108,43 @@ public class CourseResponseModel {
 
     public void setBase64Thumbnail(String base64Thumbnail) {
         this.base64Thumbnail = base64Thumbnail;
+    }
+
+    public List<CourseVideoResponseModel> getVideosNames() {
+        return videosNames;
+    }
+
+    public void setVideosNames(List<CourseVideoResponseModel> videosNames) {
+        this.videosNames = videosNames;
+    }
+
+    public static class CourseVideoResponseModel {
+
+        private String videoTitle;
+        private String videoFullName;
+
+        public CourseVideoResponseModel() {
+        }
+
+        public CourseVideoResponseModel(String videoTitle, String videoFullName) {
+            this.videoTitle = videoTitle;
+            this.videoFullName = videoFullName;
+        }
+
+        public String getVideoTitle() {
+            return videoTitle;
+        }
+
+        public void setVideoTitle(String videoTitle) {
+            this.videoTitle = videoTitle;
+        }
+
+        public String getVideoFullName() {
+            return videoFullName;
+        }
+
+        public void setVideoFullName(String videoFullName) {
+            this.videoFullName = videoFullName;
+        }
     }
 }

@@ -10,6 +10,7 @@ public class UserResponseModel {
     private String phoneNumber;
     private String email;
     private List<String> roles;
+    private String description;
 
     public String getUsername() {
         return username;
@@ -57,5 +58,13 @@ public class UserResponseModel {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

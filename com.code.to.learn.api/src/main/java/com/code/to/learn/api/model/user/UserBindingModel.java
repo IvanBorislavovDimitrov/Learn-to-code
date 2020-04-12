@@ -46,6 +46,9 @@ public class UserBindingModel {
 
     private MultipartFile profilePicture;
 
+    @NotNull
+    private String description;
+
     public UserBindingModel() {
         // Required by ModelMapper
     }
@@ -60,6 +63,7 @@ public class UserBindingModel {
         setEmail(userBindingModel.getEmail());
         setBirthDate(userBindingModel.getBirthDate());
         setProfilePicture(userBindingModel.getProfilePicture());
+        setDescription(userBindingModel.getDescription());
     }
 
     public String getFirstName() {
@@ -132,5 +136,13 @@ public class UserBindingModel {
 
     public void setProfilePicture(MultipartFile profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

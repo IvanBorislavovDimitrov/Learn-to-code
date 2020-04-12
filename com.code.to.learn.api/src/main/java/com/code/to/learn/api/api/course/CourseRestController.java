@@ -22,7 +22,6 @@ public class CourseRestController {
         this.courseServiceApi = courseServiceApi;
     }
 
-    // TODO: Add @Valid
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseResponseModel> addCourse(@Valid CourseBindingModel courseBindingModel) {
         return courseServiceApi.add(courseBindingModel);

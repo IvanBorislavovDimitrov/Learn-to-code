@@ -24,6 +24,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     private List<CourseServiceModel> coursesInCart;
     private List<RoleServiceModel> roles;
     private String profilePictureName;
+    private String description;
 
     public UserServiceModel() {
         // Required by ModelMapper
@@ -131,6 +132,14 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
 
     public void setProfilePictureName(String profilePictureName) {
         this.profilePictureName = profilePictureName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
