@@ -29,9 +29,9 @@ public class HibernateSessionManagementInterceptor implements HandlerInterceptor
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         if (response.getStatus() == HttpStatus.OK.value()) {
-            DatabaseSessionUtil.closeSessionWithCommit(sessionFactory);
+            DatabaseSessionUtil.closeWithCommit(sessionFactory);
             return;
         }
-        DatabaseSessionUtil.closeSessionWithRollback(sessionFactory);
+        DatabaseSessionUtil.closeWithRollback(sessionFactory);
     }
 }

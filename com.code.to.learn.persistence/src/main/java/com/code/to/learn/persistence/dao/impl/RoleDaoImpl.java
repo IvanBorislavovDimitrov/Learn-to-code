@@ -26,7 +26,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
                 createRoles();
             }
         } finally {
-            DatabaseSessionUtil.closeSessionWithCommit(getSessionFactory());
+            DatabaseSessionUtil.closeWithCommit(getSessionFactory());
         }
     }
 

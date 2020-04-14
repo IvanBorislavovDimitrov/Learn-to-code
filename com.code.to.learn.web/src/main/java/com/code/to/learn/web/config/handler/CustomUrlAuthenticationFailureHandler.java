@@ -20,7 +20,7 @@ public class CustomUrlAuthenticationFailureHandler extends SimpleUrlAuthenticati
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        DatabaseSessionUtil.closeSessionWithRollback(sessionFactory);
+        DatabaseSessionUtil.closeWithRollback(sessionFactory);
         super.onAuthenticationFailure(request, response, exception);
     }
 }

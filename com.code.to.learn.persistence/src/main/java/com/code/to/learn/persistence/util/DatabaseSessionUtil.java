@@ -38,7 +38,7 @@ public final class DatabaseSessionUtil {
         return session;
     }
 
-    public static void closeSessionWithRollback(SessionFactory sessionFactory) {
+    public static void closeWithRollback(SessionFactory sessionFactory) {
         Session session;
         try {
             session = sessionFactory.getCurrentSession();
@@ -66,7 +66,7 @@ public final class DatabaseSessionUtil {
         }
     }
 
-    public static void closeSessionWithCommit(SessionFactory sessionFactory) {
+    public static void closeWithCommit(SessionFactory sessionFactory) {
         Session session;
         try {
             session = sessionFactory.getCurrentSession();
