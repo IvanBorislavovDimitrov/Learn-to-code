@@ -64,6 +64,9 @@ public class User extends IdEntity<User> implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author", targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Comment> comments = new ArrayList<>();
+
     public String getFirstName() {
         return firstName;
     }
@@ -203,6 +206,14 @@ public class User extends IdEntity<User> implements UserDetails {
         this.description = description;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public User merge(User user) {
         setUsername(user.getUsername());
@@ -217,6 +228,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setRoles(user.getRoles());
         setProfilePictureName(user.getProfilePictureName());
         setDescription(user.getDescription());
+        setComments(user.getComments());
         return this;
     }
 }

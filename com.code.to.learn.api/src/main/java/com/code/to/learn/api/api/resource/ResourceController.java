@@ -38,7 +38,6 @@ public class ResourceController {
     @GetMapping(value = "/videos/{name:.*}", produces = "video/mp4")
     @Async
     public CompletableFuture<StreamingResponseBody> getVideoResource(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
         InputStream videoInputStream = resourceServiceApi.openFileStream(name);
         BufferedInputStream bufferedVideoInputStream = new BufferedInputStream(videoInputStream);
         StreamingResponseBody streamingResponseBody = outputStream -> {

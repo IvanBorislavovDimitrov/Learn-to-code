@@ -1,9 +1,7 @@
 package com.code.to.learn.web.excpetion_handlers;
 
 import com.code.to.learn.api.model.error.ApiErrorResponse;
-import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import com.code.to.learn.util.parser.Parser;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +22,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     private static final String DEFAULT_CONSTRAINT_VALIDATION_MESSAGE = "There is no error message for the validation";
 
     private final Parser parser;
-    private final SessionFactory sessionFactory;
 
     @Autowired
-    public CustomResponseEntityExceptionHandler(Parser parser, SessionFactory sessionFactory) {
+    public CustomResponseEntityExceptionHandler(Parser parser) {
         this.parser = parser;
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
-        DatabaseSessionUtil.closeSessionWithRollback(sessionFactory);
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .message(getErrorMessage(exception))
                 .code(HttpStatus.BAD_REQUEST.value())

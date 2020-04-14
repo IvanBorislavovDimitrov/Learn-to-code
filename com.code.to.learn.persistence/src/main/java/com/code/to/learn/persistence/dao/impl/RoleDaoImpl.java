@@ -21,10 +21,13 @@ public class RoleDaoImpl extends GenericDaoImpl<Role> implements RoleDao {
 
     @PostConstruct
     public void init() {
-        if (count() == 0) {
-            createRoles();
+        try {
+            if (count() == 0) {
+                createRoles();
+            }
+        } finally {
+            DatabaseSessionUtil.closeSessionWithCommit(getSessionFactory());
         }
-        DatabaseSessionUtil.closeSessionWithCommit(getSessionFactory());
     }
 
     private void createRoles() {

@@ -28,7 +28,8 @@ public class CourseRestController {
     }
 
     @GetMapping(value = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count, @RequestParam(defaultValue = "false") boolean loadThumbnails) {
+    public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count,
+                                                                      @RequestParam(defaultValue = "false") boolean loadThumbnails) {
         return courseServiceApi.getLatest(count, loadThumbnails);
     }
 

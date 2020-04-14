@@ -69,6 +69,9 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<Homework> homework = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course", targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Comment> comments = new ArrayList<>();
+
     @Override
     public String getName() {
         return name;
@@ -190,6 +193,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.thumbnailName = thumbnailName;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -207,6 +218,7 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setHomework(course.getHomework());
         setVideosNames(course.getVideosNames());
         setThumbnailName(course.getThumbnailName());
+        setComments(course.getComments());
         return this;
     }
 
