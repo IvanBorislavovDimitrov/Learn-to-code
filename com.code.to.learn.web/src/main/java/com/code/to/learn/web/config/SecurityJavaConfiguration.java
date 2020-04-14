@@ -53,6 +53,8 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
+                .cors()
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(getRestAuthenticationEntryPoint())
                 .and()
