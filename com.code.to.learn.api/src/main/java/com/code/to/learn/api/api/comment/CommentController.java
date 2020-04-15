@@ -6,12 +6,10 @@ import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/comments")
@@ -30,6 +28,11 @@ public class CommentController {
     public ResponseEntity<CommentResponseModel> add(@RequestBody @Valid CommentBindingModel commentBindingModel) {
         commentBindingModel.setAuthor(usernameGetter.getLoggedInUserUsername());
         return commentServiceApi.add(commentBindingModel);
+    }
+
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CommentResponseModel>> getCommentsByCourseName(@RequestParam String courseName) {
+        return commentServiceApi.getCommentsByCourseName(courseName);
     }
 
 }

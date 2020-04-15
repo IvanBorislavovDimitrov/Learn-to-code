@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel, CommentResponseModel> implements CommentServiceApi {
@@ -35,6 +36,11 @@ public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel,
         CommentServiceModel courseServiceModel = toCourseServiceModel(commentBindingModel);
         commentService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<List<CommentResponseModel>> getCommentsByCourseName(String courseName) {
+        return ResponseEntity.ok(toOutput(commentService.findCommentsByCourseName(courseName)));
     }
 
     private CommentServiceModel toCourseServiceModel(CommentBindingModel commentBindingModel) {

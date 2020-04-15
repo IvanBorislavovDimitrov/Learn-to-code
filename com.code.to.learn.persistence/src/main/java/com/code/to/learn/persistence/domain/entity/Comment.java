@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Table(name = "comments")
 public class Comment extends IdEntity<Comment> {
 
+    public static final String COURSE = "course";
+
     @Lob
     private String content;
 
