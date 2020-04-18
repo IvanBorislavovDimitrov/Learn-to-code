@@ -4,6 +4,7 @@ import com.code.to.learn.api.api.course.CourseServiceApi;
 import com.code.to.learn.api.model.course.CourseBindingModel;
 import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
+import com.code.to.learn.api.model.course.UserEnrolledForCourse;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.CourseValidator;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
@@ -29,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -192,6 +194,21 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     public ResponseEntity<CourseResponseModel> enrollUserForCourse(String username, String courseName) {
         CourseServiceModel courseServiceModel = courseService.enrollUserForCourse(username, courseName);
         return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<UserEnrolledForCourse> isUserEnrolledForCourse(String username, String courseName) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        UserEnrolledForCourse userEnrolledForCourse = new UserEnrolledForCourse();
+        userEnrolledForCourse.setUserEnrolledForCourse(isUserEnrolledForCourse(userServiceModel, courseName));
+        return ResponseEntity.ok(userEnrolledForCourse);
+    }
+
+    private boolean isUserEnrolledForCourse(UserServiceModel userServiceModel, String courseName) {
+        return userServiceModel.getCourses()
+                .stream()
+                .map(CourseServiceModel::getName)
+                .anyMatch(courseServiceModelName -> Objects.equals(courseServiceModelName, courseName));
     }
 
     @Override

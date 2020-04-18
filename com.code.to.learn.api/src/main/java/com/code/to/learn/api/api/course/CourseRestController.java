@@ -3,6 +3,7 @@ package com.code.to.learn.api.api.course;
 import com.code.to.learn.api.model.course.CourseBindingModel;
 import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
+import com.code.to.learn.api.model.course.UserEnrolledForCourse;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -57,6 +58,12 @@ public class CourseRestController {
     private ResponseEntity<CourseResponseModel> enrollUserForCourse(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.enrollUserForCourse(loggedUser, courseName);
+    }
+
+    @GetMapping(value = "/is-enrolled/{courseEnrolledFor}")
+    public ResponseEntity<UserEnrolledForCourse> isLoggedUserEnrolledForCourse(@PathVariable String courseEnrolledFor) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.isUserEnrolledForCourse(loggedUser, courseEnrolledFor);
     }
 
 }
