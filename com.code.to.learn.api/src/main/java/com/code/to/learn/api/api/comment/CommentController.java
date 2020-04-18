@@ -24,13 +24,13 @@ public class CommentController {
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentResponseModel> add(@RequestBody @Valid CommentBindingModel commentBindingModel) {
         commentBindingModel.setAuthor(usernameGetter.getLoggedInUserUsername());
         return commentServiceApi.add(commentBindingModel);
     }
 
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CommentResponseModel>> getCommentsByCourseName(@RequestParam String courseName) {
         return commentServiceApi.getCommentsByCourseName(courseName);
     }

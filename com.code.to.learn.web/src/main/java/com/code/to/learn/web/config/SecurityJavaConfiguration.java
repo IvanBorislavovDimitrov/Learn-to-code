@@ -59,7 +59,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(getRestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users/logout", "/users/all", "/github/**", "/comments")
+                .antMatchers("/users/logout", "/users/all", "/github/**", "/comments/add")
                 .authenticated()
                 .antMatchers("/api/admin/**", "/users/change-roles/**")
                 .hasRole("ADMIN")
