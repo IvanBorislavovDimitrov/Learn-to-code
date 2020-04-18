@@ -3,6 +3,7 @@ package com.code.to.learn.api.api.course;
 import com.code.to.learn.api.model.course.CourseBindingModel;
 import com.code.to.learn.api.model.course.CoursePagesResponseModel;
 import com.code.to.learn.api.model.course.CourseResponseModel;
+import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import java.util.List;
 public class CourseRestController {
 
     private final CourseServiceApi courseServiceApi;
+    private final UsernameGetter usernameGetter;
 
     @Autowired
-    public CourseRestController(CourseServiceApi courseServiceApi) {
+    public CourseRestController(CourseServiceApi courseServiceApi, UsernameGetter usernameGetter) {
         this.courseServiceApi = courseServiceApi;
+        this.usernameGetter = usernameGetter;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -48,6 +51,12 @@ public class CourseRestController {
     @GetMapping(value = "/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CourseResponseModel> getCourse(@PathVariable String courseName) {
         return courseServiceApi.get(courseName);
+    }
+
+    @PostMapping(value = "/enroll/{courseName}")
+    private ResponseEntity<CourseResponseModel> enrollUserForCourse(@PathVariable String courseName) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.enrollUserForCourse(loggedUser, courseName);
     }
 
 }

@@ -189,6 +189,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
+    public ResponseEntity<CourseResponseModel> enrollUserForCourse(String username, String courseName) {
+        CourseServiceModel courseServiceModel = courseService.enrollUserForCourse(username, courseName);
+        return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

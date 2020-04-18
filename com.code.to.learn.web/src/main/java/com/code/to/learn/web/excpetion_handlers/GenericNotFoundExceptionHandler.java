@@ -5,6 +5,7 @@ import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.util.parser.Parser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -17,7 +18,7 @@ public class GenericNotFoundExceptionHandler {
         this.parser = parser;
     }
 
-    @ExceptionHandler({NotFoundException.class})
+    @ExceptionHandler({NotFoundException.class, UsernameNotFoundException.class})
     public ResponseEntity<String> userExceptionOccurred(Exception exception) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .code(HttpStatus.NOT_FOUND.value())

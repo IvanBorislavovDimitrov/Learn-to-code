@@ -15,4 +15,6 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
 
     long countByNameLike(String name);
 
+    CourseServiceModel enrollUserForCourse(String username, String courseName);
+
 }

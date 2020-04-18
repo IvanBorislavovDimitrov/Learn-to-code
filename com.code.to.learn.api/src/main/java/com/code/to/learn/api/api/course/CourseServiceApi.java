@@ -19,4 +19,5 @@ public interface CourseServiceApi {
 
     ResponseEntity<CourseResponseModel> get(String name);
 
+    ResponseEntity<CourseResponseModel> enrollUserForCourse(String username, String courseName);
 }
