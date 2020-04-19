@@ -224,6 +224,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
+    public ResponseEntity<CourseResponseModel> removeCourseFromCart(String username, String courseName) {
+        CourseServiceModel courseServiceModel = courseService.removeCourseFromCart(username, courseName);
+        return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

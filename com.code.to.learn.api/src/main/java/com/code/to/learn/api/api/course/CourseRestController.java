@@ -78,4 +78,11 @@ public class CourseRestController {
         return courseServiceApi.getCoursesInCart(loggedUser);
     }
 
+    @PostMapping(value = "/cart/remove/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CourseResponseModel> removeItemFromCart(@PathVariable String courseName) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.removeCourseFromCart(loggedUser, courseName);
+    }
+
+
 }

@@ -21,4 +21,6 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
 
     List<CourseServiceModel> getCoursesInCart(String username);
 
+    CourseServiceModel removeCourseFromCart(String username, String courseName);
+
 }

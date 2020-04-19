@@ -27,4 +27,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> addToCart(String username, String courseName);
 
     ResponseEntity<List<CourseResponseModel>> getCoursesInCart(String username);
+
+    ResponseEntity<CourseResponseModel> removeCourseFromCart(String username, String courseName);
 }
