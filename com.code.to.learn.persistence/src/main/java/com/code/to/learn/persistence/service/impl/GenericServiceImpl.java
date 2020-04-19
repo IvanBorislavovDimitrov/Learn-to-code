@@ -4,12 +4,14 @@ import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.model.IdServiceModel;
 import com.code.to.learn.persistence.exception.basic.IdNotFoundException;
+import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.GenericService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServiceModel> extends ExtendableMapper<E, M> implements GenericService<M> {
@@ -72,6 +74,18 @@ public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServ
     @Override
     protected Class<E> getInputClass() {
         return getEntityClass();
+    }
+
+    protected <T extends IdEntity<T>> T getOrThrow(Supplier<Optional<T>> supplier, String exceptionMessage, Object... args) {
+        Optional<T> optionalIdServiceModel = supplier.get();
+        if (!optionalIdServiceModel.isPresent()) {
+            throw new NotFoundException(exceptionMessage, args);
+        }
+        return optionalIdServiceModel.get();
+    }
+
+    public <T extends IdEntity<T>> T getOrThrow(Supplier<Optional<T>> supplier) {
+        return supplier.get().get();
     }
 
     @Override

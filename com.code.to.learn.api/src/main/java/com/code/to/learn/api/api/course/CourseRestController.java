@@ -66,4 +66,10 @@ public class CourseRestController {
         return courseServiceApi.isUserEnrolledForCourse(loggedUser, courseEnrolledFor);
     }
 
+    @PostMapping(value = "/cart/add/{courseName}")
+    public ResponseEntity<CourseResponseModel> addToCart(@PathVariable String courseName) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.addToCart(loggedUser, courseName);
+    }
+
 }

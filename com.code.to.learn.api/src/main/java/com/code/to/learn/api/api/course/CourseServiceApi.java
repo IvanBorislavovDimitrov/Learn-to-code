@@ -23,4 +23,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> enrollUserForCourse(String username, String courseName);
 
     ResponseEntity<UserEnrolledForCourse> isUserEnrolledForCourse(String username, String courseName);
+
+    ResponseEntity<CourseResponseModel> addToCart(String username, String courseName);
 }

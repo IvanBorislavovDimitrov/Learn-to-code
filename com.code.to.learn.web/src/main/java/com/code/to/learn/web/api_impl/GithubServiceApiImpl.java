@@ -61,21 +61,31 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
     @Override
     public ResponseEntity<GithubUserResponseModel> getGithubUserInfo(String username) {
         UserServiceModel userServiceModel = userService.findByUsername(username);
+        GithubAccessTokenServiceModel githubAccessTokenServiceModel = getGithubAccessTokenServiceModel(username, userServiceModel);
+        HttpGet userRequest = new HttpGet(getUsernameResource());
+        userRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessTokenServiceModel.getAccessToken());
+        HttpResponse userResponse = resilientHttpClient.execute(userRequest);
+        validateRequest(username, userResponse);
+        GithubUserResponseModel githubUserResponseModel = parser.deserialize(UncheckedEntityUtils.getResponseBody(userResponse),
+                GithubUserResponseModel.class);
+        return ResponseEntity.ok(githubUserResponseModel);
+    }
+
+    private GithubAccessTokenServiceModel getGithubAccessTokenServiceModel(String username, UserServiceModel userServiceModel) {
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = userServiceModel.getGithubAccessToken();
         if (githubAccessTokenServiceModel == null) {
             throw new GithubException(MessageFormat.format(Messages.NO_GITHUB_ACCESS_TOKEN_FOR_USER, username));
         }
-        HttpGet userRequest = new HttpGet(getUsernameResource());
-        userRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessTokenServiceModel.getAccessToken());
-        HttpResponse userResponse = resilientHttpClient.execute(userRequest);
+        return githubAccessTokenServiceModel;
+    }
+
+    private void validateRequest(String username, HttpResponse userResponse) {
         if (userResponse.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
             throw new GithubException(MessageFormat.format(Messages.USER_NOT_FOUND, username));
         }
         if (userResponse.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
             throw new GithubException(MessageFormat.format(Messages.ACCESS_TOKEN_FOR_USER_HAS_EXPIRED, username));
         }
-        GithubUserResponseModel githubUserResponseModel = parser.deserialize(UncheckedEntityUtils.getResponseBody(userResponse), GithubUserResponseModel.class);
-        return ResponseEntity.ok(githubUserResponseModel);
     }
 
     @Override

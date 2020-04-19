@@ -6,15 +6,12 @@ import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
-import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseServiceModel> implements CourseService {
@@ -51,19 +48,24 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
 
     @Override
     public CourseServiceModel enrollUserForCourse(String username, String courseName) {
-        Optional<User> user = userDao.findByUsername(username);
-        if (!user.isPresent()) {
-            throw new UsernameNotFoundException(username);
-        }
-        Optional<Course> course = courseDao.findByName(courseName);
-        if (!course.isPresent()) {
-            throw new NotFoundException(Messages.COURSE_NOT_FOUND, courseName);
-        }
-        user.get().getCourses().add(course.get());
-        userDao.update(user.get());
-        course.get().getAttendants().add(user.get());
-        Optional<Course> updatedCourse = courseDao.update(course.get());
-        return toOutput(updatedCourse.get());
+        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        Course course = getOrThrow(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
+        user.getCourses().add(course);
+        userDao.update(user);
+        course.getAttendants().add(user);
+        Course updatedCourse = getOrThrow(() -> courseDao.update(course));
+        return toOutput(updatedCourse);
+    }
+
+    @Override
+    public CourseServiceModel addToCart(String username, String courseName) {
+        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        Course course = getOrThrow(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
+        user.getCoursesInCart().add(course);
+        userDao.update(user);
+        course.getFutureAttendants().add(user);
+        Course updatedCourse = getOrThrow(() -> courseDao.update(course));
+        return toOutput(updatedCourse);
     }
 
     @Override
