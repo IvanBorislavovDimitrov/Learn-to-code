@@ -69,6 +69,12 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     @Override
+    public List<CourseServiceModel> getCoursesInCart(String username) {
+        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        return toOutput(user.getCoursesInCart());
+    }
+
+    @Override
     protected Class<CourseServiceModel> getModelClass() {
         return CourseServiceModel.class;
     }

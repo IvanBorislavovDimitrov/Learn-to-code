@@ -60,7 +60,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/users/logout", "/users/all", "/github/**", "/comments/add",
-                        "/courses/enroll/**", "/courses/is-enrolled/**")
+                        "/courses/enroll/**", "/courses/is-enrolled/**", "/courses/cart/**")
                 .authenticated()
                 .antMatchers("/api/admin/**", "/users/change-roles/**")
                 .hasRole("ADMIN")

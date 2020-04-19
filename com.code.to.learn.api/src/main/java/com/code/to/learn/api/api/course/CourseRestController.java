@@ -66,10 +66,16 @@ public class CourseRestController {
         return courseServiceApi.isUserEnrolledForCourse(loggedUser, courseEnrolledFor);
     }
 
-    @PostMapping(value = "/cart/add/{courseName}")
+    @PostMapping(value = "/cart/add/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CourseResponseModel> addToCart(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.addToCart(loggedUser, courseName);
+    }
+
+    @GetMapping(value = "/cart/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CourseResponseModel>> getCoursesInCart() {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.getCoursesInCart(loggedUser);
     }
 
 }
