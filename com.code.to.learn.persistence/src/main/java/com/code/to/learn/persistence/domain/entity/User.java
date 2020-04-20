@@ -127,6 +127,10 @@ public class User extends IdEntity<User> implements UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
+    public void emptyCart() {
+        this.coursesInCart.clear();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream()

@@ -84,5 +84,10 @@ public class CourseRestController {
         return courseServiceApi.removeCourseFromCart(loggedUser, courseName);
     }
 
+    @PostMapping(value = "/cart/enroll-from-cart")
+    public ResponseEntity<List<CourseResponseModel>> enrollForCourses() {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.enrollFromCart(loggedUser);
+    }
 
 }

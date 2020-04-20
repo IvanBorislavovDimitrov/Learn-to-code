@@ -230,6 +230,29 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
+    public ResponseEntity<List<CourseResponseModel>> enrollFromCart(String username) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        List<CourseServiceModel> enrolledCourses = enrollUserForAllCoursesInCart(userServiceModel);
+        courseService.emptyCart(username);
+        return ResponseEntity.ok(toOutput(enrolledCourses));
+    }
+
+    private List<CourseServiceModel> enrollUserForAllCoursesInCart(UserServiceModel userServiceModel) {
+        List<CourseServiceModel> enrolledCourses = new ArrayList<>();
+        for (String courseName : getCoursesToEnroll(userServiceModel.getCoursesInCart())) {
+            CourseServiceModel courseServiceModel = courseService.enrollUserForCourse(userServiceModel.getUsername(), courseName);
+            enrolledCourses.add(courseServiceModel);
+        }
+        return enrolledCourses;
+    }
+
+    private List<String> getCoursesToEnroll(List<CourseServiceModel> courseServiceModels) {
+        return courseServiceModels.stream()
+                .map(CourseServiceModel::getName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }
