@@ -2,10 +2,7 @@ package com.code.to.learn.persistence.domain.entity;
 
 import com.code.to.learn.persistence.domain.generic.NamedElement;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,9 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Lob
+    private String description;
 
     @OneToMany(mappedBy = "category")
     private List<Course> courses = new ArrayList<>();
@@ -26,6 +26,14 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Course> getCourses() {
@@ -40,6 +48,7 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
     public CourseCategory merge(CourseCategory courseCategory) {
         setName(courseCategory.getName());
         setCourses(courseCategory.getCourses());
+        setDescription(courseCategory.getDescription());
         return this;
     }
 }

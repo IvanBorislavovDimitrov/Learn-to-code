@@ -1,5 +1,6 @@
 package com.code.to.learn.web.config;
 
+import com.code.to.learn.web.config.session.SessionListener;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -14,11 +15,12 @@ public class WebServletConfiguration implements WebApplicationInitializer {
     private static final int DEFAULT_LOAD_ON_STARTUP = 1;
 
     @Override
-    public void onStartup(ServletContext container) {
+    public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SpringConfiguration.class);
-        context.setServletContext(container);
-        ServletRegistration.Dynamic servlet = container.addServlet(DISPATCHER_SERVLET, new DispatcherServlet(context));
+        context.setServletContext(servletContext);
+        servletContext.addListener(new SessionListener());
+        ServletRegistration.Dynamic servlet = servletContext.addServlet(DISPATCHER_SERVLET, new DispatcherServlet(context));
         servlet.setAsyncSupported(true);
         servlet.setLoadOnStartup(DEFAULT_LOAD_ON_STARTUP);
         servlet.addMapping(DEFAULT_MAPPING);
