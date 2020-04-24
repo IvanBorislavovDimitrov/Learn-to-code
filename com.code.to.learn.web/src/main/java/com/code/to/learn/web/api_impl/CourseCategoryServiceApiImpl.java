@@ -4,6 +4,7 @@ import com.code.to.learn.api.api.course_category.CourseCategoryServiceApi;
 import com.code.to.learn.api.model.course_category.CourseCategoryBindingModel;
 import com.code.to.learn.api.model.course_category.CourseCategoryResponseModel;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
+import com.code.to.learn.persistence.domain.model.CourseCategoryWithCoursesNumber;
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategoryServiceModel, CourseCategoryResponseModel> implements CourseCategoryServiceApi {
@@ -36,6 +38,20 @@ public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategor
     public ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories() {
         List<CourseCategoryServiceModel> categoryServiceModels = courseCategoryService.findAll();
         return ResponseEntity.ok(toOutput(categoryServiceModels));
+    }
+
+    @Override
+    public ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(int limit) {
+        List<CourseCategoryWithCoursesNumber> categoriesWithMostCourses = courseCategoryService.findCategoriesWithMostCourses();
+        return ResponseEntity.ok(toLimitedCourseCategoryResponseModels(categoriesWithMostCourses, limit));
+    }
+
+    private List<CourseCategoryResponseModel> toLimitedCourseCategoryResponseModels(List<CourseCategoryWithCoursesNumber> categories,
+                                                                                    int limit) {
+        return categories.stream()
+                .map(course -> getMapper().map(course, CourseCategoryResponseModel.class))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override

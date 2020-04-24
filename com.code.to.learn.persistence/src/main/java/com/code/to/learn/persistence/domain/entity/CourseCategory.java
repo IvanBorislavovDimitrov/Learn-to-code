@@ -16,7 +16,7 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Course> courses = new ArrayList<>();
 
     @Override

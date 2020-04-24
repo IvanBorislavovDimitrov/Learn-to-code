@@ -11,4 +11,6 @@ public interface CourseCategoryServiceApi {
     ResponseEntity<CourseCategoryResponseModel> add(CourseCategoryBindingModel courseCategoryBindingModel);
 
     ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories();
+
+    ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(int limit);
 }

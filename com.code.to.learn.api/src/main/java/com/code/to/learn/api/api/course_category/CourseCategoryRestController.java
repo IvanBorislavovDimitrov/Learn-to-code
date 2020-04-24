@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/course-categories", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/course-categories")
 public class CourseCategoryRestController {
 
     private final CourseCategoryServiceApi courseCategoryServiceApi;
@@ -21,13 +21,18 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> add(@RequestBody @Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories() {
         return courseCategoryServiceApi.getCourseCategories();
+    }
+
+    @GetMapping(value = "/top", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(@RequestParam(defaultValue = "6") int limit) {
+        return courseCategoryServiceApi.getCategoriesWithMostCourses(limit);
     }
 }
