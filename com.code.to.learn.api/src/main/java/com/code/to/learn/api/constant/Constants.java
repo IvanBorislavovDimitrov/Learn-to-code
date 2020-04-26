@@ -8,7 +8,6 @@ public class Constants {
     public static final String INVALID_PASSWORD = "Invalid password";
     public static final String INVALID_EMAIL = "Invalid email";
     public static final String INVALID_BIRTH_DATE = "Invalid birth date";
-    public static final String INVALID_FORM_OF_EDUCATION = "Invalid form of education";
 
     public static final String NOT_BEFORE_DATE = "1900-01-01";
 

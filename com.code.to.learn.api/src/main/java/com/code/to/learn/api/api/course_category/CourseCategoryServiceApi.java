@@ -15,4 +15,6 @@ public interface CourseCategoryServiceApi {
     ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories();
 
     ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(int limit);
+
+    ResponseEntity<CourseCategoryResponseModel> getByName(String courseCategoryName);
 }

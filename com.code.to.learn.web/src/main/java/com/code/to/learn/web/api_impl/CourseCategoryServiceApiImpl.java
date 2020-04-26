@@ -104,6 +104,12 @@ public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategor
     }
 
     @Override
+    public ResponseEntity<CourseCategoryResponseModel> getByName(String courseCategoryName) {
+        CourseCategoryServiceModel courseCategoryServiceModel = courseCategoryService.findByName(courseCategoryName);
+        return ResponseEntity.ok(toOutput(courseCategoryServiceModel));
+    }
+
+    @Override
     protected Class<CourseCategoryServiceModel> getInputClass() {
         return CourseCategoryServiceModel.class;
     }

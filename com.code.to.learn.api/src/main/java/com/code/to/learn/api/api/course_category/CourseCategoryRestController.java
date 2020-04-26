@@ -40,4 +40,9 @@ public class CourseCategoryRestController {
     public ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(@RequestParam(defaultValue = "6") int limit) {
         return courseCategoryServiceApi.getCategoriesWithMostCourses(limit);
     }
+
+    @GetMapping(value = "/{courseCategoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CourseCategoryResponseModel> getCourseCategory(@PathVariable String courseCategoryName) {
+        return courseCategoryServiceApi.getByName(courseCategoryName);
+    }
 }
