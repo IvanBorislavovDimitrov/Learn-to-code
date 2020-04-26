@@ -21,9 +21,14 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CourseCategoryResponseModel> add(@RequestBody @Valid CourseCategoryBindingModel courseCategoryBindingModel) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CourseCategoryResponseModel> add(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
+    }
+
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CourseCategoryResponseModel> update(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
+        return courseCategoryServiceApi.update(courseCategoryBindingModel);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

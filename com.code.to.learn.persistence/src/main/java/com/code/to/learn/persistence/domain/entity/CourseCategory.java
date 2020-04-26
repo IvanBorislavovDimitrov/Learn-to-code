@@ -16,9 +16,12 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
     @Lob
     private String description;
 
+    @Column
+    private String thumbnailName;
+
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Course> courses = new ArrayList<>();
-
+    
     @Override
     public String getName() {
         return name;
@@ -44,11 +47,20 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
         this.courses = courses;
     }
 
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
+    }
+
     @Override
     public CourseCategory merge(CourseCategory courseCategory) {
         setName(courseCategory.getName());
         setCourses(courseCategory.getCourses());
         setDescription(courseCategory.getDescription());
+        setThumbnailName(courseCategory.getThumbnailName());
         return this;
     }
 }

@@ -6,6 +6,8 @@ public class CourseCategoryResponseModel {
 
     private String description;
 
+    private String thumbnailName;
+
     public String getName() {
         return name;
     }
@@ -20,5 +22,13 @@ public class CourseCategoryResponseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
     }
 }

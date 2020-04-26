@@ -29,7 +29,12 @@ public class CourseCategoryServiceImpl extends NamedElementServiceImpl<CourseCat
 
     private List<CourseCategoryWithCoursesNumber> toCourseCategoryWithServiceNumber(List<CourseCategory> courseCategories) {
         return courseCategories.stream()
-                .map(course -> new CourseCategoryWithCoursesNumber(course.getName(), course.getDescription(), course.getCourses().size()))
+                .map(courseCategory -> new CourseCategoryWithCoursesNumber.Builder()
+                        .name(courseCategory.getName())
+                        .coursesNumber(courseCategory.getCourses().size())
+                        .description(courseCategory.getDescription())
+                        .thumbnailName(courseCategory.getThumbnailName())
+                        .build())
                 .collect(Collectors.toList());
     }
 

@@ -5,15 +5,7 @@ public class CourseCategoryWithCoursesNumber {
     private String name;
     private String description;
     private int coursesNumber;
-
-    public CourseCategoryWithCoursesNumber() {
-    }
-
-    public CourseCategoryWithCoursesNumber(String name, String description, int coursesNumber) {
-        this.name = name;
-        this.coursesNumber = coursesNumber;
-        this.description = description;
-    }
+    private String thumbnailName;
 
     public String getName() {
         return name;
@@ -37,5 +29,41 @@ public class CourseCategoryWithCoursesNumber {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
+    }
+
+    public static class Builder {
+        private final CourseCategoryWithCoursesNumber courseCategoryWithCoursesNumber = new CourseCategoryWithCoursesNumber();
+
+        public Builder name(String name) {
+            courseCategoryWithCoursesNumber.setName(name);
+            return this;
+        }
+
+        public Builder description(String description) {
+            courseCategoryWithCoursesNumber.setDescription(description);
+            return this;
+        }
+
+        public Builder coursesNumber(int coursesNumber) {
+            courseCategoryWithCoursesNumber.setCoursesNumber(coursesNumber);
+            return this;
+        }
+
+        public Builder thumbnailName(String thumbnailName) {
+            courseCategoryWithCoursesNumber.setThumbnailName(thumbnailName);
+            return this;
+        }
+
+        public CourseCategoryWithCoursesNumber build() {
+            return courseCategoryWithCoursesNumber;
+        }
     }
 }

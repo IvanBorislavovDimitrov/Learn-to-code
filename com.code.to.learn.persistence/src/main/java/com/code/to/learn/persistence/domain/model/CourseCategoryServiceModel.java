@@ -8,6 +8,7 @@ public class CourseCategoryServiceModel extends IdServiceModel implements NamedE
 
     private String name;
     private String description;
+    private String thumbnailName;
     private List<CourseServiceModel> courses;
 
     @Override
@@ -33,5 +34,13 @@ public class CourseCategoryServiceModel extends IdServiceModel implements NamedE
 
     public void setCourses(List<CourseServiceModel> courses) {
         this.courses = courses;
+    }
+
+    public String getThumbnailName() {
+        return thumbnailName;
+    }
+
+    public void setThumbnailName(String thumbnailName) {
+        this.thumbnailName = thumbnailName;
     }
 }

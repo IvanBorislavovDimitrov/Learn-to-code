@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class DropboxClientImpl implements DropboxClient {
+public class DropboxClientV2Impl implements DropboxClient {
 
     private final DbxClientV2 client;
 
     @Autowired
-    public DropboxClientImpl(DropboxClientFactory dropboxClientFactory) {
+    public DropboxClientV2Impl(DropboxClientFactory dropboxClientFactory) {
         client = dropboxClientFactory.createDropboxClient();
     }
 
@@ -60,6 +60,15 @@ public class DropboxClientImpl implements DropboxClient {
     public InputStream getFileAsInputStream(String filename) {
         try {
             return client.files().download(insertFrontSlash(filename)).getInputStream();
+        } catch (DbxException e) {
+            throw new LCException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void removeFile(String filename) {
+        try {
+            client.files().deleteV2(insertFrontSlash(filename));
         } catch (DbxException e) {
             throw new LCException(e.getMessage(), e);
         }
