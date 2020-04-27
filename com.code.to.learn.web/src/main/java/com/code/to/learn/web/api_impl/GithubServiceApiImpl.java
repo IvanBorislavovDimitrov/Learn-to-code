@@ -2,6 +2,7 @@ package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
+import com.code.to.learn.api.model.github.GithubRepositoryResponseModel;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.client.ResilientHttpClient;
 import com.code.to.learn.core.client.UncheckedEntityUtils;
@@ -15,6 +16,7 @@ import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.util.parser.Parser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -166,6 +168,21 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
         userService.update(userServiceModel);
     }
 
+    @Override
+    public ResponseEntity<List<GithubRepositoryResponseModel>> getUserRepositories(String username) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        GithubAccessTokenServiceModel githubAccessToken = userServiceModel.getGithubAccessToken();
+        HttpGet repositoriesRequest = new HttpGet(getRepositoryResource());
+        repositoriesRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessToken.getAccessToken());
+        HttpResponse repositoriesResponse = resilientHttpClient.execute(repositoriesRequest);
+        String repositoriesResponseBody = UncheckedEntityUtils.getResponseBody(repositoriesResponse);
+        return ResponseEntity.ok(parser.deserialize(repositoriesResponseBody, new TypeReference<List<GithubRepositoryResponseModel>>() {
+        }));
+    }
+
+    private String getRepositoryResource() {
+        return applicationConfiguration.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.REPOSITORIES_RESOURCE;
+    }
 
     @Override
     protected Class<GithubAccessTokenServiceModel> getInputClass() {

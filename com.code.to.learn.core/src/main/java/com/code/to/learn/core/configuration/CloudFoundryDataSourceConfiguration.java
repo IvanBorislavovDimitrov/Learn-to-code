@@ -87,7 +87,7 @@ public class CloudFoundryDataSourceConfiguration {
             Properties properties = new Properties();
             properties.setProperty(HIBERNATE_CONNECTION_USERNAME, "postgres");
             properties.setProperty(HIBERNATE_CONNECTION_PASSWORD, "34273427");
-            properties.setProperty(HIBERNATE_CONNECTION_URL, "jdbc:postgresql://postgres_container:5432/code");
+            properties.setProperty(HIBERNATE_CONNECTION_URL, "jdbc:postgresql://localhost:5432/code");
             properties.setProperty(HIBERNATE_DIALECT, applicationConfiguration.getHibernateDialect());
             properties.setProperty(HIBERNATE_CONNECTION_DRIVER_CLASS, "org.postgresql.Driver");
             properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "30");
