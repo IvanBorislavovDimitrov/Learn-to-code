@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,6 +62,14 @@ public class UserRestController {
     @PutMapping(value = "change-roles/{username}")
     public ResponseEntity<UserResponseModel> changeUserRoles(@PathVariable String username, @RequestParam List<String> roles) {
         return userServiceApi.changeUserRoles(username, roles);
+    }
+
+    @GetMapping(value = "/session")
+    public ResponseEntity<Map<String, Object>> getUserAssociatedToSession() {
+        String username = usernameGetter.getLoggedInUserUsername();
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", username);
+        return ResponseEntity.ok(map);
     }
 
 }
