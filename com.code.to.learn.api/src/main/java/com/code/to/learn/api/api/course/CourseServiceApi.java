@@ -31,4 +31,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> removeCourseFromCart(String username, String courseName);
 
     ResponseEntity<List<CourseResponseModel>> enrollFromCart(String username);
+
+    ResponseEntity<CourseResponseModel.CourseVideoResponseModel> getVideoByCourse(String courseName, String videoName);
 }

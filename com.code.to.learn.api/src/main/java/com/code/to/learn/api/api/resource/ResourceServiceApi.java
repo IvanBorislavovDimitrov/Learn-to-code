@@ -6,5 +6,5 @@ public interface ResourceServiceApi {
 
     byte[] getImageResource(String name);
 
-    InputStream openFileStream(String name);
+    InputStream openFileStream(String name, Long offset);
 }

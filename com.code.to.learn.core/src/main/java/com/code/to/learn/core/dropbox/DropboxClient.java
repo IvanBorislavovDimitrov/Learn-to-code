@@ -14,7 +14,7 @@ public interface DropboxClient {
 
     FileMetadata getFile(String filename, File file);
 
-    InputStream getFileAsInputStream(String filename);
+    InputStream getFileAsInputStream(String filename, Long offset);
 
     void removeFile(String filename);
 }

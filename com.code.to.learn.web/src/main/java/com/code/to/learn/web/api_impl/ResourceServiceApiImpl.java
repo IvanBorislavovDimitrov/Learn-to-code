@@ -23,7 +23,7 @@ public class ResourceServiceApiImpl implements ResourceServiceApi {
     }
 
     @Override
-    public InputStream openFileStream(String name) {
-        return remoteStorageFileGetter.getFileStream(name);
+    public InputStream openFileStream(String name, Long offset) {
+        return remoteStorageFileGetter.getFileStream(name, offset);
     }
 }

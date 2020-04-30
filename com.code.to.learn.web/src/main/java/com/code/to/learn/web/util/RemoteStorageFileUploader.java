@@ -2,6 +2,7 @@ package com.code.to.learn.web.util;
 
 import com.code.to.learn.core.dropbox.DropboxClient;
 import com.code.to.learn.persistence.exception.basic.LCException;
+import com.dropbox.core.v2.files.FileMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Component
 public class RemoteStorageFileUploader {
@@ -28,20 +31,26 @@ public class RemoteStorageFileUploader {
         this.executorService = executorService;
     }
 
-    public List<Future<?>> uploadFilesAsync(List<FileToUpload> filesToUpload) {
-        List<Future<?>> futureFilesToUpload = new ArrayList<>();
+    public List<FileMetadata> uploadFilesAsync(List<FileToUpload> filesToUpload) {
+        List<Future<FileMetadata>> futureFilesToUpload = new ArrayList<>();
         filesToUpload.forEach(fileToUpload -> futureFilesToUpload.add(uploadFileAsync(fileToUpload)));
-        return futureFilesToUpload;
+        return futureFilesToUpload.stream().map(futureFileToUpload -> {
+            try {
+                return futureFileToUpload.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new LCException(e.getMessage(), e);
+            }
+        }).collect(Collectors.toList());
     }
 
-    public Future<?> uploadFileAsync(FileToUpload fileToUpload) {
+    public Future<FileMetadata> uploadFileAsync(FileToUpload fileToUpload) {
         return executorService.submit(() -> uploadFileSync(fileToUpload));
     }
 
-    public void uploadFileSync(FileToUpload fileToUpload) {
+    public FileMetadata uploadFileSync(FileToUpload fileToUpload) {
         try {
             LOGGER.info(MessageFormat.format("Uploading file to Dropbox: {0}", fileToUpload.getFilename()));
-            dropboxClient.uploadFile(fileToUpload.getFile().getInputStream(), fileToUpload.getFilename());
+            return dropboxClient.uploadFile(fileToUpload.getFile().getInputStream(), fileToUpload.getFilename());
         } catch (IOException e) {
             throw new LCException(e.getMessage(), e);
         }

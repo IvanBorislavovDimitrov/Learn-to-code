@@ -229,13 +229,16 @@ public class Course extends IdEntity<Course> implements NamedElement {
         private String videoTitle;
         @Column(nullable = false)
         private String videoFullName;
+        @Column
+        private Long videoFileSize;
 
         public CourseVideo() {
         }
 
-        public CourseVideo(String videoTitle, String videoFullName) {
+        public CourseVideo(String videoTitle, String videoFullName, long videoFileSize) {
             this.videoTitle = videoTitle;
             this.videoFullName = videoFullName;
+            this.videoFileSize = videoFileSize;
         }
 
         public String getVideoTitle() {
@@ -252,6 +255,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
         public void setVideoFullName(String videoFullName) {
             this.videoFullName = videoFullName;
+        }
+
+        public Long getVideoFileSize() {
+            return videoFileSize;
+        }
+
+        public void setVideoFileSize(Long videoFileSize) {
+            this.videoFileSize = videoFileSize;
         }
     }
 }

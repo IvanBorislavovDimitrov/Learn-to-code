@@ -1,8 +1,13 @@
 package com.code.to.learn.api.api.resource;
 
+import com.code.to.learn.api.api.course.CourseServiceApi;
+import com.code.to.learn.api.model.course.CourseResponseModel;
+import com.code.to.learn.api.util.RangeHeaderGetter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +28,12 @@ import static com.code.to.learn.api.constant.Constants.RESOURCE_BUFFER_SIZE;
 public class ResourceController {
 
     private final ResourceServiceApi resourceServiceApi;
+    private final CourseServiceApi courseServiceApi;
 
     @Autowired
-    public ResourceController(ResourceServiceApi resourceServiceApi) {
+    public ResourceController(ResourceServiceApi resourceServiceApi, CourseServiceApi courseServiceApi) {
         this.resourceServiceApi = resourceServiceApi;
+        this.courseServiceApi = courseServiceApi;
     }
 
     @GetMapping(value = "/images/{name:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -35,11 +42,21 @@ public class ResourceController {
         return resourceServiceApi.getImageResource(name);
     }
 
-    @GetMapping(value = "/videos/{name:.*}", produces = "video/mp4")
-    @Async
-    public CompletableFuture<StreamingResponseBody> getVideoResource(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
-        InputStream videoInputStream = resourceServiceApi.openFileStream(name);
+    @GetMapping(value = "/videos/{courseName}/{name:.*}", produces = "video/mp4")
+    public CompletableFuture<StreamingResponseBody> getVideoResource(@PathVariable String courseName,
+                                                                     @PathVariable String name,
+                                                                     HttpServletRequest request,
+                                                                     HttpServletResponse response) {
+        RangeHeaderGetter rangeHeaderGetter = RangeHeaderGetter.createRangeHeaderGetter(request.getHeader(HttpHeaders.RANGE));
+        response.setHeader(HttpHeaders.CONTENT_RANGE, "bytes " + rangeHeaderGetter.getOffset() + "-" +
+                (rangeHeaderGetter.getOffset()) + "/" + (getVideoFileSize(courseName, name)));
+        response.setHeader(HttpHeaders.ACCEPT_RANGES, " bytes");
+
+        response.setStatus(HttpStatus.PARTIAL_CONTENT.value());
+
+        InputStream videoInputStream = resourceServiceApi.openFileStream(name, rangeHeaderGetter.getOffset());
         BufferedInputStream bufferedVideoInputStream = new BufferedInputStream(videoInputStream);
+
         StreamingResponseBody streamingResponseBody = outputStream -> {
             byte[] read = new byte[RESOURCE_BUFFER_SIZE];
             int len;
@@ -48,6 +65,11 @@ public class ResourceController {
             }
         };
         return CompletableFuture.completedFuture(streamingResponseBody);
+    }
+
+    private long getVideoFileSize(String courseName, String videoName) {
+        ResponseEntity<CourseResponseModel.CourseVideoResponseModel> video = courseServiceApi.getVideoByCourse(courseName, videoName);
+        return video.getBody().getVideoFileSize();
     }
 
 }

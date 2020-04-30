@@ -57,9 +57,13 @@ public class DropboxClientV2Impl implements DropboxClient {
     }
 
     @Override
-    public InputStream getFileAsInputStream(String filename) {
+    public InputStream getFileAsInputStream(String filename, Long offset) {
         try {
-            return client.files().download(insertFrontSlash(filename)).getInputStream();
+            return client.files()
+                    .downloadBuilder(insertFrontSlash(filename))
+                    .range(offset)
+                    .start()
+                    .getInputStream();
         } catch (DbxException e) {
             throw new LCException(e.getMessage(), e);
         }

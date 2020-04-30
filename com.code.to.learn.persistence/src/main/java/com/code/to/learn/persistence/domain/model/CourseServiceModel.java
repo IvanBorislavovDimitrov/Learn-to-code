@@ -149,13 +149,15 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     public static class CourseVideoServiceModel {
         private String videoTitle;
         private String videoFullName;
+        private long videoFileSize;
 
         public CourseVideoServiceModel() {
         }
 
-        public CourseVideoServiceModel(String videoTitle, String videoFullName) {
+        public CourseVideoServiceModel(String videoTitle, String videoFullName, long videoFileSize) {
             this.videoTitle = videoTitle;
             this.videoFullName = videoFullName;
+            this.videoFileSize = videoFileSize;
         }
 
         public String getVideoTitle() {
@@ -172,6 +174,14 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
         public void setVideoFullName(String videoFullName) {
             this.videoFullName = videoFullName;
+        }
+
+        public long getVideoFileSize() {
+            return videoFileSize;
+        }
+
+        public void setVideoFileSize(long videoFileSize) {
+            this.videoFileSize = videoFileSize;
         }
     }
 }

@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/courses")
+@RequestMapping(value = "/courses", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseRestController {
 
     private final CourseServiceApi courseServiceApi;
@@ -31,54 +31,54 @@ public class CourseRestController {
         return courseServiceApi.add(courseBindingModel);
     }
 
-    @GetMapping(value = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/latest")
     public ResponseEntity<List<CourseResponseModel>> getLatestCourses(@RequestParam int count,
                                                                       @RequestParam(defaultValue = "false") boolean loadThumbnails) {
         return courseServiceApi.getLatest(count, loadThumbnails);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<CourseResponseModel>> getCourses(@RequestParam(defaultValue = "1") int page,
                                                                 @RequestParam(required = false) String name,
                                                                 @RequestParam(required = false) String category) {
         return courseServiceApi.getByPageNameCategory(page - 1, name, category);
     }
 
-    @GetMapping(value = "/pages-count", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/pages-count")
     public ResponseEntity<CoursePagesResponseModel> getPagesCount(@RequestParam(required = false) String courseName) {
         return courseServiceApi.getPagesCount(courseName);
     }
 
-    @GetMapping(value = "/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{courseName}")
     public ResponseEntity<CourseResponseModel> getCourse(@PathVariable String courseName) {
         return courseServiceApi.get(courseName);
     }
 
-    @PostMapping(value = "/enroll/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/enroll/{courseName}")
     private ResponseEntity<CourseResponseModel> enrollUserForCourse(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.enrollUserForCourse(loggedUser, courseName);
     }
 
-    @GetMapping(value = "/is-enrolled/{courseEnrolledFor}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/is-enrolled/{courseEnrolledFor}")
     public ResponseEntity<UserEnrolledForCourse> isLoggedUserEnrolledForCourse(@PathVariable String courseEnrolledFor) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.isUserEnrolledForCourse(loggedUser, courseEnrolledFor);
     }
 
-    @PostMapping(value = "/cart/add/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cart/add/{courseName}")
     public ResponseEntity<CourseResponseModel> addToCart(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.addToCart(loggedUser, courseName);
     }
 
-    @GetMapping(value = "/cart/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/cart/all")
     public ResponseEntity<List<CourseResponseModel>> getCoursesInCart() {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.getCoursesInCart(loggedUser);
     }
 
-    @PostMapping(value = "/cart/remove/{courseName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cart/remove/{courseName}")
     public ResponseEntity<CourseResponseModel> removeItemFromCart(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.removeCourseFromCart(loggedUser, courseName);

@@ -122,11 +122,12 @@ public class CourseResponseModel {
 
         private String videoTitle;
         private String videoFullName;
+        private long videoFileSize;
 
         public CourseVideoResponseModel() {
         }
 
-        public CourseVideoResponseModel(String videoTitle, String videoFullName) {
+        public CourseVideoResponseModel(String videoTitle, String videoFullName, long videoFileSize) {
             this.videoTitle = videoTitle;
             this.videoFullName = videoFullName;
         }
@@ -145,6 +146,14 @@ public class CourseResponseModel {
 
         public void setVideoFullName(String videoFullName) {
             this.videoFullName = videoFullName;
+        }
+
+        public long getVideoFileSize() {
+            return videoFileSize;
+        }
+
+        public void setVideoFileSize(long videoFileSize) {
+            this.videoFileSize = videoFileSize;
         }
     }
 }

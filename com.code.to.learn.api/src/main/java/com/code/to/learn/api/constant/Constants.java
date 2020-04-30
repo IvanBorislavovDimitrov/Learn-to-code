@@ -15,4 +15,6 @@ public class Constants {
 
     public static final int RESOURCE_BUFFER_SIZE = 4 * 1024;
 
+    public static final String INITIAL_RANGE_VALUE = "bytes=0-";
+
 }

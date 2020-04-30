@@ -11,6 +11,7 @@ import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
+import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -18,6 +19,7 @@ import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.RemoteStorageFileGetter;
 import com.code.to.learn.web.util.RemoteStorageFileUploader;
+import com.dropbox.core.v2.files.FileMetadata;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
 import static com.code.to.learn.web.constants.Constants.*;
+import static com.code.to.learn.web.constants.Messages.VIDEO_NAME_NOT_FOUND;
 
 @Component
 public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
@@ -70,16 +73,18 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     @Override
     public ResponseEntity<CourseResponseModel> add(CourseBindingModel courseBindingModel) {
         courseValidator.validateCourseBindingModel(courseBindingModel);
-        CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel);
-        List<FileToUpload> filesToUpload = getFilesToUpload(courseBindingModel);
-        remoteStorageFileUploader.uploadFilesAsync(filesToUpload);
+        List<FileToUpload> videosToUpload = getVideosToUpload(courseBindingModel);
+        List<FileMetadata> uploadedVideos = remoteStorageFileUploader.uploadFilesAsync(videosToUpload);
+        CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel, uploadedVideos);
+        FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
+        remoteStorageFileUploader.uploadFileAsync(thumbnail);
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
-    private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel) {
+    private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel, List<FileMetadata> uploadedVideos) {
         CourseServiceModel courseServiceModel = getMapper().map(courseBindingModel, CourseServiceModel.class);
-        courseServiceModel.setVideosNames(getVideosNames(courseBindingModel));
+        courseServiceModel.setVideosNames(getVideos(courseBindingModel, uploadedVideos));
         courseServiceModel.setThumbnailName(getThumbnailName(courseBindingModel));
         UserServiceModel teacher = userService.findByUsername(courseBindingModel.getTeacherName());
         courseServiceModel.setTeacher(teacher);
@@ -91,15 +96,13 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         return courseServiceModel;
     }
 
-    private List<FileToUpload> getFilesToUpload(CourseBindingModel courseBindingModel) {
-        List<FileToUpload> filesToUploads = new ArrayList<>();
+    private List<FileToUpload> getVideosToUpload(CourseBindingModel courseBindingModel) {
+        List<FileToUpload> videosToUpload = new ArrayList<>();
         courseBindingModel.getVideosToUpload().forEach((videoName, videoFile) -> {
             FileToUpload fileToUpload = new FileToUpload(getVideoFileName(courseBindingModel.getName(), videoName, videoFile), videoFile);
-            filesToUploads.add(fileToUpload);
+            videosToUpload.add(fileToUpload);
         });
-        FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
-        filesToUploads.add(thumbnail);
-        return filesToUploads;
+        return videosToUpload;
     }
 
     private String getVideoFileName(String courseName, String videoName, MultipartFile videoFile) {
@@ -107,12 +110,24 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         return courseName + DELIMITER + videoName + COURSE_VIDEO_EXTENSION + "." + videoFileExtension;
     }
 
-    private List<CourseServiceModel.CourseVideoServiceModel> getVideosNames(CourseBindingModel courseBindingModel) {
+    private List<CourseServiceModel.CourseVideoServiceModel> getVideos(CourseBindingModel courseBindingModel, List<FileMetadata> fileMetadata) {
         return courseBindingModel.getVideosToUpload().entrySet()
                 .stream()
-                .map(videoToUpload -> new CourseServiceModel.CourseVideoServiceModel(videoToUpload.getKey(),
-                        getVideoFileName(courseBindingModel.getName(), videoToUpload.getKey(), videoToUpload.getValue())))
+                .map(videoToUpload -> {
+                    String videoTitle = videoToUpload.getKey();
+                    String videoFullName = getVideoFileName(courseBindingModel.getName(), videoToUpload.getKey(), videoToUpload.getValue());
+                    long videoFileSize = getVideoFileSize(videoFullName, fileMetadata);
+                    return new CourseServiceModel.CourseVideoServiceModel(videoTitle, videoFullName, videoFileSize);
+                })
                 .collect(Collectors.toList());
+    }
+
+    private long getVideoFileSize(String videoName, List<FileMetadata> fileMetadata) {
+        return fileMetadata.stream()
+                .filter(metadata -> Objects.equals(videoName, metadata.getName()))
+                .map(FileMetadata::getSize)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(VIDEO_NAME_NOT_FOUND, videoName));
     }
 
     private String getThumbnailName(CourseBindingModel courseBindingModel) {
@@ -250,6 +265,20 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         return courseServiceModels.stream()
                 .map(CourseServiceModel::getName)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ResponseEntity<CourseResponseModel.CourseVideoResponseModel> getVideoByCourse(String courseName, String videoName) {
+        CourseServiceModel courseServiceModel = courseService.findByName(courseName);
+        List<CourseServiceModel.CourseVideoServiceModel> videosNames = courseServiceModel.getVideosNames();
+        return ResponseEntity.ok(getMapper().map(getVideoByName(videosNames, videoName), CourseResponseModel.CourseVideoResponseModel.class));
+    }
+
+    private CourseServiceModel.CourseVideoServiceModel getVideoByName(List<CourseServiceModel.CourseVideoServiceModel> videos, String videoName) {
+        return videos.stream()
+                .filter(video -> Objects.equals(video.getVideoFullName(), videoName))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(VIDEO_NAME_NOT_FOUND, videoName));
     }
 
     @Override

@@ -19,15 +19,15 @@ public class RemoteStorageFileGetter {
     }
 
     public byte[] getImageResource(String name) {
-        try (InputStream fileAsInputStream = dropboxClient.getFileAsInputStream(name)) {
+        try (InputStream fileAsInputStream = dropboxClient.getFileAsInputStream(name, 0L)) {
             return IOUtils.toByteArray(fileAsInputStream);
         } catch (Exception e) {
             throw new LCException(e.getMessage(), e);
         }
     }
 
-    public InputStream getFileStream(String name) {
-        return dropboxClient.getFileAsInputStream(name);
+    public InputStream getFileStream(String name, Long offset) {
+        return dropboxClient.getFileAsInputStream(name, offset);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.code.to.learn.persistence.util;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -20,7 +19,7 @@ public final class DatabaseSessionUtil {
             Session session = sessionFactory.getCurrentSession();
             beginTransactionIfNotActive(session.getTransaction());
             return session;
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return openNewSession(sessionFactory);
         }
@@ -42,7 +41,7 @@ public final class DatabaseSessionUtil {
         Session session;
         try {
             session = sessionFactory.getCurrentSession();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return;
         }
@@ -53,7 +52,7 @@ public final class DatabaseSessionUtil {
     private static void close(Session session) {
         try {
             session.close();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
@@ -61,7 +60,7 @@ public final class DatabaseSessionUtil {
     private static void rollbackTransaction(Transaction transaction) {
         try {
             transaction.rollback();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
@@ -70,7 +69,7 @@ public final class DatabaseSessionUtil {
         Session session;
         try {
             session = sessionFactory.getCurrentSession();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return;
         }
@@ -81,7 +80,7 @@ public final class DatabaseSessionUtil {
     private static void commitTransaction(Transaction transaction) {
         try {
             transaction.commit();
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
