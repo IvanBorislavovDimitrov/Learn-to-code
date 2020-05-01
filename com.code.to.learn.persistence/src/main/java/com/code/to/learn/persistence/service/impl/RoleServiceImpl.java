@@ -34,7 +34,7 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, RoleServiceModel> 
     @Override
     public RoleServiceModel findByName(String name) {
         UserRole role = UserRole.valueOf(name);
-        Role optionalRole = getOrThrow(() -> roleDao.findByName(role), Messages.ROLE_NOT_FOUND, name);
+        Role optionalRole = getOrThrowNotFound(() -> roleDao.findByName(role), Messages.ROLE_NOT_FOUND, name);
         return toOutput(optionalRole);
     }
 }

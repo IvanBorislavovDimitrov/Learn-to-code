@@ -17,7 +17,7 @@ public abstract class NamedElementServiceImpl<E extends IdEntity<E> & NamedEleme
 
     @Override
     public M findByName(String name) {
-        E entity = getOrThrow(() -> getGenericDao().findByField(NamedElement.NAME, name), Messages.NAME_NOT_FOUND, name);
+        E entity = getOrThrowNotFound(() -> getGenericDao().findByField(NamedElement.NAME, name), Messages.NAME_NOT_FOUND, name);
         return toOutput(entity);
     }
 }

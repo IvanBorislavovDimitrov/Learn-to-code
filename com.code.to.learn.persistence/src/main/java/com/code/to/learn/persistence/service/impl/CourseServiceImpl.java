@@ -6,6 +6,7 @@ import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
+import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,46 +50,47 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
 
     @Override
     public CourseServiceModel enrollUserForCourse(String username, String courseName) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
-        Course course = getOrThrow(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        Course course = getOrThrowNotFound(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
         user.getCourses().add(course);
         userDao.update(user);
         course.getAttendants().add(user);
-        Course updatedCourse = getOrThrow(() -> courseDao.update(course));
+        Course updatedCourse = getWithoutCheck(() -> courseDao.update(course));
+        removeFromCart(user, courseName);
         return toOutput(updatedCourse);
     }
 
     @Override
     public CourseServiceModel addToCart(String username, String courseName) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
-        Course course = getOrThrow(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        Course course = getOrThrowNotFound(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
         user.getCoursesInCart().add(course);
         userDao.update(user);
         course.getFutureAttendants().add(user);
-        Course updatedCourse = getOrThrow(() -> courseDao.update(course));
+        Course updatedCourse = getWithoutCheck(() -> courseDao.update(course));
         return toOutput(updatedCourse);
     }
 
     @Override
     public List<CourseServiceModel> getCoursesInCart(String username) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         return toOutput(user.getCoursesInCart());
     }
 
     @Override
     public CourseServiceModel removeCourseFromCart(String username, String courseName) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         user.getCoursesInCart().removeIf(course -> Objects.equals(course.getName(), courseName));
         userDao.update(user);
-        Course course = getOrThrow(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
+        Course course = getOrThrowNotFound(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
         course.getFutureAttendants().removeIf(attendant -> Objects.equals(attendant.getUsername(), user.getUsername()));
-        Course updatedCourse = getOrThrow(() -> courseDao.update(course));
+        Course updatedCourse = getWithoutCheck(() -> courseDao.update(course));
         return toOutput(updatedCourse);
     }
 
     @Override
     public void emptyCart(String username) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         List<Course> coursesInCart = user.getCoursesInCart();
         for (Course course : coursesInCart) {
             course.getFutureAttendants().removeIf(attendant -> Objects.equals(attendant.getUsername(), user.getUsername()));
@@ -96,6 +98,22 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
         }
         user.emptyCart();
         userDao.update(user);
+    }
+
+    @Override
+    public void removeFromCart(User user, String courseName) {
+        Course course = getCourseInCartByNameForUser(user, courseName);
+        user.getCoursesInCart().remove(course);
+        course.getFutureAttendants().remove(user);
+        userDao.update(user);
+        courseDao.update(course);
+    }
+
+    private Course getCourseInCartByNameForUser(User user, String courseName) {
+        return user.getCoursesInCart().stream()
+                .filter(course -> Objects.equals(course.getName(), courseName))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(Messages.COURSE_NOT_FOUND, courseName));
     }
 
     @Override

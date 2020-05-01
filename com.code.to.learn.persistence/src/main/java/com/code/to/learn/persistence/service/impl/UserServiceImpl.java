@@ -50,7 +50,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public UserServiceModel findByUsername(String username) {
-        User user = getOrThrow(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         return toOutput(user);
     }
 
@@ -66,9 +66,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
-    protected <T extends IdEntity<T>> T getOrThrow(Supplier<Optional<T>> supplier, String exceptionMessage, Object... args) {
+    protected <T extends IdEntity<T>> T getOrThrowNotFound(Supplier<Optional<T>> supplier, String exceptionMessage, Object... args) {
         try {
-            return super.getOrThrow(supplier, exceptionMessage, args);
+            return super.getOrThrowNotFound(supplier, exceptionMessage, args);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage());
         }

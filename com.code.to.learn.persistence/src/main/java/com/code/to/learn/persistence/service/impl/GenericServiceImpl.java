@@ -76,7 +76,7 @@ public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServ
         return getEntityClass();
     }
 
-    protected <T extends IdEntity<T>> T getOrThrow(Supplier<Optional<T>> supplier, String exceptionMessage, Object... args) {
+    protected <T extends IdEntity<T>> T getOrThrowNotFound(Supplier<Optional<T>> supplier, String exceptionMessage, Object... args) {
         Optional<T> optionalIdServiceModel = supplier.get();
         if (!optionalIdServiceModel.isPresent()) {
             throw new NotFoundException(exceptionMessage, args);
@@ -84,7 +84,7 @@ public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServ
         return optionalIdServiceModel.get();
     }
 
-    public <T extends IdEntity<T>> T getOrThrow(Supplier<Optional<T>> supplier) {
+    public <T extends IdEntity<T>> T getWithoutCheck(Supplier<Optional<T>> supplier) {
         return supplier.get().get();
     }
 
