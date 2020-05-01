@@ -2,7 +2,7 @@ package com.code.to.learn.core.validator;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.persistence.constant.Messages;
-import com.code.to.learn.persistence.exception.user.UserException;
+import com.code.to.learn.persistence.exception.user.*;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,25 +28,25 @@ public class UserValidator {
 
     private void validateUsernameNotTaken(UserBindingModel userBindingModel) {
         if (userService.isUsernameTaken(userBindingModel.getUsername())) {
-            throw new UserException(Messages.USERNAME_IS_TAKEN, userBindingModel.getUsername());
+            throw new UsernameTakenException(userBindingModel.getUsername());
         }
     }
 
     private void validateEmailNotTaken(UserBindingModel userBindingModel) {
         if (userService.isEmailTaken(userBindingModel.getEmail())) {
-            throw new UserException(Messages.EMAIL_IS_TAKEN, userBindingModel.getEmail());
+            throw new EmailTakenException(userBindingModel.getEmail());
         }
     }
 
     private void validatePhoneNumberNotTaken(UserBindingModel userBindingModel) {
         if (userService.isPhoneNumberTaken(userBindingModel.getPhoneNumber())) {
-            throw new UserException(Messages.PHONE_NUMBER_IS_TAKEN, userBindingModel.getPhoneNumber());
+            throw new PhoneNumberTakenException(userBindingModel.getPhoneNumber());
         }
     }
 
     private void validatePasswordsMatch(UserBindingModel userBindingModel) {
         if (!passwordsMatch(userBindingModel.getPassword(), userBindingModel.getConfirmPassword())) {
-            throw new UserException(Messages.PASSWORDS_DO_NOT_MATCH);
+            throw new PasswordsDoNotMatchException();
         }
     }
 
