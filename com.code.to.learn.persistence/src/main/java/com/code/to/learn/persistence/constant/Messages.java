@@ -16,6 +16,7 @@ public final class Messages {
     public static final String USERNAME_NOT_FOUND = "Username: \"{0}\" not found";
     public static final String NAME_NOT_FOUND = "Name not found: \"{0}\"";
     public static final String ROLE_NOT_FOUND = "Role not found: \"{0}\"";
+    public static final String INVALID_DATES = "Start date: \"{0}\", End date: \"{1}\"";
 
     private Messages() {
 
