@@ -3,6 +3,7 @@ package com.code.to.learn.web.api_impl;
 import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubRepositoryResponseModel;
+import com.code.to.learn.api.model.github.GithubRepositoryResponseModelExtended;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.core.client.ResilientHttpClient;
 import com.code.to.learn.core.client.UncheckedEntityUtils;
@@ -82,10 +83,18 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
     }
 
     private void validateRequest(String username, HttpResponse userResponse) {
-        if (userResponse.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
+        validateStatusNotFound(username, userResponse);
+        validateStatusUnauthorized(username, userResponse);
+    }
+
+    private void validateStatusNotFound(String username, HttpResponse response) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()) {
             throw new GithubException(MessageFormat.format(Messages.USER_NOT_FOUND, username));
         }
-        if (userResponse.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
+    }
+
+    private void validateStatusUnauthorized(String username, HttpResponse response) {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
             throw new GithubException(MessageFormat.format(Messages.ACCESS_TOKEN_FOR_USER_HAS_EXPIRED, username));
         }
     }
@@ -175,13 +184,33 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
         HttpGet repositoriesRequest = new HttpGet(getRepositoryResource());
         repositoriesRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessToken.getAccessToken());
         HttpResponse repositoriesResponse = resilientHttpClient.execute(repositoriesRequest);
+        validateRequest(username, repositoriesResponse);
         String repositoriesResponseBody = UncheckedEntityUtils.getResponseBody(repositoriesResponse);
         return ResponseEntity.ok(parser.deserialize(repositoriesResponseBody, new TypeReference<List<GithubRepositoryResponseModel>>() {
         }));
     }
 
+    @Override
+    public ResponseEntity<GithubRepositoryResponseModelExtended> getRepositoryForUser(String username, String repositoryName) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        GithubAccessTokenServiceModel githubAccessTokenServiceModel = userServiceModel.getGithubAccessToken();
+        GithubUserResponseModel githubUserInfo = getGithubUserInfo(username).getBody();
+        HttpGet repositoryRequest = new HttpGet(getCertainRepositoryResource(githubUserInfo.getLogin(), repositoryName));
+        repositoryRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubAccessTokenServiceModel.getAccessToken());
+        HttpResponse repositoryResponse = resilientHttpClient.execute(repositoryRequest);
+        validateRequest(username, repositoryResponse);
+        String repositoryResponseBode = UncheckedEntityUtils.getResponseBody(repositoryResponse);
+        return ResponseEntity.ok(parser.deserialize(repositoryResponseBode, new TypeReference<GithubRepositoryResponseModelExtended>() {
+        }));
+    }
+
     private String getRepositoryResource() {
-        return applicationConfiguration.getGithubApiUrl() + "/" + com.code.to.learn.web.constants.Constants.REPOSITORIES_RESOURCE;
+        return applicationConfiguration.getGithubApiUrl() + com.code.to.learn.web.constants.Constants.REPOSITORIES_RESOURCE;
+    }
+
+    private String getCertainRepositoryResource(String username, String repositoryName) {
+        return applicationConfiguration.getGithubApiUrl() + com.code.to.learn.web.constants.Constants.REPOSITORY_RESOURCE
+                + "/" + username + "/" + repositoryName;
     }
 
     @Override

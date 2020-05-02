@@ -2,6 +2,7 @@ package com.code.to.learn.api.api.github;
 
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubRepositoryResponseModel;
+import com.code.to.learn.api.model.github.GithubRepositoryResponseModelExtended;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class GithubRestController {
     public ResponseEntity<List<GithubRepositoryResponseModel>> getUserRepositories() {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return githubServiceApi.getUserRepositories(loggedUser);
+    }
+
+    @GetMapping(value = "/repositories/{repositoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GithubRepositoryResponseModelExtended> getRepositoryForUser(@PathVariable String repositoryName) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return githubServiceApi.getRepositoryForUser(loggedUser, repositoryName);
     }
 
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)

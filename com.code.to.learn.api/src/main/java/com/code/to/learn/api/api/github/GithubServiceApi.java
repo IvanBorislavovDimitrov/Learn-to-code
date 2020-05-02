@@ -2,6 +2,7 @@ package com.code.to.learn.api.api.github;
 
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
 import com.code.to.learn.api.model.github.GithubRepositoryResponseModel;
+import com.code.to.learn.api.model.github.GithubRepositoryResponseModelExtended;
 import com.code.to.learn.api.model.github.GithubUserResponseModel;
 import org.springframework.http.ResponseEntity;
 
@@ -14,4 +15,6 @@ public interface GithubServiceApi {
     ResponseEntity<GithubAccessTokenResponseModel> requestAccessTokenForUser(String username, String code);
 
     ResponseEntity<List<GithubRepositoryResponseModel>> getUserRepositories(String username);
+
+    ResponseEntity<GithubRepositoryResponseModelExtended> getRepositoryForUser(String username, String repositoryName);
 }
