@@ -17,4 +17,6 @@ public interface UserServiceApi {
     ResponseEntity<List<UserResponseModel>> findUsersByUsernameContaining(String username);
 
     ResponseEntity<UserResponseModel> changeUserRoles(String username, List<String> roles);
+
+    ResponseEntity<List<UserResponseModel>> findTeachers();
 }

@@ -1,6 +1,7 @@
 package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.UserDao;
+import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
@@ -47,6 +50,27 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         criteriaQuery.select(root).where(criteriaBuilder.like(criteriaBuilder.lower(root.get(User.USERNAME)), buildContainsExpression(username)));
         Query<User> query = session.createQuery(criteriaQuery);
         return query.getResultList();
+    }
+
+
+    @Override
+    public List<User> findTeachers() {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(Course.class);
+        Root<Course> courseRoot = criteriaQuery.from(Course.class);
+        courseRoot.join(Course.TEACHER, JoinType.INNER);
+        criteriaQuery.select(courseRoot);
+        Query<Course> teachersQuery = session.createQuery(criteriaQuery);
+        return getDistinctTeachers(teachersQuery);
+    }
+
+    private List<User> getDistinctTeachers(Query<Course> teachersQuery) {
+        return teachersQuery.getResultList()
+                .stream()
+                .map(Course::getTeacher)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> findUsersByUsernameContaining(String username);
 
+    List<User> findTeachers();
+
 }

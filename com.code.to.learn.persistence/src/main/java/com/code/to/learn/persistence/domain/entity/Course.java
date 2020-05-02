@@ -14,6 +14,7 @@ import java.util.List;
 public class Course extends IdEntity<Course> implements NamedElement {
 
     public static final String START_DATE = "startDate";
+    public static final String TEACHER = "teacher";
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;

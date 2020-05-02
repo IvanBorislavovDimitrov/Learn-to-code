@@ -72,4 +72,8 @@ public class UserRestController {
         return ResponseEntity.ok(map);
     }
 
+    @GetMapping(value = "/teachers")
+    public ResponseEntity<List<UserResponseModel>> getTeachers() {
+        return userServiceApi.findTeachers();
+    }
 }

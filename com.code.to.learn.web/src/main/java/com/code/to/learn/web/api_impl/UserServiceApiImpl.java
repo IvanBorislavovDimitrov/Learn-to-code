@@ -138,6 +138,12 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     }
 
     @Override
+    public ResponseEntity<List<UserResponseModel>> findTeachers() {
+        List<UserServiceModel> userServiceModels = userService.findTeachers();
+        return ResponseEntity.ok(toOutput(userServiceModels));
+    }
+
+    @Override
     protected Class<UserServiceModel> getInputClass() {
         return UserServiceModel.class;
     }

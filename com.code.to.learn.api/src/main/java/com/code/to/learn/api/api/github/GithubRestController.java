@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/github")
+@RequestMapping(value = "/github", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GithubRestController {
 
     private final GithubServiceApi githubServiceApi;
@@ -25,24 +25,24 @@ public class GithubRestController {
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(value = "/authorize", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/authorize")
     public ResponseEntity<GithubAccessTokenResponseModel> authorizeUser(@RequestParam String code) {
         return githubServiceApi.requestAccessTokenForUser(usernameGetter.getLoggedInUserUsername(), code);
     }
 
-    @GetMapping(value = "/repositories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/repositories")
     public ResponseEntity<List<GithubRepositoryResponseModel>> getUserRepositories() {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return githubServiceApi.getUserRepositories(loggedUser);
     }
 
-    @GetMapping(value = "/repositories/{repositoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/repositories/{repositoryName}")
     public ResponseEntity<GithubRepositoryResponseModelExtended> getRepositoryForUser(@PathVariable String repositoryName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return githubServiceApi.getRepositoryForUser(loggedUser, repositoryName);
     }
 
-    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/user")
     public ResponseEntity<GithubUserResponseModel> githubUser() {
         return githubServiceApi.getGithubUserInfo(usernameGetter.getLoggedInUserUsername());
     }

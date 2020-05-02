@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/course-categories")
+@RequestMapping(value = "/course-categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseCategoryRestController {
 
     private final CourseCategoryServiceApi courseCategoryServiceApi;
@@ -21,27 +21,27 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> add(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
     }
 
-    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> update(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         return courseCategoryServiceApi.update(courseCategoryBindingModel);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<CourseCategoryResponseModel>> getCourseCategories() {
         return courseCategoryServiceApi.getCourseCategories();
     }
 
-    @GetMapping(value = "/top", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/top")
     public ResponseEntity<List<CourseCategoryResponseModel>> getCategoriesWithMostCourses(@RequestParam(defaultValue = "6") int limit) {
         return courseCategoryServiceApi.getCategoriesWithMostCourses(limit);
     }
 
-    @GetMapping(value = "/{courseCategoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{courseCategoryName}")
     public ResponseEntity<CourseCategoryResponseModel> getCourseCategory(@PathVariable String courseCategoryName) {
         return courseCategoryServiceApi.getByName(courseCategoryName);
     }

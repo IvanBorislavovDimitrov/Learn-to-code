@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/comments")
+@RequestMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CommentController {
 
     private final CommentServiceApi commentServiceApi;
@@ -24,13 +24,13 @@ public class CommentController {
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add")
     public ResponseEntity<CommentResponseModel> add(@RequestBody @Valid CommentBindingModel commentBindingModel) {
         commentBindingModel.setAuthor(usernameGetter.getLoggedInUserUsername());
         return commentServiceApi.add(commentBindingModel);
     }
 
-    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/all")
     public ResponseEntity<List<CommentResponseModel>> getCommentsByCourseName(@RequestParam String courseName) {
         return commentServiceApi.getCommentsByCourseName(courseName);
     }

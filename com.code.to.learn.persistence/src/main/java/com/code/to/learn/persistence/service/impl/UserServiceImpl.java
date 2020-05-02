@@ -75,6 +75,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
+    public List<UserServiceModel> findTeachers() {
+        List<User> teachers = userDao.findTeachers();
+        return toOutput(teachers);
+    }
+
+    @Override
     protected Class<UserServiceModel> getModelClass() {
         return UserServiceModel.class;
     }
