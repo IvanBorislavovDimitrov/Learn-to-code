@@ -11,4 +11,8 @@ public interface CommentServiceApi {
     ResponseEntity<CommentResponseModel> add(CommentBindingModel commentBindingModel);
 
     ResponseEntity<List<CommentResponseModel>> getCommentsByCourseName(String courseName);
+
+    ResponseEntity<CommentResponseModel> update(CommentBindingModel commentBindingModel, String loggedUser);
+
+    ResponseEntity<CommentResponseModel> delete(String commentId, String loggedUser);
 }

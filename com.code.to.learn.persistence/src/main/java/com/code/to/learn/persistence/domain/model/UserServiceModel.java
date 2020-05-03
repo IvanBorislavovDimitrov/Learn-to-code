@@ -1,13 +1,15 @@
 package com.code.to.learn.persistence.domain.model;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class UserServiceModel extends IdServiceModel implements UserDetails {
 
@@ -145,8 +147,8 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream()
-                         .map(role -> new SimpleGrantedAuthority(role.getName()))
-                         .collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -167,5 +169,12 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isAdminOrModerator() {
+        return getRoles().stream()
+                .map(RoleServiceModel::getName)
+                .anyMatch(roleName -> Objects.equals(roleName, UserRole.ROLE_ADMIN.toString()) ||
+                        Objects.equals(roleName, UserRole.ROLE_MODERATOR.toString()));
     }
 }

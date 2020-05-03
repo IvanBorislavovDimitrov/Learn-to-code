@@ -35,4 +35,16 @@ public class CommentController {
         return commentServiceApi.getCommentsByCourseName(courseName);
     }
 
+    @PutMapping(value = "/update")
+    public ResponseEntity<CommentResponseModel> edit(@RequestBody @Valid CommentBindingModel commentBindingModel) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return commentServiceApi.update(commentBindingModel, loggedUser);
+    }
+
+    @DeleteMapping(value = "/delete/{commentId}")
+    public ResponseEntity<CommentResponseModel> delete(@PathVariable String commentId) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return commentServiceApi.delete(commentId, loggedUser);
+    }
+
 }

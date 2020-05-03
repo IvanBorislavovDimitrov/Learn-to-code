@@ -1,6 +1,7 @@
 package com.code.to.learn.web.api_impl;
 
 import com.code.to.learn.api.api.comment.CommentServiceApi;
+import com.code.to.learn.api.exception.ForbiddenException;
 import com.code.to.learn.api.model.comment.CommentBindingModel;
 import com.code.to.learn.api.model.comment.CommentResponseModel;
 import com.code.to.learn.persistence.domain.model.CommentServiceModel;
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+
+import static com.code.to.learn.web.message.Messages.USERS_DO_NOT_MATCH;
+import static com.code.to.learn.web.message.Messages.USER_CANNOT_NOT_MODIFY_COMMENT;
 
 @Service
 public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel, CommentResponseModel> implements CommentServiceApi {
@@ -49,6 +54,34 @@ public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel,
         commentServiceModel.setCourse(courseService.findByName(commentBindingModel.getCourseName()));
         commentServiceModel.setDate(LocalDate.now());
         return commentServiceModel;
+    }
+
+    @Override
+    public ResponseEntity<CommentResponseModel> update(CommentBindingModel commentBindingModel, String loggedUser) {
+        if (!Objects.equals(commentBindingModel.getAuthor(), loggedUser)) {
+            throw new ForbiddenException(USERS_DO_NOT_MATCH);
+        }
+        CommentServiceModel currentCommentServiceModel = commentService.findById(commentBindingModel.getId());
+        CommentServiceModel commentToUpdate = getUpdatedCommentServiceModel(currentCommentServiceModel, commentBindingModel);
+        return ResponseEntity.ok(toOutput(commentService.update(commentToUpdate)));
+    }
+
+    private CommentServiceModel getUpdatedCommentServiceModel(CommentServiceModel currentCommentServiceModel,
+                                                              CommentBindingModel commentBindingModel) {
+        currentCommentServiceModel.setContent(commentBindingModel.getContent());
+        currentCommentServiceModel.setDate(LocalDate.now());
+        return currentCommentServiceModel;
+    }
+
+    @Override
+    public ResponseEntity<CommentResponseModel> delete(String commentId, String loggedUser) {
+        CommentServiceModel commentServiceModel = commentService.findById(commentId);
+        if (!Objects.equals(commentServiceModel.getAuthor().getUsername(), loggedUser)
+                && !commentServiceModel.getAuthor().isAdminOrModerator()) {
+            throw new ForbiddenException(USER_CANNOT_NOT_MODIFY_COMMENT);
+        }
+        CommentServiceModel deletedCourseServiceModel = commentService.deleteById(commentId);
+        return ResponseEntity.ok(toOutput(deletedCourseServiceModel));
     }
 
     @Override

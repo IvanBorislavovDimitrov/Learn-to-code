@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 public class CommentResponseModel {
 
+    private String id;
     private String content;
     private UserResponseModel author;
     private LocalDate date;
@@ -32,5 +33,13 @@ public class CommentResponseModel {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
