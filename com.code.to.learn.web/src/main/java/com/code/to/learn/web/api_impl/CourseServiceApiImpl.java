@@ -72,18 +72,21 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         courseValidator.validateCourseBindingModel(courseBindingModel);
         List<FileToUpload> videosToUpload = getVideosToUpload(courseBindingModel);
         List<FileMetadata> uploadedVideos = remoteStorageFileOperator.uploadFilesSync(videosToUpload);
-        CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel, uploadedVideos);
+        CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel, uploadedVideos, true);
         FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
         remoteStorageFileOperator.uploadFileAsync(thumbnail);
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
-    private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel, List<FileMetadata> uploadedVideos) {
+    private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel, List<FileMetadata> uploadedVideos,
+                                                    boolean shouldUpdateContent) {
         CourseServiceModel courseServiceModel = getMapper().map(courseBindingModel, CourseServiceModel.class);
-        List<CourseServiceModel.CourseVideoServiceModel> videos = getVideos(courseBindingModel, uploadedVideos);
-        if (!videos.isEmpty()) {
-            courseServiceModel.setVideosNames(videos);
+        if (shouldUpdateContent) {
+            List<CourseServiceModel.CourseVideoServiceModel> videos = getVideos(courseBindingModel, uploadedVideos);
+            if (!videos.isEmpty()) {
+                courseServiceModel.setVideosNames(videos);
+            }
         }
         courseServiceModel.setThumbnailName(getThumbnailName(courseBindingModel));
         UserServiceModel teacher = userService.findByUsername(courseBindingModel.getTeacherName());
@@ -131,6 +134,9 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     private String getThumbnailName(CourseBindingModel courseBindingModel) {
+        if (courseBindingModel.getThumbnail() == null) {
+            return null;
+        }
         String thumbnailFileExtension = FilenameUtils.getExtension(courseBindingModel.getThumbnail().getOriginalFilename());
         return courseBindingModel.getName() + THUMBNAIL_FILE_EXTENSION + "." + thumbnailFileExtension;
     }
@@ -290,7 +296,7 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
             FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
             remoteStorageFileOperator.uploadFileSync(thumbnail);
         }
-        CourseServiceModel updatedCourseServiceModel = toCourseServiceModel(courseBindingModel, updatedVideos);
+        CourseServiceModel updatedCourseServiceModel = toCourseServiceModel(courseBindingModel, updatedVideos, shouldUpdateCourse);
         updatedCourseServiceModel = updateCourseServiceModel(currentCourseServiceModel, updatedCourseServiceModel);
         courseService.update(updatedCourseServiceModel);
         return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
@@ -322,6 +328,12 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         courseServiceModelToUpdate.setFutureAttendants(currentCourseServiceModel.getFutureAttendants());
         courseServiceModelToUpdate.setId(currentCourseServiceModel.getId());
         courseServiceModelToUpdate.setHomework(currentCourseServiceModel.getHomework());
+        if (courseServiceModelToUpdate.getVideosNames() == null) {
+            courseServiceModelToUpdate.setVideosNames(currentCourseServiceModel.getVideosNames());
+        }
+        if (courseServiceModelToUpdate.getThumbnailName() == null) {
+            courseServiceModelToUpdate.setThumbnailName(currentCourseServiceModel.getThumbnailName());
+        }
         return courseServiceModelToUpdate;
     }
 
