@@ -90,4 +90,10 @@ public class CourseRestController {
         return courseServiceApi.enrollFromCart(loggedUser);
     }
 
+    @PostMapping(value = "/update")
+    public ResponseEntity<CourseResponseModel> updateCourse(CourseBindingModel courseBindingModel,
+                                                            @RequestParam(defaultValue = "false") boolean shouldUpdateContent) {
+        return courseServiceApi.updateCourse(courseBindingModel, shouldUpdateContent);
+    }
+
 }

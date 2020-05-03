@@ -57,13 +57,23 @@ public abstract class GenericServiceImpl<E extends IdEntity<E>, M extends IdServ
 
     @Override
     public M update(M model) {
+        E updatedEntity = getUpdatedEntity(model);
+        return toOutput(genericDao.update(updatedEntity).get());
+    }
+
+    @Override
+    public M merge(M model) {
+        E updatedEntity = getUpdatedEntity(model);
+        return toOutput(genericDao.merge(updatedEntity).get());
+    }
+
+    private E getUpdatedEntity(M model) {
         Optional<E> entity = genericDao.findById(model.getId());
         if (!entity.isPresent()) {
             throw new IdNotFoundException(model.getId());
         }
         E mappedEntity = toInput(model);
-        E updatedEntity = entity.get().merge(mappedEntity);
-        return toOutput(genericDao.update(updatedEntity).get());
+        return entity.get().merge(mappedEntity);
     }
 
     @Override

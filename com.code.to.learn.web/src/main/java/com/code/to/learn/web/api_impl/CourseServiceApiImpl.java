@@ -18,7 +18,7 @@ import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.RemoteStorageFileGetter;
-import com.code.to.learn.web.util.RemoteStorageFileUploader;
+import com.code.to.learn.web.util.RemoteStorageFileOperator;
 import com.dropbox.core.v2.files.FileMetadata;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
@@ -29,10 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -46,7 +43,7 @@ import static com.code.to.learn.web.constants.Messages.VIDEO_NAME_NOT_FOUND;
 public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
 
     private final CourseService courseService;
-    private final RemoteStorageFileUploader remoteStorageFileUploader;
+    private final RemoteStorageFileOperator remoteStorageFileOperator;
     private final CourseValidator courseValidator;
     private final UserService userService;
     private final CourseCategoryService courseCategoryService;
@@ -55,13 +52,13 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     private final ApplicationConfiguration configuration;
 
     @Autowired
-    public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileUploader remoteStorageFileUploader,
+    public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileOperator remoteStorageFileOperator,
                                 CourseValidator courseValidator, UserService userService,
                                 CourseCategoryService courseCategoryService, ExecutorService executorService,
                                 RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration) {
         super(modelMapper);
         this.courseService = courseService;
-        this.remoteStorageFileUploader = remoteStorageFileUploader;
+        this.remoteStorageFileOperator = remoteStorageFileOperator;
         this.courseValidator = courseValidator;
         this.userService = userService;
         this.courseCategoryService = courseCategoryService;
@@ -74,17 +71,20 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     public ResponseEntity<CourseResponseModel> add(CourseBindingModel courseBindingModel) {
         courseValidator.validateCourseBindingModel(courseBindingModel);
         List<FileToUpload> videosToUpload = getVideosToUpload(courseBindingModel);
-        List<FileMetadata> uploadedVideos = remoteStorageFileUploader.uploadFilesAsync(videosToUpload);
+        List<FileMetadata> uploadedVideos = remoteStorageFileOperator.uploadFilesSync(videosToUpload);
         CourseServiceModel courseServiceModel = toCourseServiceModel(courseBindingModel, uploadedVideos);
         FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
-        remoteStorageFileUploader.uploadFileAsync(thumbnail);
+        remoteStorageFileOperator.uploadFileAsync(thumbnail);
         courseService.save(courseServiceModel);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
     private CourseServiceModel toCourseServiceModel(CourseBindingModel courseBindingModel, List<FileMetadata> uploadedVideos) {
         CourseServiceModel courseServiceModel = getMapper().map(courseBindingModel, CourseServiceModel.class);
-        courseServiceModel.setVideosNames(getVideos(courseBindingModel, uploadedVideos));
+        List<CourseServiceModel.CourseVideoServiceModel> videos = getVideos(courseBindingModel, uploadedVideos);
+        if (!videos.isEmpty()) {
+            courseServiceModel.setVideosNames(videos);
+        }
         courseServiceModel.setThumbnailName(getThumbnailName(courseBindingModel));
         UserServiceModel teacher = userService.findByUsername(courseBindingModel.getTeacherName());
         courseServiceModel.setTeacher(teacher);
@@ -279,6 +279,50 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
                 .filter(video -> Objects.equals(video.getVideoFullName(), videoName))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(VIDEO_NAME_NOT_FOUND, videoName));
+    }
+
+    @Override
+    public ResponseEntity<CourseResponseModel> updateCourse(CourseBindingModel courseBindingModel, boolean shouldUpdateCourse) {
+        CourseServiceModel currentCourseServiceModel = courseService.findByName(courseBindingModel.getName());
+        List<FileMetadata> updatedVideos = updateCourseVideos(shouldUpdateCourse, courseBindingModel, currentCourseServiceModel);
+        if (shouldUpdateCourse) {
+            remoteStorageFileOperator.removeFileSync(currentCourseServiceModel.getThumbnailName());
+            FileToUpload thumbnail = new FileToUpload(getThumbnailName(courseBindingModel), courseBindingModel.getThumbnail());
+            remoteStorageFileOperator.uploadFileSync(thumbnail);
+        }
+        CourseServiceModel updatedCourseServiceModel = toCourseServiceModel(courseBindingModel, updatedVideos);
+        updatedCourseServiceModel = updateCourseServiceModel(currentCourseServiceModel, updatedCourseServiceModel);
+        courseService.update(updatedCourseServiceModel);
+        return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
+    }
+
+    private List<FileMetadata> updateCourseVideos(boolean shouldUpdateCourse, CourseBindingModel courseBindingModel,
+                                                  CourseServiceModel currentCourseServiceModel) {
+        if (!shouldUpdateCourse) {
+            return Collections.emptyList();
+        }
+        return updateVideoContent(courseBindingModel, currentCourseServiceModel);
+    }
+
+    private List<FileMetadata> updateVideoContent(CourseBindingModel courseBindingModel, CourseServiceModel currentCourseServiceModel) {
+        List<CourseServiceModel.CourseVideoServiceModel> currentVideos = currentCourseServiceModel.getVideosNames();
+        removeVideos(currentVideos);
+        List<FileToUpload> videosToUpload = getVideosToUpload(courseBindingModel);
+        return remoteStorageFileOperator.uploadFilesSync(videosToUpload);
+    }
+
+    private void removeVideos(List<CourseServiceModel.CourseVideoServiceModel> videos) {
+        videos.stream()
+                .map(CourseServiceModel.CourseVideoServiceModel::getVideoFullName)
+                .forEach(remoteStorageFileOperator::removeFileSync);
+    }
+
+    private CourseServiceModel updateCourseServiceModel(CourseServiceModel currentCourseServiceModel, CourseServiceModel courseServiceModelToUpdate) {
+        courseServiceModelToUpdate.setAttendants(currentCourseServiceModel.getAttendants());
+        courseServiceModelToUpdate.setFutureAttendants(currentCourseServiceModel.getFutureAttendants());
+        courseServiceModelToUpdate.setId(currentCourseServiceModel.getId());
+        courseServiceModelToUpdate.setHomework(currentCourseServiceModel.getHomework());
+        return courseServiceModelToUpdate;
     }
 
     @Override

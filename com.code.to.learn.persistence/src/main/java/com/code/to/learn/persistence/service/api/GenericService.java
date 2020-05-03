@@ -19,4 +19,6 @@ public interface GenericService<M extends IdServiceModel> {
     M update(M model);
 
     long count();
+
+    M merge(M model);
 }

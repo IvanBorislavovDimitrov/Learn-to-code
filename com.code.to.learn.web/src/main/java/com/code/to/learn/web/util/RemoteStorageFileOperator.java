@@ -18,20 +18,20 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @Component
-public class RemoteStorageFileUploader {
+public class RemoteStorageFileOperator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteStorageFileUploader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteStorageFileOperator.class);
 
     private final DropboxClient dropboxClient;
     private final ExecutorService executorService;
 
     @Autowired
-    public RemoteStorageFileUploader(DropboxClient dropboxClient, ExecutorService executorService) {
+    public RemoteStorageFileOperator(DropboxClient dropboxClient, ExecutorService executorService) {
         this.dropboxClient = dropboxClient;
         this.executorService = executorService;
     }
 
-    public List<FileMetadata> uploadFilesAsync(List<FileToUpload> filesToUpload) {
+    public List<FileMetadata> uploadFilesSync(List<FileToUpload> filesToUpload) {
         List<Future<FileMetadata>> futureFilesToUpload = new ArrayList<>();
         filesToUpload.forEach(fileToUpload -> futureFilesToUpload.add(uploadFileAsync(fileToUpload)));
         return futureFilesToUpload.stream().map(futureFileToUpload -> {

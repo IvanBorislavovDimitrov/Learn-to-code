@@ -8,7 +8,7 @@ import com.code.to.learn.persistence.domain.model.CourseCategoryWithCoursesNumbe
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.web.util.FileToUpload;
-import com.code.to.learn.web.util.RemoteStorageFileUploader;
+import com.code.to.learn.web.util.RemoteStorageFileOperator;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ import static com.code.to.learn.web.constants.Constants.COURSE_CATEGORY_THUMBNAI
 public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategoryServiceModel, CourseCategoryResponseModel> implements CourseCategoryServiceApi {
 
     private final CourseCategoryService courseCategoryService;
-    private final RemoteStorageFileUploader remoteStorageFileUploader;
+    private final RemoteStorageFileOperator remoteStorageFileOperator;
 
     @Autowired
-    public CourseCategoryServiceApiImpl(ModelMapper modelMapper, CourseCategoryService courseCategoryService, RemoteStorageFileUploader remoteStorageFileUploader) {
+    public CourseCategoryServiceApiImpl(ModelMapper modelMapper, CourseCategoryService courseCategoryService, RemoteStorageFileOperator remoteStorageFileOperator) {
         super(modelMapper);
         this.courseCategoryService = courseCategoryService;
-        this.remoteStorageFileUploader = remoteStorageFileUploader;
+        this.remoteStorageFileOperator = remoteStorageFileOperator;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategor
     private void uploadCourseCategoryThumbnail(CourseCategoryBindingModel courseCategoryBindingModel) {
         String courseCategoryFileToUploadName = getCourseCategoryFileToUploadName(courseCategoryBindingModel);
         FileToUpload fileToUpload = new FileToUpload(courseCategoryFileToUploadName, courseCategoryBindingModel.getThumbnail());
-        remoteStorageFileUploader.uploadFileAsync(fileToUpload);
+        remoteStorageFileOperator.uploadFileAsync(fileToUpload);
     }
 
     private String getCourseCategoryFileToUploadName(CourseCategoryBindingModel courseCategoryBindingModel) {
@@ -73,7 +73,7 @@ public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategor
         if (courseCategoryThumbnailName == null) {
             return;
         }
-        remoteStorageFileUploader.removeFileSync(courseCategoryThumbnailName);
+        remoteStorageFileOperator.removeFileSync(courseCategoryThumbnailName);
     }
 
     private CourseCategoryServiceModel updateCourseServiceModel(CourseCategoryBindingModel courseCategoryBindingModel,
