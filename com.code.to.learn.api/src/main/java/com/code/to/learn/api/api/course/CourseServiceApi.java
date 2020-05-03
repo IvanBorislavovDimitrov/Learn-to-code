@@ -35,4 +35,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel.CourseVideoResponseModel> getVideoByCourse(String courseName, String videoName);
 
     ResponseEntity<CourseResponseModel> updateCourse(CourseBindingModel courseBindingModel, boolean shouldUpdateContent);
+
+    ResponseEntity<CourseResponseModel> deleteCourse(String courseName);
 }

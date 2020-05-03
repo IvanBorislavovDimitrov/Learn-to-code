@@ -338,6 +338,13 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     }
 
     @Override
+    public ResponseEntity<CourseResponseModel> deleteCourse(String courseName) {
+        CourseServiceModel courseServiceModel = courseService.findByName(courseName);
+        CourseServiceModel deletedCourseServiceModel = courseService.deleteById(courseServiceModel.getId());
+        return ResponseEntity.ok(toOutput(deletedCourseServiceModel));
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

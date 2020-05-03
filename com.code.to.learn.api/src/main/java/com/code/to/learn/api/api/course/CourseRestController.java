@@ -96,4 +96,9 @@ public class CourseRestController {
         return courseServiceApi.updateCourse(courseBindingModel, shouldUpdateContent);
     }
 
+    @DeleteMapping(value = "/delete/{courseName}")
+    public ResponseEntity<CourseResponseModel> deleteCourse(@PathVariable String courseName) {
+        return courseServiceApi.deleteCourse(courseName);
+    }
+
 }
