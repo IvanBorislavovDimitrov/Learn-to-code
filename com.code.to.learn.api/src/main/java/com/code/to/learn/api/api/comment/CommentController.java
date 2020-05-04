@@ -47,4 +47,9 @@ public class CommentController {
         return commentServiceApi.delete(commentId, loggedUser);
     }
 
+    @GetMapping(value = "/{commentId}")
+    public ResponseEntity<CommentResponseModel> get(@PathVariable String commentId) {
+        return commentServiceApi.get(commentId);
+    }
+
 }

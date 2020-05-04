@@ -6,7 +6,6 @@ public class CommentBindingModel {
 
     private String id;
 
-    @NotNull
     private String courseName;
 
     @NotNull

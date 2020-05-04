@@ -69,7 +69,6 @@ public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel,
     private CommentServiceModel getUpdatedCommentServiceModel(CommentServiceModel currentCommentServiceModel,
                                                               CommentBindingModel commentBindingModel) {
         currentCommentServiceModel.setContent(commentBindingModel.getContent());
-        currentCommentServiceModel.setDate(LocalDate.now());
         return currentCommentServiceModel;
     }
 
@@ -82,6 +81,11 @@ public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel,
         }
         CommentServiceModel deletedCourseServiceModel = commentService.deleteById(commentId);
         return ResponseEntity.ok(toOutput(deletedCourseServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<CommentResponseModel> get(String commentId) {
+        return ResponseEntity.ok(toOutput(commentService.findById(commentId)));
     }
 
     @Override
