@@ -87,7 +87,7 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         activateAccountUrl = String.format(activateAccountUrl, userBindingModel.getUsername());
         Email activateAccountEmail = new Email.Builder()
                 .setContent(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, userBindingModel.getUsername()))
-                .setTitle(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, activateAccountUrl))
+                .setTitle(MessageFormat.format(Messages.ACCOUNT_ACTIVATION, activateAccountUrl))
                 .setRecipient(userBindingModel.getEmail())
                 .build();
         emailClient.sendAsync(activateAccountEmail);

@@ -34,7 +34,7 @@ public class ApplicationConfiguration {
     private static final String SMTP_AUTH_ENABLED_NAME = "SMTP_AUTH_ENABLED";
     private static final String SMTP_USERNAME_NAME = "SMTP_USERNAME";
     private static final String SMTP_PASSWORD_NAME = "SMTP_PASSWORD";
-    private static final String ACTIVATE_EMAIL_NAME = "ACTIVATE_EMAIL";
+    private static final String CLIENT_URL_NAME = "CLIENT_URL";
 
     // Variable default values
     private static final String CLIENT_ID_VALUE = "5b2f3c2f8bb2f09aa59d";
@@ -65,7 +65,8 @@ public class ApplicationConfiguration {
     private static final String SMTP_AUTH_ENABLED_VALUE = "true";
     private static final String SMTP_USERNAME_VALUE = "automaticmailsendercommunity@gmail.com";
     private static final String SMTP_PASSWORD_VALUE = "123456sender";
-    private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(ACTIVATE_EMAIL_NAME) + "/users/activate/%s";
+    private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/activate/%s";
+    private static final String CLIENT_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME);
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -181,6 +182,10 @@ public class ApplicationConfiguration {
 
     public String getActivateAccountUrl() {
         return ACTIVATE_EMAIL_VALUE;
+    }
+
+    public String getClientUrl() {
+        return CLIENT_URL_VALUE;
     }
 
     @SuppressWarnings("unchecked")

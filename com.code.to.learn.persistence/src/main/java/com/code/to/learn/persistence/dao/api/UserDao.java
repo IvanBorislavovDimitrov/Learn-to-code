@@ -17,4 +17,6 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> findTeachers();
 
+    List<User> findUsersByPage(int page, int maxResults);
+
 }

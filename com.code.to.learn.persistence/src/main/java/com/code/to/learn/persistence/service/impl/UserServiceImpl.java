@@ -89,6 +89,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
+    public List<UserServiceModel> findUsersByPage(int page, int maxResults) {
+        List<User> users = userDao.findUsersByPage(page, maxResults);
+        return toOutput(users);
+    }
+
+    @Override
     protected Class<UserServiceModel> getModelClass() {
         return UserServiceModel.class;
     }
