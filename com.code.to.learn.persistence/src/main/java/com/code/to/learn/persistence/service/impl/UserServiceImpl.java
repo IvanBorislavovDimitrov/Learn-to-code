@@ -81,6 +81,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
+    public UserServiceModel activateAccount(String username) {
+        UserServiceModel userServiceModel = findByUsername(username);
+        userServiceModel.setEnabled(true);
+        update(userServiceModel);
+        return userServiceModel;
+    }
+
+    @Override
     protected Class<UserServiceModel> getModelClass() {
         return UserServiceModel.class;
     }

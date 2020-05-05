@@ -1,5 +1,6 @@
 package com.code.to.learn.core.client;
 
+import com.code.to.learn.core.util.ResilientExecutor;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -10,13 +11,19 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResilientHttpClient implements HttpClient {
 
     private final HttpClient httpClient = HttpClientBuilder.create().build();
-    private final ResilientExecutor resilientExecutor = new ResilientExecutor();
+    private final ResilientExecutor resilientExecutor;
+
+    @Autowired
+    public ResilientHttpClient(ResilientExecutor resilientExecutor) {
+        this.resilientExecutor = resilientExecutor;
+    }
 
     @Override
     public HttpParams getParams() {

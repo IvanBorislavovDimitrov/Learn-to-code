@@ -10,6 +10,10 @@
 	<artifactId>com.code.to.learn.web</artifactId>
 	<packaging>war</packaging>
 
+	<properties>
+		<java.mail.version>1.4.7</java.mail.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -28,6 +32,12 @@
 			<artifactId>com.code.to.learn.core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${java.mail.version}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

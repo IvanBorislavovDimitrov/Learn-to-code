@@ -27,6 +27,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     private List<RoleServiceModel> roles;
     private String profilePictureName;
     private String description;
+    private boolean isEnabled;
 
     public UserServiceModel() {
         // Required by ModelMapper
@@ -168,7 +169,11 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public boolean isAdminOrModerator() {

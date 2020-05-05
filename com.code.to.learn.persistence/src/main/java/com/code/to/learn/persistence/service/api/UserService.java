@@ -21,4 +21,6 @@ public interface UserService extends GenericService<UserServiceModel> {
     List<UserServiceModel> findUsersByUsernameContaining(String username);
 
     List<UserServiceModel> findTeachers();
+
+    UserServiceModel activateAccount(String username);
 }

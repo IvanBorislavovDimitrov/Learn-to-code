@@ -28,6 +28,13 @@ public class ApplicationConfiguration {
     private static final String THREAD_POOL_SIZE_NAME = "THEAD_POOL_SIZE";
     private static final String ASYNC_EXECUTOR_THREADS_COUNT_NAME = "ASYNC_EXECUTOR_THREADS_COUNT";
     private static final String MAX_COURSES_ON_PAGE_NAME = "MAX_COURSES_ON_PAGE";
+    private static final String SMTP_HOST_NAME = "SMTP_HOST";
+    private static final String SMTP_PORT_NAME = "SMTP_PORT";
+    private static final String SMTP_SSL_ENABLED_NAME = "SMTP_SSL_ENABLED";
+    private static final String SMTP_AUTH_ENABLED_NAME = "SMTP_AUTH_ENABLED";
+    private static final String SMTP_USERNAME_NAME = "SMTP_USERNAME";
+    private static final String SMTP_PASSWORD_NAME = "SMTP_PASSWORD";
+    private static final String ACTIVATE_EMAIL_NAME = "ACTIVATE_EMAIL";
 
     // Variable default values
     private static final String CLIENT_ID_VALUE = "5b2f3c2f8bb2f09aa59d";
@@ -52,6 +59,13 @@ public class ApplicationConfiguration {
     private static final int THREAD_POOL_SIZE_VALUE = 5;
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
     private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
+    private static final String SMTP_HOST_VALUE = "smtp.gmail.com";
+    private static final String SMTP_PORT_VALUE = "465";
+    private static final String SMTP_SSL_ENABLED_VALUE = "true";
+    private static final String SMTP_AUTH_ENABLED_VALUE = "true";
+    private static final String SMTP_USERNAME_VALUE = "automaticmailsendercommunity@gmail.com";
+    private static final String SMTP_PASSWORD_VALUE = "123456sender";
+    private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(ACTIVATE_EMAIL_NAME) + "/users/activate/%s";
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -139,6 +153,34 @@ public class ApplicationConfiguration {
 
     public int getMaxCoursesOnPage() {
         return getOrDefault(MAX_COURSES_ON_PAGE_NAME, MAX_COURSES_ON_PAGE_VALUE);
+    }
+
+    public String getSmtpHost() {
+        return getOrDefault(SMTP_HOST_NAME, SMTP_HOST_VALUE);
+    }
+
+    public String getSmtpPort() {
+        return getOrDefault(SMTP_PORT_NAME, SMTP_PORT_VALUE);
+    }
+
+    public String getSmtpSslEnabled() {
+        return getOrDefault(SMTP_SSL_ENABLED_NAME, SMTP_SSL_ENABLED_VALUE);
+    }
+
+    public String getAuthEnabled() {
+        return getOrDefault(SMTP_AUTH_ENABLED_NAME, SMTP_AUTH_ENABLED_VALUE);
+    }
+
+    public String getSmtpUsername() {
+        return getOrDefault(SMTP_USERNAME_NAME, SMTP_USERNAME_VALUE);
+    }
+
+    public String getSmtpPassword() {
+        return getOrDefault(SMTP_PASSWORD_NAME, SMTP_PASSWORD_VALUE);
+    }
+
+    public String getActivateAccountUrl() {
+        return ACTIVATE_EMAIL_VALUE;
     }
 
     @SuppressWarnings("unchecked")

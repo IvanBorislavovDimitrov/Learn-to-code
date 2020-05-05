@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       spring_profiles_active: dev
+      ACTIVATE_PROFILE: "http://localhost:3000"
     build: .
     ports:
       - "8080:8080"

@@ -76,4 +76,9 @@ public class UserRestController {
     public ResponseEntity<List<UserResponseModel>> getTeachers() {
         return userServiceApi.findTeachers();
     }
+
+    @PostMapping(value = "/activate/{username}")
+    public ResponseEntity<UserResponseModel> activateAccount(@PathVariable String username) {
+        return userServiceApi.activateAccount(username);
+    }
 }

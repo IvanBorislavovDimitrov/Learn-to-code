@@ -67,6 +67,9 @@ public class User extends IdEntity<User> implements UserDetails {
     @OneToMany(mappedBy = "author", targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Comment> comments = new ArrayList<>();
 
+    @Column()
+    private boolean isEnabled;
+
     public String getFirstName() {
         return firstName;
     }
@@ -116,7 +119,7 @@ public class User extends IdEntity<User> implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 
     public String getPhoneNumber() {
@@ -218,6 +221,10 @@ public class User extends IdEntity<User> implements UserDetails {
         this.comments = comments;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     @Override
     public User merge(User user) {
         setUsername(user.getUsername());
@@ -233,6 +240,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setProfilePictureName(user.getProfilePictureName());
         setDescription(user.getDescription());
         setComments(user.getComments());
+        setEnabled(user.isEnabled());
         return this;
     }
 }

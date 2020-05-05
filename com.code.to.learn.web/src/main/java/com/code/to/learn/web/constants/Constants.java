@@ -15,6 +15,11 @@ public final class Constants {
     public static final long ASYNC_TIMEOUT_IN_MILISECONDS = 600 * 60 * 1000;
     public static final int SESSION_TIMEOUT_IN_SECONDS = 24 * 60 * 60;
 
+    public static final String MAIL_SMTP_HOST = "mail.smtp.host";
+    public static final String MAIL_SMTP_PORT = "mail.smtp.port";
+    public static final String MAIL_SMTP_SSL_ENABLE = "mail.smtp.ssl.enable";
+    public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+
     private Constants() {
 
     }

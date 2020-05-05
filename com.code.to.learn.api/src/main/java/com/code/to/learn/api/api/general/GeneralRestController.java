@@ -12,4 +12,5 @@ public class GeneralRestController {
     public ResponseEntity<String> pong() {
         return ResponseEntity.ok(Constants.PONG);
     }
+
 }

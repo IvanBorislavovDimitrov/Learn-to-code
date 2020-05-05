@@ -3,6 +3,7 @@ package com.code.to.learn.web.api_facade;
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
@@ -10,6 +11,9 @@ import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
+import com.code.to.learn.web.constants.Messages;
+import com.code.to.learn.web.mail.Email;
+import com.code.to.learn.web.mail.EmailClient;
 import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.RemoteStorageFileOperator;
 import org.apache.commons.io.FilenameUtils;
@@ -19,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -36,16 +41,20 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final RemoteStorageFileOperator remoteStorageFileOperator;
+    private final EmailClient emailClient;
+    private final ApplicationConfiguration applicationConfiguration;
 
     @Autowired
     public UserServiceApiFacade(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
-                                PasswordEncoder passwordEncoder, RoleService roleService, RemoteStorageFileOperator remoteStorageFileOperator) {
+                                PasswordEncoder passwordEncoder, RoleService roleService, RemoteStorageFileOperator remoteStorageFileOperator, EmailClient emailClient, ApplicationConfiguration applicationConfiguration) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.remoteStorageFileOperator = remoteStorageFileOperator;
+        this.emailClient = emailClient;
+        this.applicationConfiguration = applicationConfiguration;
     }
 
     @Override
@@ -68,8 +77,20 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);
+        sendActivationEmail(userBindingModel);
         UserResponseModel userResponseModel = toOutput(userServiceModel);
         return ResponseEntity.ok(userResponseModel);
+    }
+
+    private void sendActivationEmail(UserBindingModel userBindingModel) {
+        String activateAccountUrl = applicationConfiguration.getActivateAccountUrl();
+        activateAccountUrl = String.format(activateAccountUrl, userBindingModel.getUsername());
+        Email activateAccountEmail = new Email.Builder()
+                .setContent(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, userBindingModel.getUsername()))
+                .setTitle(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, activateAccountUrl))
+                .setRecipient(userBindingModel.getEmail())
+                .build();
+        emailClient.sendAsync(activateAccountEmail);
     }
 
     @Override
@@ -141,6 +162,12 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     public ResponseEntity<List<UserResponseModel>> findTeachers() {
         List<UserServiceModel> userServiceModels = userService.findTeachers();
         return ResponseEntity.ok(toOutput(userServiceModels));
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> activateAccount(String username) {
+        UserServiceModel userServiceModel = userService.activateAccount(username);
+        return ResponseEntity.ok(toOutput(userServiceModel));
     }
 
     @Override

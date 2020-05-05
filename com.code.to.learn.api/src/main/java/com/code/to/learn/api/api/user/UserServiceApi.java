@@ -19,4 +19,6 @@ public interface UserServiceApi {
     ResponseEntity<UserResponseModel> changeUserRoles(String username, List<String> roles);
 
     ResponseEntity<List<UserResponseModel>> findTeachers();
+
+    ResponseEntity<UserResponseModel> activateAccount(String username);
 }
