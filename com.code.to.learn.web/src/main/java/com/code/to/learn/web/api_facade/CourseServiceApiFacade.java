@@ -1,10 +1,7 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.course.CourseServiceApi;
-import com.code.to.learn.api.model.course.CourseBindingModel;
-import com.code.to.learn.api.model.course.CoursePagesResponseModel;
-import com.code.to.learn.api.model.course.CourseResponseModel;
-import com.code.to.learn.api.model.course.UserEnrolledForCourse;
+import com.code.to.learn.api.model.course.*;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.CourseValidator;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
@@ -16,6 +13,7 @@ import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
+import com.code.to.learn.web.exception.course.UnsupportedCourseTypeException;
 import com.code.to.learn.web.util.FileToUpload;
 import com.code.to.learn.web.util.RemoteStorageFileGetter;
 import com.code.to.learn.web.util.RemoteStorageFileOperator;
@@ -38,9 +36,10 @@ import java.util.stream.Collectors;
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
 import static com.code.to.learn.web.constants.Constants.*;
 import static com.code.to.learn.web.constants.Messages.VIDEO_NAME_NOT_FOUND;
+import static com.code.to.learn.web.message.Messages.UNSUPPORTED_COURSE_EXCEPTION;
 
 @Component
-public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
+public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
 
     private final CourseService courseService;
     private final RemoteStorageFileOperator remoteStorageFileOperator;
@@ -52,10 +51,10 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
     private final ApplicationConfiguration configuration;
 
     @Autowired
-    public CourseServiceApiImpl(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileOperator remoteStorageFileOperator,
-                                CourseValidator courseValidator, UserService userService,
-                                CourseCategoryService courseCategoryService, ExecutorService executorService,
-                                RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration) {
+    public CourseServiceApiFacade(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileOperator remoteStorageFileOperator,
+                                  CourseValidator courseValidator, UserService userService,
+                                  CourseCategoryService courseCategoryService, ExecutorService executorService,
+                                  RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration) {
         super(modelMapper);
         this.courseService = courseService;
         this.remoteStorageFileOperator = remoteStorageFileOperator;
@@ -342,6 +341,27 @@ public class CourseServiceApiImpl extends ExtendableMapper<CourseServiceModel, C
         CourseServiceModel courseServiceModel = courseService.findByName(courseName);
         CourseServiceModel deletedCourseServiceModel = courseService.deleteById(courseServiceModel.getId());
         return ResponseEntity.ok(toOutput(deletedCourseServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<List<CourseResponseModel>> getCoursesByFilter(CourseFilter courseFilter, int limit) {
+        switch (courseFilter) {
+            case BEST_SELLERS:
+                return ResponseEntity.ok(getBestSellers(limit));
+            case MOST_COMMENTED:
+                return ResponseEntity.ok(getMostCommented(limit));
+        }
+        throw new UnsupportedCourseTypeException(UNSUPPORTED_COURSE_EXCEPTION, courseFilter.toString());
+    }
+
+    private List<CourseResponseModel> getBestSellers(int limit) {
+        List<CourseServiceModel> bestSellers = courseService.findBestSellers(limit);
+        return toCourseResponseModels(bestSellers, true);
+    }
+
+    private List<CourseResponseModel> getMostCommented(int limit) {
+        List<CourseServiceModel> mostCommented = courseService.findMostCommented(limit);
+        return toCourseResponseModels(mostCommented, true);
     }
 
     @Override

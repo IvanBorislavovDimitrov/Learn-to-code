@@ -1,4 +1,4 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.comment.CommentServiceApi;
 import com.code.to.learn.api.exception.ForbiddenException;
@@ -22,14 +22,14 @@ import static com.code.to.learn.web.message.Messages.USERS_DO_NOT_MATCH;
 import static com.code.to.learn.web.message.Messages.USER_CANNOT_NOT_MODIFY_COMMENT;
 
 @Service
-public class CommentServiceApiImpl extends ExtendableMapper<CommentServiceModel, CommentResponseModel> implements CommentServiceApi {
+public class CommentServiceApiFacade extends ExtendableMapper<CommentServiceModel, CommentResponseModel> implements CommentServiceApi {
 
     private final CommentService commentService;
     private final CourseService courseService;
     private final UserService userService;
 
     @Autowired
-    public CommentServiceApiImpl(ModelMapper modelMapper, CommentService commentService, CourseService courseService, UserService userService) {
+    public CommentServiceApiFacade(ModelMapper modelMapper, CommentService commentService, CourseService courseService, UserService userService) {
         super(modelMapper);
         this.commentService = commentService;
         this.courseService = courseService;

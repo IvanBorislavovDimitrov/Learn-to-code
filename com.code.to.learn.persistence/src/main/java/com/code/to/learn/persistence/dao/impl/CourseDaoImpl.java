@@ -1,8 +1,10 @@
 package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.CourseDao;
+import com.code.to.learn.persistence.domain.entity.Comment;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.CourseCategory;
+import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,15 +12,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.code.to.learn.persistence.domain.entity.Course.START_DATE;
+import static com.code.to.learn.persistence.domain.entity.Course.*;
 
 @Repository
 public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
@@ -84,6 +83,36 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
         criteriaQuery.where(like);
         criteriaQuery.select(criteriaBuilder.count(root));
         return session.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    @Override
+    public List<Course> findBestSellers(int limit) {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Course> courseCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+        Root<Course> courseRoot = courseCriteriaQuery.from(getDomainClassType());
+        courseRoot.join(ATTENDANTS, JoinType.LEFT);
+        courseCriteriaQuery.groupBy(courseRoot.get(Course.ID));
+        courseCriteriaQuery.orderBy(criteriaBuilder.desc(criteriaBuilder.count(courseCriteriaQuery.from(User.class))));
+        courseCriteriaQuery.select(courseRoot);
+        Query<Course> bestSellers = session.createQuery(courseCriteriaQuery);
+        return bestSellers.setMaxResults(limit)
+                .getResultList();
+    }
+
+    @Override
+    public List<Course> findMostCommented(int limit) {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Course> courseCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+        Root<Course> courseRoot = courseCriteriaQuery.from(getDomainClassType());
+        courseRoot.join(COMMENTS, JoinType.LEFT);
+        courseCriteriaQuery.groupBy(courseRoot.get(Course.ID));
+        courseCriteriaQuery.orderBy(criteriaBuilder.desc(criteriaBuilder.count(courseCriteriaQuery.from(Comment.class))));
+        courseCriteriaQuery.select(courseRoot);
+        Query<Course> mostCommented = session.createQuery(courseCriteriaQuery);
+        return mostCommented.setMaxResults(limit)
+                .getResultList();
     }
 
     @Override

@@ -110,10 +110,23 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     private Course getCourseInCartByNameForUser(User user, String courseName) {
-        return user.getCoursesInCart().stream()
+        return user.getCoursesInCart()
+                .stream()
                 .filter(course -> Objects.equals(course.getName(), courseName))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(Messages.COURSE_NOT_FOUND, courseName));
+    }
+
+    @Override
+    public List<CourseServiceModel> findBestSellers(int limit) {
+        List<Course> bestSellers = courseDao.findBestSellers(limit);
+        return toOutput(bestSellers);
+    }
+
+    @Override
+    public List<CourseServiceModel> findMostCommented(int limit) {
+        List<Course> mostCommented = courseDao.findMostCommented(limit);
+        return toOutput(mostCommented);
     }
 
     @Override

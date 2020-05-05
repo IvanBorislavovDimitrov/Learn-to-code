@@ -1,4 +1,4 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.resource.ResourceServiceApi;
 import com.code.to.learn.web.util.RemoteStorageFileGetter;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 
 @Component
-public class ResourceServiceApiImpl implements ResourceServiceApi {
+public class ResourceServiceApiFacade implements ResourceServiceApi {
 
     private final RemoteStorageFileGetter remoteStorageFileGetter;
 
     @Autowired
-    public ResourceServiceApiImpl(RemoteStorageFileGetter remoteStorageFileGetter) {
+    public ResourceServiceApiFacade(RemoteStorageFileGetter remoteStorageFileGetter) {
         this.remoteStorageFileGetter = remoteStorageFileGetter;
     }
 

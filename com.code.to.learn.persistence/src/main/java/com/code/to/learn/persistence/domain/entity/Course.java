@@ -15,6 +15,8 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
     public static final String START_DATE = "startDate";
     public static final String TEACHER = "teacher";
+    public static final String ATTENDANTS = "attendants";
+    public static final String COMMENTS = "comments";
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;

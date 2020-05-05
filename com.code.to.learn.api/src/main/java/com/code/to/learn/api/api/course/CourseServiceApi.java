@@ -1,9 +1,6 @@
 package com.code.to.learn.api.api.course;
 
-import com.code.to.learn.api.model.course.CourseBindingModel;
-import com.code.to.learn.api.model.course.CoursePagesResponseModel;
-import com.code.to.learn.api.model.course.CourseResponseModel;
-import com.code.to.learn.api.model.course.UserEnrolledForCourse;
+import com.code.to.learn.api.model.course.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -37,4 +34,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> updateCourse(CourseBindingModel courseBindingModel, boolean shouldUpdateContent);
 
     ResponseEntity<CourseResponseModel> deleteCourse(String courseName);
+
+    ResponseEntity<List<CourseResponseModel>> getCoursesByFilter(CourseFilter courseFilter, int limit);
 }

@@ -1,4 +1,4 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
@@ -29,7 +29,7 @@ import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
 import static com.code.to.learn.web.constants.Constants.PROFILE_PICTURE_EXTENSION;
 
 @Service
-public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserResponseModel> implements UserServiceApi {
+public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, UserResponseModel> implements UserServiceApi {
 
     private final UserValidator userValidator;
     private final UserService userService;
@@ -38,8 +38,8 @@ public class UserServiceApiImpl extends ExtendableMapper<UserServiceModel, UserR
     private final RemoteStorageFileOperator remoteStorageFileOperator;
 
     @Autowired
-    public UserServiceApiImpl(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
-                              PasswordEncoder passwordEncoder, RoleService roleService, RemoteStorageFileOperator remoteStorageFileOperator) {
+    public UserServiceApiFacade(ModelMapper modelMapper, UserValidator userValidator, UserService userService,
+                                PasswordEncoder passwordEncoder, RoleService roleService, RemoteStorageFileOperator remoteStorageFileOperator) {
         super(modelMapper);
         this.userValidator = userValidator;
         this.userService = userService;

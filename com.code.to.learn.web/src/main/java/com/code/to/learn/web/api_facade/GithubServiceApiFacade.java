@@ -1,4 +1,4 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.github.GithubServiceApi;
 import com.code.to.learn.api.model.github.GithubAccessTokenResponseModel;
@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServiceModel, GithubAccessTokenResponseModel> implements GithubServiceApi {
+public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenServiceModel, GithubAccessTokenResponseModel> implements GithubServiceApi {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GithubServiceApiFacade.class);
 
     private final Parser parser;
     private final ResilientHttpClient resilientHttpClient;
@@ -52,8 +52,8 @@ public class GithubServiceApiImpl extends ExtendableMapper<GithubAccessTokenServ
     private final UserService userService;
 
     @Autowired
-    public GithubServiceApiImpl(Parser parser, ResilientHttpClient resilientHttpClient,
-                                ModelMapper modelMapper, ApplicationConfiguration applicationConfiguration, UserService userService) {
+    public GithubServiceApiFacade(Parser parser, ResilientHttpClient resilientHttpClient,
+                                  ModelMapper modelMapper, ApplicationConfiguration applicationConfiguration, UserService userService) {
         super(modelMapper);
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;

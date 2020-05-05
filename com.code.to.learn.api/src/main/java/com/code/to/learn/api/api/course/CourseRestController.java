@@ -1,9 +1,6 @@
 package com.code.to.learn.api.api.course;
 
-import com.code.to.learn.api.model.course.CourseBindingModel;
-import com.code.to.learn.api.model.course.CoursePagesResponseModel;
-import com.code.to.learn.api.model.course.CourseResponseModel;
-import com.code.to.learn.api.model.course.UserEnrolledForCourse;
+import com.code.to.learn.api.model.course.*;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -99,6 +96,11 @@ public class CourseRestController {
     @DeleteMapping(value = "/delete/{courseName}")
     public ResponseEntity<CourseResponseModel> deleteCourse(@PathVariable String courseName) {
         return courseServiceApi.deleteCourse(courseName);
+    }
+
+    @GetMapping(value = "/get")
+    public ResponseEntity<List<CourseResponseModel>> getCourseByFilter(@RequestParam CourseFilter filter, @RequestParam int limit) {
+        return courseServiceApi.getCoursesByFilter(filter, limit);
     }
 
 }

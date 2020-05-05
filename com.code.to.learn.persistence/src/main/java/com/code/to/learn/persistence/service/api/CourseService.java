@@ -28,4 +28,8 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
 
     void removeFromCart(User user, String courseName);
 
+    List<CourseServiceModel> findBestSellers(int limit);
+
+    List<CourseServiceModel> findMostCommented(int limit);
+
 }

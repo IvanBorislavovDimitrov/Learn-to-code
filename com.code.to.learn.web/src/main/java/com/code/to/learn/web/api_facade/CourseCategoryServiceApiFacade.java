@@ -1,4 +1,4 @@
-package com.code.to.learn.web.api_impl;
+package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.course_category.CourseCategoryServiceApi;
 import com.code.to.learn.api.model.course_category.CourseCategoryBindingModel;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 import static com.code.to.learn.web.constants.Constants.COURSE_CATEGORY_THUMBNAIL;
 
 @Service
-public class CourseCategoryServiceApiImpl extends ExtendableMapper<CourseCategoryServiceModel, CourseCategoryResponseModel> implements CourseCategoryServiceApi {
+public class CourseCategoryServiceApiFacade extends ExtendableMapper<CourseCategoryServiceModel, CourseCategoryResponseModel> implements CourseCategoryServiceApi {
 
     private final CourseCategoryService courseCategoryService;
     private final RemoteStorageFileOperator remoteStorageFileOperator;
 
     @Autowired
-    public CourseCategoryServiceApiImpl(ModelMapper modelMapper, CourseCategoryService courseCategoryService, RemoteStorageFileOperator remoteStorageFileOperator) {
+    public CourseCategoryServiceApiFacade(ModelMapper modelMapper, CourseCategoryService courseCategoryService, RemoteStorageFileOperator remoteStorageFileOperator) {
         super(modelMapper);
         this.courseCategoryService = courseCategoryService;
         this.remoteStorageFileOperator = remoteStorageFileOperator;
