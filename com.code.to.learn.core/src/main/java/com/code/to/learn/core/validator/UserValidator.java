@@ -1,8 +1,11 @@
 package com.code.to.learn.core.validator;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.persistence.constant.Messages;
-import com.code.to.learn.persistence.exception.user.*;
+import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
+import com.code.to.learn.persistence.exception.user.EmailTakenException;
+import com.code.to.learn.persistence.exception.user.PasswordsDoNotMatchException;
+import com.code.to.learn.persistence.exception.user.PhoneNumberTakenException;
+import com.code.to.learn.persistence.exception.user.UsernameTakenException;
 import com.code.to.learn.persistence.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,5 +55,11 @@ public class UserValidator {
 
     private boolean passwordsMatch(String password, String confirmPassword) {
         return Objects.equals(password, confirmPassword);
+    }
+
+    public void validatePasswordsMatch(UserChangePasswordBindingModel userChangePasswordBindingModel) {
+        if (!passwordsMatch(userChangePasswordBindingModel.getPassword(), userChangePasswordBindingModel.getConfirmPassword())) {
+            throw new PasswordsDoNotMatchException();
+        }
     }
 }

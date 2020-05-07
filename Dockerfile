@@ -1,6 +1,7 @@
 FROM tomcat:9.0.34-jdk8-openjdk
 
 ENV spring_profiles_active=dev
+ENV CLIENT_URL="http://localhost:3000"
 
 WORKDIR /usr/src/app
 

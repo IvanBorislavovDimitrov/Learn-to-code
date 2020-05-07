@@ -18,8 +18,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import static com.code.to.learn.web.message.Messages.USERS_DO_NOT_MATCH;
-import static com.code.to.learn.web.message.Messages.USER_CANNOT_NOT_MODIFY_COMMENT;
+import static com.code.to.learn.web.constants.Messages.USERS_DO_NOT_MATCH;
+import static com.code.to.learn.web.constants.Messages.USER_CANNOT_NOT_MODIFY_COMMENT;
+
 
 @Service
 public class CommentServiceApiFacade extends ExtendableMapper<CommentServiceModel, CommentResponseModel> implements CommentServiceApi {

@@ -2,11 +2,14 @@ package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.user.UserServiceApi;
 import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.domain.model.RoleServiceModel;
+import com.code.to.learn.persistence.domain.model.UserChangePasswordServiceModel;
+import com.code.to.learn.persistence.domain.model.UserForgottenPasswordServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.service.api.RoleService;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -86,8 +89,8 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         String activateAccountUrl = applicationConfiguration.getActivateAccountUrl();
         activateAccountUrl = String.format(activateAccountUrl, userBindingModel.getUsername());
         Email activateAccountEmail = new Email.Builder()
-                .setContent(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, userBindingModel.getUsername()))
-                .setTitle(MessageFormat.format(Messages.ACCOUNT_ACTIVATION, activateAccountUrl))
+                .setContent(MessageFormat.format(Messages.ACTIVATE_ACCOUNT_EMAIL, activateAccountUrl))
+                .setTitle(Messages.ACCOUNT_ACTIVATION)
                 .setRecipient(userBindingModel.getEmail())
                 .build();
         emailClient.sendAsync(activateAccountEmail);
@@ -168,6 +171,38 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     public ResponseEntity<UserResponseModel> activateAccount(String username) {
         UserServiceModel userServiceModel = userService.activateAccount(username);
         return ResponseEntity.ok(toOutput(userServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<?> sendEmailForPasswordReset(String username) {
+        UserForgottenPasswordServiceModel userForgottenPasswordServiceModel = userService.generateResetPasswordToken(username);
+        sendEmailForPasswordReset(userForgottenPasswordServiceModel);
+        return ResponseEntity.ok().build();
+    }
+
+    private void sendEmailForPasswordReset(UserForgottenPasswordServiceModel userForgottenPasswordServiceModel) {
+        Email passwordResetEmail = new Email.Builder()
+                .setContent(MessageFormat.format(Messages.RESET_YOUR_PASSWORD,
+                        generateUserForgottenPasswordLink(userForgottenPasswordServiceModel.getToken())))
+                .setRecipient(userForgottenPasswordServiceModel.getEmail())
+                .setTitle(Messages.FORGOTTEN_PASSWORD)
+                .build();
+        emailClient.sendAsync(passwordResetEmail);
+    }
+
+    private String generateUserForgottenPasswordLink(String forgottenPasswordToken) {
+        return String.format(applicationConfiguration.getResetPasswordUrl(), forgottenPasswordToken);
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> changeForgottenPassword(UserChangePasswordBindingModel userChangePasswordBindingModel) {
+        userValidator.validatePasswordsMatch(userChangePasswordBindingModel);
+        UserChangePasswordServiceModel userChangePasswordServiceModel = getMapper()
+                .map(userChangePasswordBindingModel, UserChangePasswordServiceModel.class);
+        userChangePasswordServiceModel.setPassword(passwordEncoder.encode(userChangePasswordBindingModel.getPassword()));
+        userChangePasswordServiceModel.setConfirmPassword(passwordEncoder.encode(userChangePasswordBindingModel.getConfirmPassword()));
+        UserResponseModel userResponseModel = toOutput(userService.changeForgottenPassword(userChangePasswordServiceModel));
+        return ResponseEntity.ok(userResponseModel);
     }
 
     @Override

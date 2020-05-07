@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
 import static com.code.to.learn.web.constants.Constants.*;
+import static com.code.to.learn.web.constants.Messages.UNSUPPORTED_COURSE_EXCEPTION;
 import static com.code.to.learn.web.constants.Messages.VIDEO_NAME_NOT_FOUND;
-import static com.code.to.learn.web.message.Messages.UNSUPPORTED_COURSE_EXCEPTION;
 
 @Component
 public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {

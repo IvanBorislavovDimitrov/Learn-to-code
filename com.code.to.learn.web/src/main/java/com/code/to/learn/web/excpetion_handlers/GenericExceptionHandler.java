@@ -1,6 +1,7 @@
 package com.code.to.learn.web.excpetion_handlers;
 
 import com.code.to.learn.api.model.error.ApiErrorResponse;
+import com.code.to.learn.persistence.exception.basic.InvalidTokenException;
 import com.code.to.learn.persistence.exception.course.CourseException;
 import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.exception.user.UserException;
@@ -19,7 +20,7 @@ public class GenericExceptionHandler {
         this.parser = parser;
     }
 
-    @ExceptionHandler({UserException.class, CourseException.class, GithubException.class})
+    @ExceptionHandler({UserException.class, CourseException.class, GithubException.class, InvalidTokenException.class})
     public ResponseEntity<String> userExceptionOccurred(Exception exception) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .code(HttpStatus.BAD_REQUEST.value())

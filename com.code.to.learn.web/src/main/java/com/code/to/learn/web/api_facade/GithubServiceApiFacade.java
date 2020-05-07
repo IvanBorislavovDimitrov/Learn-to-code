@@ -163,7 +163,7 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
 
     public void verifyNotErrorIsReturned(Map<String, String> accessTokenQueryParameters) {
         if (accessTokenQueryParameters.containsKey(Constants.ERROR)) {
-            throw new GithubException(com.code.to.learn.web.message.Messages.INVALID_GITHUB_VERIFICATION_CODE, accessTokenQueryParameters);
+            throw new GithubException(com.code.to.learn.web.constants.Messages.INVALID_GITHUB_VERIFICATION_CODE, accessTokenQueryParameters);
         }
     }
 

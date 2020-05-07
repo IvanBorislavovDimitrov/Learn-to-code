@@ -67,6 +67,7 @@ public class ApplicationConfiguration {
     private static final String SMTP_PASSWORD_VALUE = "123456sender";
     private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/activate/%s";
     private static final String CLIENT_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME);
+    private static final String RESET_PASSWORD_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/new-password/%s";
 
     public String getGithubApiUrl() {
         return getOrDefault(GITHUB_URL_NAME, DEFAULT_GITHUB_URL_VALUE);
@@ -186,6 +187,10 @@ public class ApplicationConfiguration {
 
     public String getClientUrl() {
         return CLIENT_URL_VALUE;
+    }
+
+    public String getResetPasswordUrl() {
+        return RESET_PASSWORD_URL_VALUE;
     }
 
     @SuppressWarnings("unchecked")

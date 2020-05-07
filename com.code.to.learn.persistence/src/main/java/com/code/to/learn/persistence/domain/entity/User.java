@@ -70,6 +70,8 @@ public class User extends IdEntity<User> implements UserDetails {
     @Column()
     private boolean isEnabled;
 
+    private String resetPasswordToken;
+
     public String getFirstName() {
         return firstName;
     }
@@ -120,6 +122,10 @@ public class User extends IdEntity<User> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public String getPhoneNumber() {
@@ -221,8 +227,12 @@ public class User extends IdEntity<User> implements UserDetails {
         this.comments = comments;
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
     }
 
     @Override
@@ -241,6 +251,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setDescription(user.getDescription());
         setComments(user.getComments());
         setEnabled(user.isEnabled());
+        setResetPasswordToken(user.getResetPasswordToken());
         return this;
     }
 }

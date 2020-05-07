@@ -1,6 +1,7 @@
 package com.code.to.learn.api.api.user;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import org.springframework.http.ResponseEntity;
 
@@ -21,4 +22,8 @@ public interface UserServiceApi {
     ResponseEntity<List<UserResponseModel>> findTeachers();
 
     ResponseEntity<UserResponseModel> activateAccount(String username);
+
+    ResponseEntity<?> sendEmailForPasswordReset(String username);
+
+    ResponseEntity<UserResponseModel> changeForgottenPassword(UserChangePasswordBindingModel userChangePasswordBindingModel);
 }

@@ -4,15 +4,21 @@ import com.code.to.learn.persistence.constant.Messages;
 import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
 import com.code.to.learn.persistence.domain.entity.User;
+import com.code.to.learn.persistence.domain.model.UserChangePasswordServiceModel;
+import com.code.to.learn.persistence.domain.model.UserForgottenPasswordServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
+import com.code.to.learn.persistence.exception.basic.InvalidTokenException;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.UserService;
+import com.code.to.learn.persistence.util.ResetPasswordTokenGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -20,11 +26,13 @@ import java.util.function.Supplier;
 public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> implements UserService {
 
     private final UserDao userDao;
+    private final ResetPasswordTokenGenerator resetPasswordTokenGenerator;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, ModelMapper modelMapper) {
+    public UserServiceImpl(UserDao userDao, ModelMapper modelMapper, ResetPasswordTokenGenerator resetPasswordTokenGenerator) {
         super(userDao, modelMapper);
         this.userDao = userDao;
+        this.resetPasswordTokenGenerator = resetPasswordTokenGenerator;
     }
 
     @Override
@@ -92,6 +100,27 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     public List<UserServiceModel> findUsersByPage(int page, int maxResults) {
         List<User> users = userDao.findUsersByPage(page, maxResults);
         return toOutput(users);
+    }
+
+    @Override
+    public UserForgottenPasswordServiceModel generateResetPasswordToken(String username) {
+        String resetPasswordToken = resetPasswordTokenGenerator.generateResetPasswordToken();
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        user.setResetPasswordToken(resetPasswordToken);
+        userDao.update(user);
+        return new UserForgottenPasswordServiceModel(resetPasswordToken, user.getEmail());
+    }
+
+    @Override
+    public UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel) {
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(userChangePasswordServiceModel.getUsername()),
+                Messages.USERNAME_NOT_FOUND, userChangePasswordServiceModel.getConfirmPassword());
+        if (!Objects.equals(user.getResetPasswordToken(), userChangePasswordServiceModel.getToken())) {
+            throw new InvalidTokenException("Invalid token: {0}", user);
+        }
+        user.setPassword(userChangePasswordServiceModel.getPassword());
+        user.setResetPasswordToken(null);
+        return toOutput(userDao.update(user).get());
     }
 
     @Override

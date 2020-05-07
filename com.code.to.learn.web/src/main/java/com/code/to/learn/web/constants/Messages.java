@@ -10,6 +10,18 @@ public final class Messages {
     public static final String CHECKOUT_OUR_NEW_COURSE = "Checkout our new courses";
     public static final String VISIT_OUR_SITE_AND_CHECK_THE_COURSES = "Hello,\n\n Visit our website: {0} and checkout our new courses!";
 
+    public static final String FORGOTTEN_PASSWORD = "Forgotten password";
+    public static final String RESET_YOUR_PASSWORD = "Please click here: {0}, to reset your password!";
+
+    // Info messages
+    public static final String EXECUTION_RETRIED = "Execution retries: times: {0}/{1}";
+
+    // Exception messages
+    public static final String INVALID_GITHUB_VERIFICATION_CODE = "Invalid github verification code!";
+    public static final String USERS_DO_NOT_MATCH = "Users do not match!";
+    public static final String USER_CANNOT_NOT_MODIFY_COMMENT = "This user cannot modify this comment!";
+    public static final String UNSUPPORTED_COURSE_EXCEPTION = "Unsupported course exception: \"{0}\"";
+
     private Messages() {
 
     }

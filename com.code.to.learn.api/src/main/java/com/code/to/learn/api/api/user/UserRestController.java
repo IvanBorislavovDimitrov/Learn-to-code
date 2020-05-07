@@ -1,6 +1,7 @@
 package com.code.to.learn.api.api.user;
 
 import com.code.to.learn.api.model.user.UserBindingModel;
+import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,16 @@ public class UserRestController {
     @PostMapping(value = "/activate/{username}")
     public ResponseEntity<UserResponseModel> activateAccount(@PathVariable String username) {
         return userServiceApi.activateAccount(username);
+    }
+
+    @PostMapping(value = "/forgotten-password/{username}")
+    public ResponseEntity<?> requestPasswordChange(@PathVariable String username) {
+        return userServiceApi.sendEmailForPasswordReset(username);
+    }
+
+    @PatchMapping(value = "/change-forgotten-password")
+    public ResponseEntity<UserResponseModel> changeForgottenPassword(@RequestBody @Valid UserChangePasswordBindingModel
+                                                                             userChangePasswordBindingModel) {
+        return userServiceApi.changeForgottenPassword(userChangePasswordBindingModel);
     }
 }

@@ -1,5 +1,7 @@
 package com.code.to.learn.persistence.service.api;
 
+import com.code.to.learn.persistence.domain.model.UserChangePasswordServiceModel;
+import com.code.to.learn.persistence.domain.model.UserForgottenPasswordServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 
 import java.util.List;
@@ -25,4 +27,8 @@ public interface UserService extends GenericService<UserServiceModel> {
     UserServiceModel activateAccount(String username);
 
     List<UserServiceModel> findUsersByPage(int page, int maxResults);
+
+    UserForgottenPasswordServiceModel generateResetPasswordToken(String username);
+
+    UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel);
 }
