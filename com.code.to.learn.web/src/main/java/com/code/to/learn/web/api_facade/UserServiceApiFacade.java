@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -130,9 +131,13 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     private UserServiceModel toUserServiceModel(UserBindingModel userBindingModel) {
         UserBindingModel encodedPasswordUserBindingModel = getUserBindingModelWithEncodedPassword(userBindingModel);
         UserServiceModel userServiceModel = getMapper().map(encodedPasswordUserBindingModel, UserServiceModel.class);
-        String extension = FilenameUtils.getExtension(userBindingModel.getProfilePicture().getOriginalFilename());
-        userServiceModel.setProfilePictureName(userServiceModel.getUsername() + PROFILE_PICTURE_EXTENSION + "." + extension);
+        userServiceModel.setProfilePictureName(getProfilePictureName(userBindingModel.getUsername(), userBindingModel.getProfilePicture()));
         return userServiceModel;
+    }
+
+    private String getProfilePictureName(String username, MultipartFile profilePicture) {
+        String extension = FilenameUtils.getExtension(profilePicture.getOriginalFilename());
+        return username + PROFILE_PICTURE_EXTENSION + "." + extension;
     }
 
     private UserBindingModel getUserBindingModelWithEncodedPassword(UserBindingModel userBindingModel) {
@@ -203,6 +208,16 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         userChangePasswordServiceModel.setConfirmPassword(passwordEncoder.encode(userChangePasswordBindingModel.getConfirmPassword()));
         UserResponseModel userResponseModel = toOutput(userService.changeForgottenPassword(userChangePasswordServiceModel));
         return ResponseEntity.ok(userResponseModel);
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> updateProfilePicture(String username, MultipartFile profilePicture) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        remoteStorageFileOperator.removeFileSync(userServiceModel.getProfilePictureName());
+        userServiceModel.setProfilePictureName(getProfilePictureName(username, profilePicture));
+        remoteStorageFileOperator.uploadFileSync(new FileToUpload(userServiceModel.getProfilePictureName(), profilePicture));
+        UserServiceModel updatedUserServiceModel = userService.update(userServiceModel);
+        return ResponseEntity.ok(toOutput(updatedUserServiceModel));
     }
 
     @Override

@@ -36,4 +36,6 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> deleteCourse(String courseName);
 
     ResponseEntity<List<CourseResponseModel>> getCoursesByFilter(CourseFilter courseFilter, int limit);
+
+    ResponseEntity<List<CourseResponseModel>> getCoursesByUsername(String username);
 }

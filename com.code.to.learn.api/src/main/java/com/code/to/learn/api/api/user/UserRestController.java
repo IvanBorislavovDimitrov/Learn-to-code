@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -92,5 +93,10 @@ public class UserRestController {
     public ResponseEntity<UserResponseModel> changeForgottenPassword(@RequestBody @Valid UserChangePasswordBindingModel
                                                                              userChangePasswordBindingModel) {
         return userServiceApi.changeForgottenPassword(userChangePasswordBindingModel);
+    }
+
+    @PostMapping(value = "/change-profile-picture/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserResponseModel> changeProfilePicture(@PathVariable String username, @RequestParam MultipartFile profilePicture) {
+        return userServiceApi.updateProfilePicture(username, profilePicture);
     }
 }

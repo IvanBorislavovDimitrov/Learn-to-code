@@ -103,4 +103,9 @@ public class CourseRestController {
         return courseServiceApi.getCoursesByFilter(filter, limit);
     }
 
+    @GetMapping(value = "/user/{username}")
+    public ResponseEntity<List<CourseResponseModel>> getCoursesByUser(@PathVariable String username) {
+        return courseServiceApi.getCoursesByUsername(username);
+    }
+
 }
