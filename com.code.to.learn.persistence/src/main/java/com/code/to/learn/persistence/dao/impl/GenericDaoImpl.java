@@ -79,7 +79,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<E> root = criteriaQuery.from(getDomainClassType());
         criteriaQuery.select(criteriaBuilder.count(root));
-        return ((Optional<Long>) getOrEmpty(session, criteriaQuery)).get();
+        return getOrEmpty(session, criteriaQuery).get();
     }
 
     @Override
@@ -89,10 +89,10 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
         criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field), value));
-        return (Optional<E>) getOrEmpty(session, criteriaQuery);
+        return getOrEmpty(session, criteriaQuery);
     }
 
-    protected Optional<?> getOrEmpty(Session session, CriteriaQuery<?> criteriaQuery) {
+    protected <T> Optional<T> getOrEmpty(Session session, CriteriaQuery<T> criteriaQuery) {
         try {
             return getSingleResult(session, criteriaQuery);
         } catch (NoResultException e) {
@@ -104,7 +104,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
         return "%" + value + "%";
     }
 
-    private Optional<?> getSingleResult(Session session, CriteriaQuery<?> criteriaQuery) {
+    private <T> Optional<T> getSingleResult(Session session, CriteriaQuery<T> criteriaQuery) {
         return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
     }
 

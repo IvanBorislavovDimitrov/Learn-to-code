@@ -18,6 +18,7 @@ public class User extends IdEntity<User> implements UserDetails {
     public static final String USERNAME = "username";
     public static final String EMAIL = "email";
     public static final String PHONE_NUMBER = "phoneNumber";
+    public static final String RESET_PASSWORD_TOKEN = "resetPasswordToken";
 
     @Column(length = 100, nullable = false)
     private String firstName;

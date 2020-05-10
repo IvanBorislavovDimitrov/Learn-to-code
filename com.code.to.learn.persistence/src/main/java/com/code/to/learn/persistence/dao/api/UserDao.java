@@ -19,4 +19,6 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> findUsersByPage(int page, int maxResults);
 
+    Optional<User> findByResetPasswordToken(String resetPasswordToken);
+
 }

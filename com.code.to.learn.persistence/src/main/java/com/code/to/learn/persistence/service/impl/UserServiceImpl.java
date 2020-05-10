@@ -8,7 +8,6 @@ import com.code.to.learn.persistence.domain.model.UserChangePasswordServiceModel
 import com.code.to.learn.persistence.domain.model.UserForgottenPasswordServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.InvalidTokenException;
-import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.persistence.util.ResetPasswordTokenGenerator;
@@ -113,7 +112,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel) {
-        User user = getOrThrowNotFound(() -> userDao.findByUsername(userChangePasswordServiceModel.getUsername()),
+        User user = super.getOrThrowNotFound(() -> userDao.findByResetPasswordToken(userChangePasswordServiceModel.getToken()),
                 Messages.USERNAME_NOT_FOUND, userChangePasswordServiceModel.getConfirmPassword());
         if (!Objects.equals(user.getResetPasswordToken(), userChangePasswordServiceModel.getToken())) {
             throw new InvalidTokenException("Invalid token: {0}", user);

@@ -7,8 +7,6 @@ public class UserChangePasswordBindingModel {
     @NotNull
     private String token;
     @NotNull
-    private String username;
-    @NotNull
     private String password;
     @NotNull
     private String confirmPassword;
@@ -19,14 +17,6 @@ public class UserChangePasswordBindingModel {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

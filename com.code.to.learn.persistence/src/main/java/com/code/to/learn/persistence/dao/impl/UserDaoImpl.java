@@ -87,6 +87,16 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public Optional<User> findByResetPasswordToken(String resetPasswordToken) {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+        Root<User> root = criteriaQuery.from(getDomainClassType());
+        criteriaQuery.select(root).where(criteriaBuilder.equal(criteriaBuilder.lower(root.get(User.RESET_PASSWORD_TOKEN)), resetPasswordToken));
+        return getOrEmpty(session, criteriaQuery);
+    }
+
+    @Override
     protected Class<User> getDomainClassType() {
         return User.class;
     }
