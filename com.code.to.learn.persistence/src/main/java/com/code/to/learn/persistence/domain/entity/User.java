@@ -47,20 +47,20 @@ public class User extends IdEntity<User> implements UserDetails {
     @Lob
     private String description;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
 
-    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, targetEntity = Course.class)
+    @ManyToMany(mappedBy = "attendants", fetch = FetchType.LAZY, targetEntity = Course.class, cascade = CascadeType.MERGE)
     private List<Course> courses = new ArrayList<>();
 
-    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, mappedBy = "teacher")
+    @OneToMany(targetEntity = Course.class, fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.MERGE)
     private List<Course> coursesThatTeaches = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "futureAttendants", targetEntity = Course.class, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "futureAttendants", targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Course> coursesInCart = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Role.class, cascade = CascadeType.MERGE)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
@@ -238,6 +238,8 @@ public class User extends IdEntity<User> implements UserDetails {
 
     @Override
     public User merge(User user) {
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
         setUsername(user.getUsername());
         setPhoneNumber(user.getPhoneNumber());
         setPassword(user.getPassword());

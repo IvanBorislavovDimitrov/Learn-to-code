@@ -108,4 +108,10 @@ public class CourseRestController {
         return courseServiceApi.getCoursesByUsername(username);
     }
 
+    @GetMapping(value = "/user/teaches/{username}")
+    public ResponseEntity<List<CourseResponseModel>> getCoursesThatUserTeaches(@PathVariable String username) {
+        return courseServiceApi.getCoursesThatUserTeaches(username);
+    }
+
+
 }

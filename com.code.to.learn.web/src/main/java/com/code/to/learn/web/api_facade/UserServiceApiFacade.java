@@ -1,6 +1,7 @@
 package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.user.UserServiceApi;
+import com.code.to.learn.api.model.user.UserBasicUpdateBindingModel;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
@@ -218,6 +219,26 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         remoteStorageFileOperator.uploadFileSync(new FileToUpload(userServiceModel.getProfilePictureName(), profilePicture));
         UserServiceModel updatedUserServiceModel = userService.update(userServiceModel);
         return ResponseEntity.ok(toOutput(updatedUserServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<UserResponseModel> updateBasicProfileInformation(String username,
+                                                                           UserBasicUpdateBindingModel userBasicUpdateBindingModel) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        userServiceModel = updateBasicUserServiceModel(userServiceModel, userBasicUpdateBindingModel);
+        UserServiceModel updateUserServiceModel = userService.update(userServiceModel);
+        return ResponseEntity.ok(toOutput(updateUserServiceModel));
+    }
+
+    private UserServiceModel updateBasicUserServiceModel(UserServiceModel userServiceModel,
+                                                         UserBasicUpdateBindingModel userBasicUpdateBindingModel) {
+        userServiceModel.setFirstName(userBasicUpdateBindingModel.getFirstName());
+        userServiceModel.setLastName(userBasicUpdateBindingModel.getLastName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+        LocalDate birthDate = LocalDate.parse(userBasicUpdateBindingModel.getBirthDate(), formatter);
+        userServiceModel.setBirthDate(birthDate);
+        userServiceModel.setDescription(userBasicUpdateBindingModel.getDescription());
+        return userServiceModel;
     }
 
     @Override

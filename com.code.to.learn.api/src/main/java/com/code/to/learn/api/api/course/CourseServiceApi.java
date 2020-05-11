@@ -38,4 +38,6 @@ public interface CourseServiceApi {
     ResponseEntity<List<CourseResponseModel>> getCoursesByFilter(CourseFilter courseFilter, int limit);
 
     ResponseEntity<List<CourseResponseModel>> getCoursesByUsername(String username);
+
+    ResponseEntity<List<CourseResponseModel>> getCoursesThatUserTeaches(String username);
 }

@@ -371,6 +371,12 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     @Override
+    public ResponseEntity<List<CourseResponseModel>> getCoursesThatUserTeaches(String username) {
+        List<CourseServiceModel> courseResponseModels = userService.findByUsername(username).getCoursesThatTeaches();
+        return ResponseEntity.ok(toOutput(courseResponseModels));
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

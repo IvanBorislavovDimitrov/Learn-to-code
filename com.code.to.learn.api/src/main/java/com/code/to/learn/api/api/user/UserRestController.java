@@ -1,5 +1,6 @@
 package com.code.to.learn.api.api.user;
 
+import com.code.to.learn.api.model.user.UserBasicUpdateBindingModel;
 import com.code.to.learn.api.model.user.UserBindingModel;
 import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
 import com.code.to.learn.api.model.user.UserResponseModel;
@@ -99,4 +100,11 @@ public class UserRestController {
     public ResponseEntity<UserResponseModel> changeProfilePicture(@PathVariable String username, @RequestParam MultipartFile profilePicture) {
         return userServiceApi.updateProfilePicture(username, profilePicture);
     }
+
+    @PatchMapping(value = "/update/basic/{username}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserResponseModel> updateProfileBasicInformation(@PathVariable String username,
+                                                                           @RequestBody UserBasicUpdateBindingModel userBasicUpdateBindingModel) {
+        return userServiceApi.updateBasicProfileInformation(username, userBasicUpdateBindingModel);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.code.to.learn.persistence.util;
 
+import com.code.to.learn.persistence.exception.basic.LCException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -73,15 +74,18 @@ public final class DatabaseSessionUtil {
             LOGGER.error(e.getMessage(), e);
             return;
         }
-        commitTransaction(session.getTransaction());
-        close(session);
+        try {
+            commitTransaction(session.getTransaction());
+        } finally {
+            close(session);
+        }
     }
 
     private static void commitTransaction(Transaction transaction) {
         try {
             transaction.commit();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            throw new LCException(e.getMessage(), e);
         }
     }
 
