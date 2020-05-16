@@ -272,7 +272,7 @@ public class User extends IdEntity<User> implements UserDetails {
     }
 
     @Embeddable
-    public static class LoginRecord {
+    public static class LoginRecord implements Comparable<LoginRecord> {
         @Basic
         private LocalDate date;
         @Basic
@@ -292,6 +292,11 @@ public class User extends IdEntity<User> implements UserDetails {
 
         public void setAdditionalInformation(String additionalInformation) {
             this.additionalInformation = additionalInformation;
+        }
+
+        @Override
+        public int compareTo(LoginRecord loginRecord) {
+            return loginRecord.getDate().compareTo(date);
         }
     }
 }

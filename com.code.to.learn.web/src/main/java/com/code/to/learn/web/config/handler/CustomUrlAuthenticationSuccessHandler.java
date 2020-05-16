@@ -37,7 +37,6 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        DatabaseSessionUtil.closeWithCommit(sessionFactory);
         User user = (User) authentication.getPrincipal();
         UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
         response.setStatus(HttpServletResponse.SC_OK);

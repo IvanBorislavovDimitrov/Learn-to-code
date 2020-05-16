@@ -20,6 +20,8 @@ public final class Constants {
     public static final String HIBERNATE_DBCP_MAX_WAIT_MILLIS = "hibernate.dbcp.maxWaitMillis";
     public static final String HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current_session_context_class";
 
+    public static final byte MAX_SIZE_OF_USER_LOGIN_RECORDS = 10;
+
     private Constants() {
     }
 

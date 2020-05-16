@@ -28,6 +28,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     private String profilePictureName;
     private String description;
     private boolean isEnabled;
+    private List<LoginRecord> loginRecords;
 
     public UserServiceModel() {
         // Required by ModelMapper
@@ -145,6 +146,14 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
         this.description = description;
     }
 
+    public List<LoginRecord> getLoginRecords() {
+        return loginRecords;
+    }
+
+    public void setLoginRecords(List<LoginRecord> loginRecords) {
+        this.loginRecords = loginRecords;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream()
@@ -181,5 +190,27 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
                 .map(RoleServiceModel::getName)
                 .anyMatch(roleName -> Objects.equals(roleName, UserRole.ROLE_ADMIN.toString()) ||
                         Objects.equals(roleName, UserRole.ROLE_MODERATOR.toString()));
+    }
+
+    public static class LoginRecord {
+
+        private LocalDate date;
+        private String additionalInformation;
+
+        public LocalDate getDate() {
+            return date;
+        }
+
+        public void setDate(LocalDate date) {
+            this.date = date;
+        }
+
+        public String getAdditionalInformation() {
+            return additionalInformation;
+        }
+
+        public void setAdditionalInformation(String additionalInformation) {
+            this.additionalInformation = additionalInformation;
+        }
     }
 }

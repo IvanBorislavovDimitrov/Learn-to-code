@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.code.to.learn.persistence.constant.Constants.MAX_SIZE_OF_USER_LOGIN_RECORDS;
+
 @Component
 public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> implements UserService {
 
@@ -130,7 +132,23 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
         loginRecord.setDate(date);
         loginRecord.setAdditionalInformation(additionalInformation);
         user.getLoginRecords().add(loginRecord);
+        removeOldestLoginRecordIfNeeded(user.getLoginRecords());
         userDao.update(user);
+    }
+
+    private void removeOldestLoginRecordIfNeeded(List<User.LoginRecord> loginRecords) {
+        if (loginRecords.size() <= MAX_SIZE_OF_USER_LOGIN_RECORDS) {
+            return;
+        }
+        removeOldestLoginRecord(loginRecords);
+    }
+
+    private void removeOldestLoginRecord(List<User.LoginRecord> loginRecords) {
+        User.LoginRecord loginRecordToRemove = loginRecords.stream()
+                .sorted()
+                .findFirst()
+                .get();
+        loginRecords.remove(loginRecordToRemove);
     }
 
     @Override
