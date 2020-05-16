@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static com.code.to.learn.web.constants.Constants.CRON_EVERY_DAY_AT_EIGHT_AM;
 import static com.code.to.learn.web.constants.Constants.MAX_USERS_BY_PAGE;
+import static com.code.to.learn.web.constants.Constants.THREE_AM_EVERY_DAY;
 import static com.code.to.learn.web.constants.Messages.CHECKOUT_OUR_NEW_COURSE;
 import static com.code.to.learn.web.constants.Messages.VISIT_OUR_SITE_AND_CHECK_THE_COURSES;
 
@@ -34,7 +34,8 @@ public class NewestCoursesDailyEmailSender {
         this.applicationConfiguration = applicationConfiguration;
     }
 
-    @Scheduled(cron = CRON_EVERY_DAY_AT_EIGHT_AM)
+    // TODO: Possible connection leak, db session is not closed!!!
+    @Scheduled(cron = THREE_AM_EVERY_DAY)
     @Async
     public void sendDailyNewCourses() {
         int page = 1;

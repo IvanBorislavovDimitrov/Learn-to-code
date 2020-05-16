@@ -6,7 +6,6 @@ import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
-import com.code.to.learn.persistence.exception.basic.NotFoundException;
 import com.code.to.learn.persistence.service.api.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseServiceModel> implements CourseService {
@@ -102,19 +102,21 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
 
     @Override
     public void removeFromCart(User user, String courseName) {
-        Course course = getCourseInCartByNameForUser(user, courseName);
-        user.getCoursesInCart().remove(course);
-        course.getFutureAttendants().remove(user);
+        Optional<Course> course = getCourseInCartByNameForUser(user, courseName);
+        if (!course.isPresent()) {
+            return;
+        }
+        user.getCoursesInCart().remove(course.get());
+        course.get().getFutureAttendants().remove(user);
         userDao.update(user);
-        courseDao.update(course);
+        courseDao.update(course.get());
     }
 
-    private Course getCourseInCartByNameForUser(User user, String courseName) {
+    private Optional<Course> getCourseInCartByNameForUser(User user, String courseName) {
         return user.getCoursesInCart()
                 .stream()
                 .filter(course -> Objects.equals(course.getName(), courseName))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(Messages.COURSE_NOT_FOUND, courseName));
+                .findFirst();
     }
 
     @Override

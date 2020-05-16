@@ -51,7 +51,7 @@ public class CourseRestController {
         return courseServiceApi.get(courseName);
     }
 
-    @PostMapping(value = "/enroll/{courseName}")
+    @PostMapping(value = "/enroll/{courseName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<CourseResponseModel> enrollUserForCourse(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();
         return courseServiceApi.enrollUserForCourse(loggedUser, courseName);

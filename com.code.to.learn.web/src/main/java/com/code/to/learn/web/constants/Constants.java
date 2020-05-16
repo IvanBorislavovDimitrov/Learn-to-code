@@ -20,7 +20,7 @@ public final class Constants {
     public static final String MAIL_SMTP_SSL_ENABLE = "mail.smtp.ssl.enable";
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
-    public static final String CRON_EVERY_DAY_AT_EIGHT_AM = "0 0 8 * * ?";
+    public static final String THREE_AM_EVERY_DAY = "0 0 3 * * ?";
     public static final int MAX_USERS_BY_PAGE = 10;
 
     private Constants() {
