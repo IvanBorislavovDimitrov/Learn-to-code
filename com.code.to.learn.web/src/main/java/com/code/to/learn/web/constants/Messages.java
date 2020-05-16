@@ -15,6 +15,7 @@ public final class Messages {
 
     // Info messages
     public static final String EXECUTION_RETRIED = "Execution retries: times: {0}/{1}";
+    public static final String USER_SUCCESSFULLY_LOGGED = "User: \"{0}\" successfully logged";
 
     // Exception messages
     public static final String INVALID_GITHUB_VERIFICATION_CODE = "Invalid github verification code!";

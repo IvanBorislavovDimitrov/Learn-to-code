@@ -1,5 +1,6 @@
 package com.code.to.learn.web.config;
 
+import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.web.config.handler.CustomUrlAuthenticationFailureHandler;
 import com.code.to.learn.web.config.handler.CustomUrlAuthenticationSuccessHandler;
@@ -32,15 +33,17 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     private final ModelMapper modelMapper;
     private final Parser parser;
     private final SessionFactory sessionFactory;
+    private final UserService userService;
 
     @Autowired
     public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService,
-                                     ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory) {
+                                     ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory, UserService userService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.modelMapper = modelMapper;
         this.parser = parser;
         this.sessionFactory = sessionFactory;
+        this.userService = userService;
     }
 
     @Override
@@ -98,7 +101,7 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
-        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, sessionFactory);
+        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, sessionFactory, userService);
     }
 
     private SimpleUrlAuthenticationFailureHandler getFailureHandler() {

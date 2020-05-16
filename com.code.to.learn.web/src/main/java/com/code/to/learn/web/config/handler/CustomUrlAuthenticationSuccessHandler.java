@@ -1,10 +1,11 @@
 package com.code.to.learn.web.config.handler;
 
 import com.code.to.learn.api.model.user.UserResponseModel;
-import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.exception.basic.LCException;
+import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
+import com.code.to.learn.util.parser.Parser;
 import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
@@ -15,17 +16,23 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.time.LocalDate;
+
+import static com.code.to.learn.web.constants.Messages.USER_SUCCESSFULLY_LOGGED;
 
 public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final ModelMapper modelMapper;
     private final Parser parser;
     private final SessionFactory sessionFactory;
+    private final UserService userService;
 
-    public CustomUrlAuthenticationSuccessHandler(ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory) {
+    public CustomUrlAuthenticationSuccessHandler(ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory, UserService userService) {
         this.modelMapper = modelMapper;
         this.parser = parser;
         this.sessionFactory = sessionFactory;
+        this.userService = userService;
     }
 
     @Override
@@ -36,6 +43,7 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         setResponseBody(response, userResponseModel);
+        trackSuccessfulUserLogin(user.getUsername());
     }
 
     private void setResponseBody(HttpServletResponse response, UserResponseModel userResponseModel) {
@@ -46,4 +54,12 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         }
     }
 
+    private void trackSuccessfulUserLogin(String username) {
+        try {
+            userService.storeUserLoginInformation(username, LocalDate.now(), MessageFormat.format(USER_SUCCESSFULLY_LOGGED, username));
+        } catch (Exception e) {
+            DatabaseSessionUtil.closeWithRollback(sessionFactory);
+        }
+        DatabaseSessionUtil.closeWithCommit(sessionFactory);
+    }
 }

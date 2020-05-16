@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -120,6 +121,16 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
         user.setPassword(userChangePasswordServiceModel.getPassword());
         user.setResetPasswordToken(null);
         return toOutput(userDao.update(user).get());
+    }
+
+    @Override
+    public void storeUserLoginInformation(String username, LocalDate date, String additionalInformation) {
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User.LoginRecord loginRecord = new User.LoginRecord();
+        loginRecord.setDate(date);
+        loginRecord.setAdditionalInformation(additionalInformation);
+        user.getLoginRecords().add(loginRecord);
+        userDao.update(user);
     }
 
     @Override

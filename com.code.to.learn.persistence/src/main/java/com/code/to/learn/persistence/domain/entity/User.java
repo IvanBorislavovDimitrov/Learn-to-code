@@ -73,6 +73,10 @@ public class User extends IdEntity<User> implements UserDetails {
 
     private String resetPasswordToken;
 
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(name = ID))
+    private List<LoginRecord> loginRecords;
+
     public String getFirstName() {
         return firstName;
     }
@@ -236,6 +240,14 @@ public class User extends IdEntity<User> implements UserDetails {
         this.resetPasswordToken = resetPasswordToken;
     }
 
+    public List<LoginRecord> getLoginRecords() {
+        return loginRecords;
+    }
+
+    public void setLoginRecords(List<LoginRecord> loginRecords) {
+        this.loginRecords = loginRecords;
+    }
+
     @Override
     public User merge(User user) {
         setFirstName(user.getFirstName());
@@ -255,6 +267,31 @@ public class User extends IdEntity<User> implements UserDetails {
         setComments(user.getComments());
         setEnabled(user.isEnabled());
         setResetPasswordToken(user.getResetPasswordToken());
+        setLoginRecords(user.getLoginRecords());
         return this;
+    }
+
+    @Embeddable
+    public static class LoginRecord {
+        @Basic
+        private LocalDate date;
+        @Basic
+        private String additionalInformation;
+
+        public LocalDate getDate() {
+            return date;
+        }
+
+        public void setDate(LocalDate date) {
+            this.date = date;
+        }
+
+        public String getAdditionalInformation() {
+            return additionalInformation;
+        }
+
+        public void setAdditionalInformation(String additionalInformation) {
+            this.additionalInformation = additionalInformation;
+        }
     }
 }

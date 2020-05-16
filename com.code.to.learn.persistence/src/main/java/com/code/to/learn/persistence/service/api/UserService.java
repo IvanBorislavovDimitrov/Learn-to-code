@@ -4,6 +4,7 @@ import com.code.to.learn.persistence.domain.model.UserChangePasswordServiceModel
 import com.code.to.learn.persistence.domain.model.UserForgottenPasswordServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UserService extends GenericService<UserServiceModel> {
@@ -31,4 +32,6 @@ public interface UserService extends GenericService<UserServiceModel> {
     UserForgottenPasswordServiceModel generateResetPasswordToken(String username);
 
     UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel);
+
+    void storeUserLoginInformation(String username, LocalDate date, String additionalInformation);
 }
