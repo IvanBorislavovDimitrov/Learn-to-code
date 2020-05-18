@@ -1,12 +1,14 @@
   
 ---
 applications:
-- name: learn-to-code
-  memory: 2GB
+- name: learn-to-code-backend
+  memory: 1GB
   disk_quota: 2GB
-  random-route: true
-  path: \com.code.to.learn.web\target\com.code.to.learn.web-0.0.1-SNAPSHOT.war
+  path: ./com.code.to.learn.web/target/com.code.to.learn.web-0.0.1-SNAPSHOT.war
   env:
     SPRING_PROFILES_ACTIVE: cloud,postgresql
+    CLIENT_URL: http://learn-to-code-backend-reliable-platypus-ft.cfapps.io
   services:
   - learn-to-code-database
+  routes:
+    - route: learn-to-code-backend-reliable-platypus-ft.cfapps.io
