@@ -59,12 +59,12 @@ public class ApplicationConfiguration {
     private static final int THREAD_POOL_SIZE_VALUE = 5;
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
     private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
-    private static final String SMTP_HOST_VALUE = "smtp.abv.bg";
+    private static final String SMTP_HOST_VALUE = "smtp.gmail.com";
     private static final String SMTP_PORT_VALUE = "465";
     private static final String SMTP_SSL_ENABLED_VALUE = "true";
     private static final String SMTP_AUTH_ENABLED_VALUE = "true";
-    private static final String SMTP_USERNAME_VALUE = "nokian97@abv.bg";
-    private static final String SMTP_PASSWORD_VALUE = "34273427ivan";
+    private static final String SMTP_USERNAME_VALUE = "automaticmailsendercommunity@gmail.com";
+    private static final String SMTP_PASSWORD_VALUE = "123456sender";
     private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/activate/%s";
     private static final String CLIENT_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME);
     private static final String RESET_PASSWORD_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/new-password/%s";

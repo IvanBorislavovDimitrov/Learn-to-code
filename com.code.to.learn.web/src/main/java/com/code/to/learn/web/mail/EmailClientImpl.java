@@ -36,7 +36,6 @@ public class EmailClientImpl implements EmailClient {
 
     @Override
     public void sendAsync(Email email) {
-        executorService.submit(() -> {
             try {
                 Message message = new MimeMessage(getSession());
                 message.setFrom(new InternetAddress(applicationConfiguration.getSmtpUsername()));
@@ -55,7 +54,6 @@ public class EmailClientImpl implements EmailClient {
             } catch (MessagingException e) {
                 LOGGER.error(e.getMessage(), e);
             }
-        });
     }
 
     private Session getSession() {
