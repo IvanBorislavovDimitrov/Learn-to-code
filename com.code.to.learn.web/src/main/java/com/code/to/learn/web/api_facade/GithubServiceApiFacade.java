@@ -135,7 +135,7 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
 
     private ResponseEntity<GithubAccessTokenResponseModel> processAccessTokenForUser(UserServiceModel userServiceModel, HttpResponse accessTokenResponse) {
         GithubAccessTokenResponseModel githubAccessTokenResponseModel = parseGithubAccessTokenResponse(accessTokenResponse);
-        setGithubAccessTokenForUser(userServiceModel, githubAccessTokenResponseModel);
+        updateGithubAccessTokenForUser(userServiceModel, githubAccessTokenResponseModel);
         return ResponseEntity.ok(githubAccessTokenResponseModel);
     }
 
@@ -171,7 +171,7 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
         return GithubAccessTokenResponseModel.fromAccessTokenQueryParameters(githubAccessTokenQueryParameters);
     }
 
-    private void setGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessTokenResponseModel githubAccessTokenResponseModel) {
+    private void updateGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessTokenResponseModel githubAccessTokenResponseModel) {
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = toInput(githubAccessTokenResponseModel);
         userServiceModel.setGithubAccessToken(githubAccessTokenServiceModel);
         userService.update(userServiceModel);
