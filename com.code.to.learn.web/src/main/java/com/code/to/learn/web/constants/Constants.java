@@ -17,8 +17,8 @@ public final class Constants {
 
     public static final String MAIL_SMTP_HOST = "mail.smtp.host";
     public static final String MAIL_SMTP_PORT = "mail.smtp.port";
-    public static final String MAIL_SMTP_SSL_ENABLE = "mail.smtp.ssl.enable";
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+    public static final String MAIL_SMPT_START_TLS_ENABLED = "mail.smtp.starttls.enable";
 
     public static final String THREE_AM_EVERY_DAY = "0 0 3 * * ?";
     public static final int MAX_USERS_BY_PAGE = 10;

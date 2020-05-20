@@ -30,7 +30,7 @@ public class ApplicationConfiguration {
     private static final String MAX_COURSES_ON_PAGE_NAME = "MAX_COURSES_ON_PAGE";
     private static final String SMTP_HOST_NAME = "SMTP_HOST";
     private static final String SMTP_PORT_NAME = "SMTP_PORT";
-    private static final String SMTP_SSL_ENABLED_NAME = "SMTP_SSL_ENABLED";
+    private static final String SMPT_START_TLS_ENABLED_NAME = "SMPT_START_TLS_ENABLED";
     private static final String SMTP_AUTH_ENABLED_NAME = "SMTP_AUTH_ENABLED";
     private static final String SMTP_USERNAME_NAME = "SMTP_USERNAME";
     private static final String SMTP_PASSWORD_NAME = "SMTP_PASSWORD";
@@ -45,7 +45,7 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_DIALECT_POSTGRE_SQL_9_DIALECT_VALUE = "org.hibernate.dialect.PostgreSQL9Dialect";
     private static final String HIBERNATE_POSTGRESQL_DRIVER_VALUE = "org.postgresql.Driver";
     private static final String HIBERNATE_CONNECTION_POOL_SIZE_VALUE = "3";
-    private static final String HIBERNATE_DDL_STRATEGY_VALUE = "create";
+    private static final String HIBERNATE_DDL_STRATEGY_VALUE = "update";
     private static final String HIBERNATE_ARCHIVE_AUTO_DETECTION_VALUE = "class";
     private static final String HIBERNATE_SHOW_SQL_VALUE = "true";
     private static final String HIBERNATE_DBCP_INITIAL_SIZE_VALUE = "2";
@@ -60,11 +60,11 @@ public class ApplicationConfiguration {
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
     private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
     private static final String SMTP_HOST_VALUE = "smtp.gmail.com";
-    private static final String SMTP_PORT_VALUE = "465";
-    private static final String SMTP_SSL_ENABLED_VALUE = "true";
+    private static final String SMTP_PORT_VALUE = "587";
     private static final String SMTP_AUTH_ENABLED_VALUE = "true";
+    private static final String SMPT_START_TLS_ENABLED_VALUE = "true";
     private static final String SMTP_USERNAME_VALUE = "automaticmailsendercommunity@gmail.com";
-    private static final String SMTP_PASSWORD_VALUE = "123456sender";
+    private static final String SMTP_PASSWORD_VALUE = "uwzttwwzklrbpmdo";
     private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/activate/%s";
     private static final String CLIENT_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME);
     private static final String RESET_PASSWORD_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/new-password/%s";
@@ -165,12 +165,12 @@ public class ApplicationConfiguration {
         return getOrDefault(SMTP_PORT_NAME, SMTP_PORT_VALUE);
     }
 
-    public String getSmtpSslEnabled() {
-        return getOrDefault(SMTP_SSL_ENABLED_NAME, SMTP_SSL_ENABLED_VALUE);
-    }
-
     public String getAuthEnabled() {
         return getOrDefault(SMTP_AUTH_ENABLED_NAME, SMTP_AUTH_ENABLED_VALUE);
+    }
+
+    public String getSmtpStartTlsEnabled() {
+        return getOrDefault(SMPT_START_TLS_ENABLED_NAME, SMPT_START_TLS_ENABLED_VALUE);
     }
 
     public String getSmtpUsername() {

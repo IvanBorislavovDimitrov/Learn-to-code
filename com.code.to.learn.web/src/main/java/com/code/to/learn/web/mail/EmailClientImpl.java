@@ -8,7 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import javax.mail.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -16,7 +22,10 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
-import static com.code.to.learn.web.constants.Constants.*;
+import static com.code.to.learn.web.constants.Constants.MAIL_SMPT_START_TLS_ENABLED;
+import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_AUTH;
+import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_HOST;
+import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_PORT;
 
 @Component
 public class EmailClientImpl implements EmailClient {
@@ -36,6 +45,7 @@ public class EmailClientImpl implements EmailClient {
 
     @Override
     public void sendAsync(Email email) {
+        executorService.submit(() -> {
             try {
                 Message message = new MimeMessage(getSession());
                 message.setFrom(new InternetAddress(applicationConfiguration.getSmtpUsername()));
@@ -54,6 +64,7 @@ public class EmailClientImpl implements EmailClient {
             } catch (MessagingException e) {
                 LOGGER.error(e.getMessage(), e);
             }
+        });
     }
 
     private Session getSession() {
@@ -69,8 +80,8 @@ public class EmailClientImpl implements EmailClient {
         Properties properties = new Properties();
         properties.put(MAIL_SMTP_HOST, applicationConfiguration.getSmtpHost());
         properties.put(MAIL_SMTP_PORT, applicationConfiguration.getSmtpPort());
-        properties.put(MAIL_SMTP_SSL_ENABLE, applicationConfiguration.getSmtpSslEnabled());
         properties.put(MAIL_SMTP_AUTH, applicationConfiguration.getAuthEnabled());
+        properties.put(MAIL_SMPT_START_TLS_ENABLED, applicationConfiguration.getSmtpStartTlsEnabled());
         return properties;
     }
 }
