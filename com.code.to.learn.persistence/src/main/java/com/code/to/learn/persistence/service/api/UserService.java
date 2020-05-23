@@ -27,8 +27,6 @@ public interface UserService extends GenericService<UserServiceModel> {
 
     UserServiceModel activateAccount(String username);
 
-    List<UserServiceModel> findUsersByPage(int page, int maxResults);
-
     UserForgottenPasswordServiceModel generateResetPasswordToken(String username);
 
     UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel);

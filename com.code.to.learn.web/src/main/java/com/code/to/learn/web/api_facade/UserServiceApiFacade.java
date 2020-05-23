@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
+import static com.code.to.learn.web.constants.Constants.DEFAULT_PICTURE_NAME;
 import static com.code.to.learn.web.constants.Constants.PROFILE_PICTURE_EXTENSION;
 
 @Service
@@ -78,7 +79,9 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     public ResponseEntity<UserResponseModel> register(UserBindingModel userBindingModel) {
         userValidator.validateUserBindingModel(userBindingModel);
         UserServiceModel userServiceModel = toUserServiceModel(userBindingModel);
-        remoteStorageFileOperator.uploadFileAsync(new FileToUpload(userServiceModel.getProfilePictureName(), userBindingModel.getProfilePicture()));
+        if (userBindingModel.getProfilePicture() != null) {
+            remoteStorageFileOperator.uploadFileAsync(new FileToUpload(userServiceModel.getProfilePictureName(), userBindingModel.getProfilePicture()));
+        }
         addRolesForUser(userServiceModel);
         convertAndSetDateToUser(userBindingModel, userServiceModel);
         userService.registerUser(userServiceModel);
@@ -137,6 +140,9 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     }
 
     private String getProfilePictureName(String username, MultipartFile profilePicture) {
+        if (profilePicture == null) {
+            return DEFAULT_PICTURE_NAME;
+        }
         String extension = FilenameUtils.getExtension(profilePicture.getOriginalFilename());
         return username + PROFILE_PICTURE_EXTENSION + "." + extension;
     }

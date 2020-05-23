@@ -65,6 +65,14 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         return getDistinctTeachers(teachersQuery);
     }
 
+    private List<User> getDistinctTeachers(Query<Course> teachersQuery) {
+        return teachersQuery.getResultList()
+                .stream()
+                .map(Course::getTeacher)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
     @Override
     public List<User> findUsersByPage(int page, int maxResults) {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
@@ -75,15 +83,9 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         Query<User> userQuery = session.createQuery(userCriteriaQuery);
         userQuery.setFirstResult(page * maxResults);
         userQuery.setMaxResults(maxResults);
-        return userQuery.getResultList();
-    }
-
-    private List<User> getDistinctTeachers(Query<Course> teachersQuery) {
-        return teachersQuery.getResultList()
-                .stream()
-                .map(Course::getTeacher)
-                .distinct()
-                .collect(Collectors.toList());
+        List<User> users = userQuery.getResultList();
+        DatabaseSessionUtil.closeWithCommit(getSessionFactory());
+        return users;
     }
 
     @Override

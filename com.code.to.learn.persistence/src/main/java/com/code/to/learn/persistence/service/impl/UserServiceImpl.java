@@ -99,12 +99,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
-    public List<UserServiceModel> findUsersByPage(int page, int maxResults) {
-        List<User> users = userDao.findUsersByPage(page, maxResults);
-        return toOutput(users);
-    }
-
-    @Override
     public UserForgottenPasswordServiceModel generateResetPasswordToken(String username) {
         String resetPasswordToken = resetPasswordTokenGenerator.generateResetPasswordToken();
         User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);

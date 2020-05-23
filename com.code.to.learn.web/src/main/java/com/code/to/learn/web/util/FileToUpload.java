@@ -4,8 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileToUpload {
 
-    private String filename;
-    private MultipartFile file;
+    private final String filename;
+    private final MultipartFile file;
 
     public FileToUpload(String filename, MultipartFile file) {
         this.filename = filename;
