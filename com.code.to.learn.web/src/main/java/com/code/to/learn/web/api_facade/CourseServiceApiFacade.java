@@ -182,7 +182,8 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
 
     @Override
     public ResponseEntity<List<CourseResponseModel>> getByPageNameCategory(int page, String name, String category) {
-        List<CourseServiceModel> courseServiceModels = courseService.findCourses(page, configuration.getMaxCoursesOnPage(), name, category);
+        List<CourseServiceModel> courseServiceModels = courseService.findCourses(page, configuration.getMaxCoursesOnPage(), name,
+                category);
         return ResponseEntity.ok(toCourseResponseModels(courseServiceModels, true));
     }
 

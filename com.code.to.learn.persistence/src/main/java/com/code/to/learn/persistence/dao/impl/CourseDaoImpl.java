@@ -54,19 +54,19 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
         Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
-        Root<Course> root = criteriaQuery.from(getDomainClassType());
-        criteriaQuery.select(root);
+        Root<Course> courseRoot = criteriaQuery.from(getDomainClassType());
+        criteriaQuery.select(courseRoot);
         List<Predicate> predicates = new ArrayList<>();
         if (name != null) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(Course.NAME)), buildContainsExpression(name.toLowerCase())));
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(courseRoot.get(Course.NAME)), buildContainsExpression(name.toLowerCase())));
         }
         if (category != null) {
-            Root<CourseCategory> courseCategoryRoot = criteriaQuery.from(CourseCategory.class);
-            predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(courseCategoryRoot.get(CourseCategory.NAME)),
-                    category));
+            Join<Course, CourseCategory> join = courseRoot.join(CATEGORY, JoinType.INNER);
+            predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(join.get(CourseCategory.NAME)),
+                    category.toLowerCase()));
         }
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get(START_DATE)));
+        criteriaQuery.orderBy(criteriaBuilder.desc(courseRoot.get(START_DATE)));
         Query<Course> courseQuery = session.createQuery(criteriaQuery);
         courseQuery.setFirstResult(page * maxResults);
         courseQuery.setMaxResults(maxResults);
