@@ -248,6 +248,12 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     }
 
     @Override
+    public ResponseEntity<UserResponseModel> deactivateProfile(String username) {
+        UserServiceModel userServiceModel = userService.deactivateUserProfile(username);
+        return ResponseEntity.ok(toOutput(userServiceModel));
+    }
+
+    @Override
     protected Class<UserServiceModel> getInputClass() {
         return UserServiceModel.class;
     }

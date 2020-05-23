@@ -32,4 +32,6 @@ public interface UserServiceApi {
     ResponseEntity<UserResponseModel> updateProfilePicture(String username, MultipartFile profilePicture);
 
     ResponseEntity<UserResponseModel> updateBasicProfileInformation(String username, UserBasicUpdateBindingModel userBasicUpdateBindingModel);
+
+    ResponseEntity<UserResponseModel> deactivateProfile(String username);
 }

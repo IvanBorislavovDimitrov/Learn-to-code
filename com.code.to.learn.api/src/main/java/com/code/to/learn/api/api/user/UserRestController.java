@@ -107,4 +107,17 @@ public class UserRestController {
         return userServiceApi.updateBasicProfileInformation(username, userBasicUpdateBindingModel);
     }
 
+    @PostMapping(value = "/update/deactivate/{username}")
+    public ResponseEntity<UserResponseModel> deactivateUserProfile(@PathVariable String username) {
+        return userServiceApi.deactivateProfile(username);
+    }
+
+    @PostMapping(value = "/update/deactivate")
+    public ResponseEntity<UserResponseModel> deactivateCurrentUser(HttpSession httpSession) {
+        String loggedUserUsername = usernameGetter.getLoggedInUserUsername();
+        ResponseEntity<UserResponseModel> userResponseModelResponseEntity = userServiceApi.deactivateProfile(loggedUserUsername);
+        httpSession.invalidate();
+        return userResponseModelResponseEntity;
+    }
+
 }

@@ -146,6 +146,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
+    public UserServiceModel deactivateUserProfile(String username) {
+        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        user.setEnabled(false);
+        userDao.update(user);
+        return toOutput(user);
+    }
+
+    @Override
     protected Class<UserServiceModel> getModelClass() {
         return UserServiceModel.class;
     }

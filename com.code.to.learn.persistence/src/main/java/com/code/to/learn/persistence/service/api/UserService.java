@@ -32,4 +32,6 @@ public interface UserService extends GenericService<UserServiceModel> {
     UserServiceModel changeForgottenPassword(UserChangePasswordServiceModel userChangePasswordServiceModel);
 
     void storeUserLoginInformation(String username, LocalDate date, String additionalInformation);
+
+    UserServiceModel deactivateUserProfile(String username);
 }
