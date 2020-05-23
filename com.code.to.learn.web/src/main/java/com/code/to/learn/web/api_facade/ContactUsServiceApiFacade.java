@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ContactUsServiceApiFacade extends ExtendableMapper<ContactUsServiceModel, ContactUsResponseModel> implements ContactUsServiceApi {
 
@@ -28,6 +30,12 @@ public class ContactUsServiceApiFacade extends ExtendableMapper<ContactUsService
         ContactUsServiceModel contactUsServiceModel = getMapper().map(contactUsBindingModel, ContactUsServiceModel.class);
         contactUsService.save(contactUsServiceModel);
         return ResponseEntity.ok(toOutput(contactUsServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<List<ContactUsResponseModel>> getAll() {
+        List<ContactUsServiceModel> contactUsServiceAll = contactUsService.findAll();
+        return ResponseEntity.ok(toOutput(contactUsServiceAll));
     }
 
     @Override

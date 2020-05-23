@@ -2,6 +2,7 @@ package com.code.to.learn.persistence.domain.entity;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +15,7 @@ public class ContactUs extends IdEntity<ContactUs> {
     private String email;
     @Basic
     private String subject;
-    @Basic
+    @Lob
     private String message;
 
     public String getUsername() {

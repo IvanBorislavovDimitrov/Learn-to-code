@@ -47,7 +47,7 @@ public class User extends IdEntity<User> implements UserDetails {
     @Lob
     private String description;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "github_access_token_id", referencedColumnName = IdEntity.ID)
     private GithubAccessToken githubAccessToken;
 
