@@ -51,6 +51,11 @@ public class UserRestController {
         return userServiceApi.findAllUsers();
     }
 
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable String username) {
+        return userServiceApi.findUser(username);
+    }
+
     @GetMapping(value = "/user")
     public ResponseEntity<UserResponseModel> getLoggedInUser() {
         String username = usernameGetter.getLoggedInUserUsername();
