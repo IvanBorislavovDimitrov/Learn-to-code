@@ -1,9 +1,6 @@
 package com.code.to.learn.api.api.user;
 
-import com.code.to.learn.api.model.user.UserBasicUpdateBindingModel;
-import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
-import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.api.model.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,4 +31,6 @@ public interface UserServiceApi {
     ResponseEntity<UserResponseModel> updateBasicProfileInformation(String username, UserBasicUpdateBindingModel userBasicUpdateBindingModel);
 
     ResponseEntity<UserResponseModel> deactivateProfile(String username);
+
+    ResponseEntity<?> changeUserPassword(UserPasswordChangeBindingModel userPasswordChangeBindingModel);
 }

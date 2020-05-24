@@ -1,9 +1,6 @@
 package com.code.to.learn.api.api.user;
 
-import com.code.to.learn.api.model.user.UserBasicUpdateBindingModel;
-import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
-import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.api.model.user.*;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -123,6 +120,13 @@ public class UserRestController {
         ResponseEntity<UserResponseModel> userResponseModelResponseEntity = userServiceApi.deactivateProfile(loggedUserUsername);
         httpSession.invalidate();
         return userResponseModelResponseEntity;
+    }
+
+    @PatchMapping(value = "/update/password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeUserPassword(@RequestBody @Valid UserPasswordChangeBindingModel userPasswordChangeBindingModel) {
+        String loggedUserUsername = usernameGetter.getLoggedInUserUsername();
+        userPasswordChangeBindingModel.setUsername(loggedUserUsername);
+        return userServiceApi.changeUserPassword(userPasswordChangeBindingModel);
     }
 
 }

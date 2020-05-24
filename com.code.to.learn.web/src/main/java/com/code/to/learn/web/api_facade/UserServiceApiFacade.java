@@ -1,10 +1,7 @@
 package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.user.UserServiceApi;
-import com.code.to.learn.api.model.user.UserBasicUpdateBindingModel;
-import com.code.to.learn.api.model.user.UserBindingModel;
-import com.code.to.learn.api.model.user.UserChangePasswordBindingModel;
-import com.code.to.learn.api.model.user.UserResponseModel;
+import com.code.to.learn.api.model.user.*;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.UserValidator;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
@@ -251,6 +248,16 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
     public ResponseEntity<UserResponseModel> deactivateProfile(String username) {
         UserServiceModel userServiceModel = userService.deactivateUserProfile(username);
         return ResponseEntity.ok(toOutput(userServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<?> changeUserPassword(UserPasswordChangeBindingModel userPasswordChangeBindingModel) {
+        userValidator.validateCurrentPasswordMatch(userPasswordChangeBindingModel.getUsername(), userPasswordChangeBindingModel.getCurrentPassword());
+        userValidator.validatePasswordsMatch(userPasswordChangeBindingModel);
+        UserServiceModel userServiceModel = userService.findByUsername(userPasswordChangeBindingModel.getUsername());
+        userServiceModel.setPassword(passwordEncoder.encode(userPasswordChangeBindingModel.getNewPassword()));
+        userService.update(userServiceModel);
+        return ResponseEntity.ok().build();
     }
 
     @Override
