@@ -45,6 +45,7 @@ import static com.code.to.learn.web.constants.Messages.VIDEO_NAME_NOT_FOUND;
 @Component
 public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel, CourseResponseModel> implements CourseServiceApi {
 
+    private final Object lock = new Object();
     private final CourseService courseService;
     private final RemoteStorageFileOperator remoteStorageFileOperator;
     private final CourseValidator courseValidator;
@@ -393,14 +394,21 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
 
     @Override
     public ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel) {
+        CourseServiceModel updatedCourseServiceModel;
+        synchronized (lock) {
+            updatedCourseServiceModel = rateCourseInternal(courseRatingBindingModel);
+        }
+        return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
+    }
+
+    private CourseServiceModel rateCourseInternal(CourseRatingBindingModel courseRatingBindingModel) {
         CourseServiceModel courseServiceModel = courseService.findByName(courseRatingBindingModel.getCourseName());
         RatingCalculator ratingCalculator = getRatingCalculator(courseRatingBindingModel.getStars(), courseServiceModel);
         RateEstimator rateEstimator = ratingEstimatorFactory.createRateEstimator(courseRatingBindingModel.getCourseRatingType());
         double newRating = ratingCalculator.calculateRating(rateEstimator);
         courseServiceModel.setRating(newRating);
         courseServiceModel.setRatingCount(courseServiceModel.getRatingCount() + 1);
-        CourseServiceModel updatedCourseServiceModel = courseService.update(courseServiceModel);
-        return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
+        return courseService.update(courseServiceModel);
     }
 
     protected RatingCalculator getRatingCalculator(int stars, CourseServiceModel courseServiceModel) {
