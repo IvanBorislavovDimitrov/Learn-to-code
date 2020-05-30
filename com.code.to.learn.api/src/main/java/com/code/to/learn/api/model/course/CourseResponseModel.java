@@ -21,6 +21,7 @@ public class CourseResponseModel {
     private CourseCategoryResponseModel category;
     private String base64Thumbnail;
     private List<CourseVideoResponseModel> videosNames;
+    private double rating;
 
     public String getName() {
         return name;
@@ -116,6 +117,14 @@ public class CourseResponseModel {
 
     public void setVideosNames(List<CourseVideoResponseModel> videosNames) {
         this.videosNames = videosNames;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public static class CourseVideoResponseModel {

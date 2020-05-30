@@ -3,6 +3,10 @@ package com.code.to.learn.web.api_facade;
 import com.code.to.learn.api.api.course.CourseServiceApi;
 import com.code.to.learn.api.model.course.*;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
+import com.code.to.learn.core.rating.CourseRatingCalculator;
+import com.code.to.learn.core.rating.RateEstimator;
+import com.code.to.learn.core.rating.RatingCalculator;
+import com.code.to.learn.core.rating.RatingEstimatorFactory;
 import com.code.to.learn.core.validator.CourseValidator;
 import com.code.to.learn.persistence.domain.model.CourseCategoryServiceModel;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
@@ -49,12 +53,13 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     private final ExecutorService executorService;
     private final RemoteStorageFileGetter remoteStorageFileGetter;
     private final ApplicationConfiguration configuration;
+    private final RatingEstimatorFactory ratingEstimatorFactory;
 
     @Autowired
     public CourseServiceApiFacade(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileOperator remoteStorageFileOperator,
                                   CourseValidator courseValidator, UserService userService,
                                   CourseCategoryService courseCategoryService, ExecutorService executorService,
-                                  RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration) {
+                                  RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration, RatingEstimatorFactory ratingEstimatorFactory) {
         super(modelMapper);
         this.courseService = courseService;
         this.remoteStorageFileOperator = remoteStorageFileOperator;
@@ -64,6 +69,7 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
         this.executorService = executorService;
         this.remoteStorageFileGetter = remoteStorageFileGetter;
         this.configuration = configuration;
+        this.ratingEstimatorFactory = ratingEstimatorFactory;
     }
 
     @Override
@@ -189,8 +195,16 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
 
     @Override
     public ResponseEntity<CourseResponseModel> get(String name) {
-        CourseServiceModel courseServiceModel = courseService.findByName(name);
+        CourseServiceModel courseServiceModel = toCourseServiceModelWithCalculatedRating(courseService.findByName(name));
         return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    private CourseServiceModel toCourseServiceModelWithCalculatedRating(CourseServiceModel courseServiceModel) {
+        RateEstimator rateEstimator = ratingEstimatorFactory.createRateEstimator(CourseRatingType.OUTPUT);
+        RatingCalculator ratingCalculator = getRatingCalculator(0, courseServiceModel);
+        double rating = ratingCalculator.calculateRating(rateEstimator);
+        courseServiceModel.setRating(rating);
+        return courseServiceModel;
     }
 
     @Override
@@ -375,6 +389,22 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     public ResponseEntity<List<CourseResponseModel>> getCoursesThatUserTeaches(String username) {
         List<CourseServiceModel> courseResponseModels = userService.findByUsername(username).getCoursesThatTeaches();
         return ResponseEntity.ok(toOutput(courseResponseModels));
+    }
+
+    @Override
+    public ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel) {
+        CourseServiceModel courseServiceModel = courseService.findByName(courseRatingBindingModel.getCourseName());
+        RatingCalculator ratingCalculator = getRatingCalculator(courseRatingBindingModel.getStars(), courseServiceModel);
+        RateEstimator rateEstimator = ratingEstimatorFactory.createRateEstimator(courseRatingBindingModel.getCourseRatingType());
+        double newRating = ratingCalculator.calculateRating(rateEstimator);
+        courseServiceModel.setRating(newRating);
+        courseServiceModel.setRatingCount(courseServiceModel.getRatingCount() + 1);
+        CourseServiceModel updatedCourseServiceModel = courseService.update(courseServiceModel);
+        return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
+    }
+
+    protected RatingCalculator getRatingCalculator(int stars, CourseServiceModel courseServiceModel) {
+        return new CourseRatingCalculator(stars, courseServiceModel);
     }
 
     @Override

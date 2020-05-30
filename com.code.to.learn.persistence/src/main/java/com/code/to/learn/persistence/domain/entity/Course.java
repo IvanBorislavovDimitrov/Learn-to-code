@@ -1,6 +1,5 @@
 package com.code.to.learn.persistence.domain.entity;
 
-import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
 import com.code.to.learn.persistence.domain.generic.NamedElement;
 
 import javax.persistence.*;
@@ -31,12 +30,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @Column(nullable = false)
     private int durationInWeeks;
 
+    @Column(columnDefinition = "decimal default 0")
+    private double rating;
+
+    @Column(columnDefinition = "int default 0")
+    private int ratingCount;
+
     @Column(nullable = false)
     private int credits;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private FormOfEducation formOfEducation;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -115,14 +116,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
     public void setCredits(int credits) {
         this.credits = credits;
-    }
-
-    public FormOfEducation getFormOfEducation() {
-        return formOfEducation;
-    }
-
-    public void setFormOfEducation(FormOfEducation formOfEducation) {
-        this.formOfEducation = formOfEducation;
     }
 
     public BigDecimal getPrice() {
@@ -205,6 +198,22 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.comments = comments;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -212,7 +221,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setEndDate(course.getEndDate());
         setDurationInWeeks(course.getDurationInWeeks());
         setCredits(course.getCredits());
-        setFormOfEducation(course.getFormOfEducation());
         setPrice(course.getPrice());
         setDescription(course.getDescription());
         setCategory(course.getCategory());
@@ -223,6 +231,8 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setVideosNames(course.getVideosNames());
         setThumbnailName(course.getThumbnailName());
         setComments(course.getComments());
+        setRating(course.getRating());
+        setRatingCount(course.getRatingCount());
         return this;
     }
 

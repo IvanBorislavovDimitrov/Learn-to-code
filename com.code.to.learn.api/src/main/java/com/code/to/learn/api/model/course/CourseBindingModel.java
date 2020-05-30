@@ -27,9 +27,6 @@ public class CourseBindingModel {
     private int credits;
 
     @NotNull
-    private String formOfEducation;
-
-    @NotNull
     @Min(0)
     private BigDecimal price;
 
@@ -85,14 +82,6 @@ public class CourseBindingModel {
 
     public void setCredits(int credits) {
         this.credits = credits;
-    }
-
-    public String getFormOfEducation() {
-        return formOfEducation;
-    }
-
-    public void setFormOfEducation(String formOfEducation) {
-        this.formOfEducation = formOfEducation;
     }
 
     public BigDecimal getPrice() {

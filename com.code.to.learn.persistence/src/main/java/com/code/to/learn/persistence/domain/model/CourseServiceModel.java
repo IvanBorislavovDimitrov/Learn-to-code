@@ -1,6 +1,5 @@
 package com.code.to.learn.persistence.domain.model;
 
-import com.code.to.learn.persistence.domain.entity.entity_enum.FormOfEducation;
 import com.code.to.learn.persistence.domain.generic.NamedElement;
 
 import java.math.BigDecimal;
@@ -14,7 +13,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private LocalDate endDate;
     private int durationInWeeks;
     private int credits;
-    private FormOfEducation formOfEducation;
     private BigDecimal price;
     private String description;
     private List<UserServiceModel> attendants;
@@ -24,6 +22,8 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private List<CourseVideoServiceModel> videosNames;
     private CourseCategoryServiceModel courseCategory;
     private String thumbnailName;
+    private double rating;
+    private int ratingCount;
 
     @Override
     public String getName() {
@@ -64,14 +64,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setCredits(int credits) {
         this.credits = credits;
-    }
-
-    public FormOfEducation getFormOfEducation() {
-        return formOfEducation;
-    }
-
-    public void setFormOfEducation(FormOfEducation formOfEducation) {
-        this.formOfEducation = formOfEducation;
     }
 
     public BigDecimal getPrice() {
@@ -144,6 +136,22 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setThumbnailName(String thumbnailName) {
         this.thumbnailName = thumbnailName;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
     }
 
     public static class CourseVideoServiceModel {

@@ -113,5 +113,9 @@ public class CourseRestController {
         return courseServiceApi.getCoursesThatUserTeaches(username);
     }
 
+    @PostMapping(value = "/rate")
+    public ResponseEntity<CourseResponseModel> rateCourse(@RequestBody @Valid CourseRatingBindingModel courseRatingBindingModel) {
+        return courseServiceApi.rateCourse(courseRatingBindingModel);
+    }
 
 }
