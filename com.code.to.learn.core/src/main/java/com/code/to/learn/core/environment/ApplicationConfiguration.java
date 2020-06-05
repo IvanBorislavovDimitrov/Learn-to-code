@@ -55,7 +55,7 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_DBCP_MAX_WAIT_MILLIS_VALUE = "-1";
     private static final String HIBERNATE_SESSION_CONTEXT_CLASS_VALUE = "org.hibernate.context.internal.ThreadLocalSessionContext";
     private static final String DROPBOX_CLIENT_IDENTIFIER_VALUE = "dropbox/learn-to-code";
-    private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAAGCBG9tH2zJkc2iUIf8pYdekaLvYk2mTY-LWBoEsP6Q5z";
+    private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAA993f88QX0MWFA3tKDlNZz3kmE3UgePDW_coEu3QJwY5B";
     private static final int THREAD_POOL_SIZE_VALUE = 5;
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
     private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
