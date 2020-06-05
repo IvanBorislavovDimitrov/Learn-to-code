@@ -115,7 +115,14 @@ public class CourseRestController {
 
     @PostMapping(value = "/rate")
     public ResponseEntity<CourseResponseModel> rateCourse(@RequestBody @Valid CourseRatingBindingModel courseRatingBindingModel) {
-        return courseServiceApi.rateCourse(courseRatingBindingModel);
+        String loggedUserUsername = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.rateCourse(courseRatingBindingModel, loggedUserUsername);
+    }
+
+    @GetMapping(value = "/is-rated")
+    public ResponseEntity<RatedCourseResponseModel> hasUserRatedCourse(@RequestParam String courseName) {
+        String loggedUserUsername = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.hasUserRatedCourse(courseName, loggedUserUsername);
     }
 
 }

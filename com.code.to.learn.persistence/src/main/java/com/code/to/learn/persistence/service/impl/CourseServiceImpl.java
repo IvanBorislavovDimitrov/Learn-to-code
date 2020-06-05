@@ -132,6 +132,17 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     @Override
+    public CourseServiceModel markCourseAsRatedByUser(String courseName, String username) {
+        Course course = courseDao.markCourseAsRatedByUser(courseName, username);
+        return toOutput(course);
+    }
+
+    @Override
+    public boolean hasUserRatedCourse(String courseName, String username) {
+        return courseDao.hasUserRatedCourse(courseName, username);
+    }
+
+    @Override
     protected Class<CourseServiceModel> getModelClass() {
         return CourseServiceModel.class;
     }

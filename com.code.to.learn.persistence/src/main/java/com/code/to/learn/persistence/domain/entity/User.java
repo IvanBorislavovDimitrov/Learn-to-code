@@ -71,11 +71,15 @@ public class User extends IdEntity<User> implements UserDetails {
     @Column()
     private boolean isEnabled;
 
+    @Column
     private String resetPasswordToken;
 
     @ElementCollection
     @CollectionTable(joinColumns = @JoinColumn(name = ID))
     private List<LoginRecord> loginRecords;
+
+    @ManyToMany(mappedBy = "ratedByUsers", targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Course> ratedCourses = new ArrayList<>();
 
     public String getFirstName() {
         return firstName;
@@ -248,6 +252,14 @@ public class User extends IdEntity<User> implements UserDetails {
         this.loginRecords = loginRecords;
     }
 
+    public List<Course> getRatedCourses() {
+        return ratedCourses;
+    }
+
+    public void setRatedCourses(List<Course> ratedCourses) {
+        this.ratedCourses = ratedCourses;
+    }
+
     @Override
     public User merge(User user) {
         setFirstName(user.getFirstName());
@@ -268,6 +280,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setEnabled(user.isEnabled());
         setResetPasswordToken(user.getResetPasswordToken());
         setLoginRecords(user.getLoginRecords());
+        setRatedCourses(user.getRatedCourses());
         return this;
     }
 

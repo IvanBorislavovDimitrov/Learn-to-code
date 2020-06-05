@@ -32,4 +32,7 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
 
     List<CourseServiceModel> findMostCommented(int limit);
 
+    CourseServiceModel markCourseAsRatedByUser(String courseName, String username);
+
+    boolean hasUserRatedCourse(String courseName, String username);
 }

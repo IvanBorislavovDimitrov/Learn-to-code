@@ -18,4 +18,8 @@ public interface CourseDao extends GenericDao<Course> {
     List<Course> findBestSellers(int limit);
 
     List<Course> findMostCommented(int limit);
+
+    Course markCourseAsRatedByUser(String courseName, String username);
+
+    boolean hasUserRatedCourse(String courseName, String username);
 }

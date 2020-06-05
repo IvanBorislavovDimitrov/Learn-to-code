@@ -77,6 +77,11 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @OneToMany(mappedBy = "course", targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(name = "rated_by_users", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_rated_id", referencedColumnName = "id"))
+    private List<User> ratedByUsers = new ArrayList<>();
+
     @Override
     public String getName() {
         return name;
@@ -214,6 +219,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.ratingCount = ratingCount;
     }
 
+    public List<User> getRatedByUsers() {
+        return ratedByUsers;
+    }
+
+    public void setRatedByUsers(List<User> ratedByUsers) {
+        this.ratedByUsers = ratedByUsers;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -233,6 +246,7 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setComments(course.getComments());
         setRating(course.getRating());
         setRatingCount(course.getRatingCount());
+        setRatedByUsers(course.getRatedByUsers());
         return this;
     }
 

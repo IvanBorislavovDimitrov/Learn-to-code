@@ -41,5 +41,7 @@ public interface CourseServiceApi {
 
     ResponseEntity<List<CourseResponseModel>> getCoursesThatUserTeaches(String username);
 
-    ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel);
+    ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel, String username);
+
+    ResponseEntity<RatedCourseResponseModel> hasUserRatedCourse(String courseName, String username);
 }

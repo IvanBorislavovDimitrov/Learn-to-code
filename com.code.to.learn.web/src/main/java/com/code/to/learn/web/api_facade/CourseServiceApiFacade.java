@@ -393,11 +393,12 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     @Override
-    public ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel) {
+    public ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel, String username) {
         CourseServiceModel updatedCourseServiceModel;
         synchronized (lock) {
             updatedCourseServiceModel = rateCourseInternal(courseRatingBindingModel);
         }
+        courseService.markCourseAsRatedByUser(courseRatingBindingModel.getCourseName(), username);
         return ResponseEntity.ok(toOutput(updatedCourseServiceModel));
     }
 
@@ -413,6 +414,15 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
 
     protected RatingCalculator getRatingCalculator(int stars, CourseServiceModel courseServiceModel) {
         return new CourseRatingCalculator(stars, courseServiceModel);
+    }
+
+    @Override
+    public ResponseEntity<RatedCourseResponseModel> hasUserRatedCourse(String courseName, String username) {
+        boolean hasUserRatedCourse = courseService.hasUserRatedCourse(courseName, username);
+        RatedCourseResponseModel ratedCourseResponseModel = new RatedCourseResponseModel();
+        ratedCourseResponseModel.setCourseName(courseName);
+        ratedCourseResponseModel.setRated(hasUserRatedCourse);
+        return ResponseEntity.ok(ratedCourseResponseModel);
     }
 
     @Override
