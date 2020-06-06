@@ -24,21 +24,11 @@ public class CourseValidator {
 
     public void validateCourseBindingModel(CourseBindingModel courseBindingModel) {
         validateCourseName(courseBindingModel.getName());
-        validateStartEndDates(courseBindingModel);
     }
 
     private void validateCourseName(String courseName) {
         if (courseService.isNameTaken(courseName)) {
             throw new CourseNameTakenException(courseName);
-        }
-    }
-
-    private void validateStartEndDates(CourseBindingModel courseBindingModel) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-        LocalDate startDate = LocalDate.parse(courseBindingModel.getStartDate(), formatter);
-        LocalDate endDate = LocalDate.parse(courseBindingModel.getEndDate(), formatter);
-        if (startDate.compareTo(endDate) > 0) {
-            throw new InvalidDatesException(startDate, endDate);
         }
     }
 

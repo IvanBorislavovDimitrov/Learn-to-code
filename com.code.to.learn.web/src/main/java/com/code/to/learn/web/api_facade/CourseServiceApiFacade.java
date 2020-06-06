@@ -99,7 +99,6 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
         courseServiceModel.setTeacher(teacher);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
         courseServiceModel.setStartDate(LocalDate.parse(courseBindingModel.getStartDate(), formatter));
-        courseServiceModel.setEndDate(LocalDate.parse(courseBindingModel.getEndDate(), formatter));
         CourseCategoryServiceModel courseCategoryServiceModel = courseCategoryService.findByName(courseBindingModel.getCategoryName());
         courseServiceModel.setCourseCategory(courseCategoryServiceModel);
         return courseServiceModel;

@@ -18,15 +18,6 @@ public class CourseBindingModel {
     private String startDate;
 
     @NotNull
-    private String endDate;
-
-    @NotNull
-    private int durationInWeeks;
-
-    @NotNull
-    private int credits;
-
-    @NotNull
     @Min(0)
     private BigDecimal price;
 
@@ -58,30 +49,6 @@ public class CourseBindingModel {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getDurationInWeeks() {
-        return durationInWeeks;
-    }
-
-    public void setDurationInWeeks(int durationInWeeks) {
-        this.durationInWeeks = durationInWeeks;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
     }
 
     public BigDecimal getPrice() {

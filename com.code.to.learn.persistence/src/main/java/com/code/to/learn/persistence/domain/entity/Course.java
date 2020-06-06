@@ -24,20 +24,11 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column(nullable = false)
-    private LocalDate endDate;
-
-    @Column(nullable = false)
-    private int durationInWeeks;
-
     @Column(columnDefinition = "decimal default 0")
     private double rating;
 
     @Column(columnDefinition = "int default 0")
     private int ratingCount;
-
-    @Column(nullable = false)
-    private int credits;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -97,30 +88,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getDurationInWeeks() {
-        return durationInWeeks;
-    }
-
-    public void setDurationInWeeks(int durationInWeeks) {
-        this.durationInWeeks = durationInWeeks;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
     }
 
     public BigDecimal getPrice() {
@@ -231,9 +198,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
     public Course merge(Course course) {
         setName(course.getName());
         setStartDate(course.getStartDate());
-        setEndDate(course.getEndDate());
-        setDurationInWeeks(course.getDurationInWeeks());
-        setCredits(course.getCredits());
         setPrice(course.getPrice());
         setDescription(course.getDescription());
         setCategory(course.getCategory());

@@ -10,9 +10,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     private String name;
     private LocalDate startDate;
-    private LocalDate endDate;
-    private int durationInWeeks;
-    private int credits;
     private BigDecimal price;
     private String description;
     private List<UserServiceModel> attendants;
@@ -40,30 +37,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getDurationInWeeks() {
-        return durationInWeeks;
-    }
-
-    public void setDurationInWeeks(int durationInWeeks) {
-        this.durationInWeeks = durationInWeeks;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
     }
 
     public BigDecimal getPrice() {
