@@ -100,8 +100,7 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
         userDao.update(user);
     }
 
-    @Override
-    public void removeFromCart(User user, String courseName) {
+    private void removeFromCart(User user, String courseName) {
         Optional<Course> course = getCourseInCartByNameForUser(user, courseName);
         if (!course.isPresent()) {
             return;

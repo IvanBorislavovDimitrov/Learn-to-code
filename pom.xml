@@ -19,6 +19,8 @@
         <maven.war.plugin.version>2.4</maven.war.plugin.version>
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
         <apache.http.client>4.5.10</apache.http.client>
+        <junit.version>5.6.2</junit.version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <modules>
@@ -118,6 +120,19 @@
             <artifactId>httpclient</artifactId>
             <version>${apache.http.client}</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 </project>

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class CourseCategoryServiceImpl extends NamedElementServiceImpl<CourseCategory, CourseCategoryServiceModel> implements CourseCategoryService {
 
-
     @Autowired
     protected CourseCategoryServiceImpl(CourseCategoryDao courseCategoryDao, ModelMapper modelMapper) {
         super(courseCategoryDao, modelMapper);
