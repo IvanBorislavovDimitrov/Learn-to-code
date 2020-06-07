@@ -15,7 +15,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private List<UserServiceModel> attendants;
     private UserServiceModel teacher;
     private List<UserServiceModel> futureAttendants;
-    private List<HomeworkServiceModel> homework;
     private List<CourseVideoServiceModel> videosNames;
     private CourseCategoryServiceModel courseCategory;
     private String thumbnailName;
@@ -77,14 +76,6 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setFutureAttendants(List<UserServiceModel> futureAttendants) {
         this.futureAttendants = futureAttendants;
-    }
-
-    public List<HomeworkServiceModel> getHomework() {
-        return homework;
-    }
-
-    public void setHomework(List<HomeworkServiceModel> homework) {
-        this.homework = homework;
     }
 
     public List<CourseVideoServiceModel> getVideosNames() {

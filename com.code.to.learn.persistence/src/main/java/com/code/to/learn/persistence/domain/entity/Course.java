@@ -62,9 +62,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
             inverseJoinColumns = @JoinColumn(name = "future_attendants_id", referencedColumnName = "id"))
     private List<User> futureAttendants = new ArrayList<>();
 
-    @OneToMany(targetEntity = Homework.class, fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.MERGE)
-    private List<Homework> homework = new ArrayList<>();
-
     @OneToMany(mappedBy = "course", targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Comment> comments = new ArrayList<>();
 
@@ -138,14 +135,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.futureAttendants = futureAttendants;
     }
 
-    public List<Homework> getHomework() {
-        return homework;
-    }
-
-    public void setHomework(List<Homework> homework) {
-        this.homework = homework;
-    }
-
     public List<CourseVideo> getVideosNames() {
         return videosNames;
     }
@@ -204,7 +193,6 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setAttendants(course.getAttendants());
         setTeacher(course.getTeacher());
         setFutureAttendants(course.getFutureAttendants());
-        setHomework(course.getHomework());
         setVideosNames(course.getVideosNames());
         setThumbnailName(course.getThumbnailName());
         setComments(course.getComments());

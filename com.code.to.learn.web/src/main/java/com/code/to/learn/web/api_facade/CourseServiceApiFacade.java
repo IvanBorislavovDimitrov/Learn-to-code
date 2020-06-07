@@ -341,7 +341,6 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
         courseServiceModelToUpdate.setAttendants(currentCourseServiceModel.getAttendants());
         courseServiceModelToUpdate.setFutureAttendants(currentCourseServiceModel.getFutureAttendants());
         courseServiceModelToUpdate.setId(currentCourseServiceModel.getId());
-        courseServiceModelToUpdate.setHomework(currentCourseServiceModel.getHomework());
         if (courseServiceModelToUpdate.getVideosNames() == null) {
             courseServiceModelToUpdate.setVideosNames(currentCourseServiceModel.getVideosNames());
         }
