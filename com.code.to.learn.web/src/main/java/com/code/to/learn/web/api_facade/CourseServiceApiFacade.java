@@ -424,6 +424,50 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     @Override
+    public ResponseEntity<UserPaidForCourse> hasUserPaidForCourse(String username, String courseName) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        UserPaidForCourse userPaidForCourse = new UserPaidForCourse();
+        userPaidForCourse.setHasUserPaidForCourse(hasUserPaidForCourse(userServiceModel, courseName));
+        return ResponseEntity.ok(userPaidForCourse);
+    }
+
+    private boolean hasUserPaidForCourse(UserServiceModel userServiceModel, String courseName) {
+        return userServiceModel.getUnpaidCourses()
+                .stream()
+                .map(CourseServiceModel::getName)
+                .noneMatch(currentCourseName -> Objects.equals(currentCourseName, courseName));
+    }
+
+    @Override
+    public ResponseEntity<CourseResponseModel> confirmUserHasPaidForCourse(String username, String courseName) {
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        CourseServiceModel courseServiceModel = courseService.findByName(courseName);
+        courseServiceModel.getUsersWhoHaveNotPaid().removeIf(currentUserServiceModel -> currentUserServiceModel.getUsername().equals(username));
+        userServiceModel.getUnpaidCourses().removeIf(currentCourseServiceModel -> currentCourseServiceModel.getName().equals(courseName));
+        userService.update(userServiceModel);
+        courseService.update(courseServiceModel);
+        return ResponseEntity.ok(toOutput(courseServiceModel));
+    }
+
+    @Override
+    public ResponseEntity<List<UnpaidCourseResponseModel>> getCoursesThatAreStillUnpaid() {
+        List<UserServiceModel> allUsersWithUnpaidCourses = userService.findAllUsersWithUnpaidCourses();
+        List<UnpaidCourseResponseModel> unpaidCourses = new ArrayList<>();
+        allUsersWithUnpaidCourses.forEach(userWithUnpaidCourse -> {
+            for (CourseServiceModel unpaidCourse : userWithUnpaidCourse.getUnpaidCourses()) {
+                if (unpaidCourses.stream().anyMatch(x -> x.getUsername().equals(userWithUnpaidCourse.getUsername()))) {
+                    if (unpaidCourses.stream().filter(x -> x.getUsername().equals(userWithUnpaidCourse.getUsername()))
+                            .anyMatch(x -> x.getCourseName().equals(unpaidCourse.getName()))) {
+                        continue;
+                    }
+                }
+                unpaidCourses.add(new UnpaidCourseResponseModel(userWithUnpaidCourse.getUsername(), unpaidCourse.getName()));
+            }
+        });
+        return ResponseEntity.ok(unpaidCourses);
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

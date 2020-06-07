@@ -17,6 +17,8 @@ public class Course extends IdEntity<Course> implements NamedElement {
     public static final String ATTENDANTS = "attendants";
     public static final String COMMENTS = "comments";
     public static final String CATEGORY = "category";
+    public static final String USERS_WHO_PAID = "usersWhoPaid";
+
 
     @Column(name = NAME, nullable = false, unique = true)
     private String name;
@@ -69,6 +71,11 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @JoinTable(name = "rated_by_users", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_rated_id", referencedColumnName = "id"))
     private List<User> ratedByUsers = new ArrayList<>();
+
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(name = "unpaid_by_users", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_paid_id", referencedColumnName = "id"))
+    private List<User> usersWhoHaveNotPaid = new ArrayList<>();
 
     @Override
     public String getName() {
@@ -183,6 +190,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
         this.ratedByUsers = ratedByUsers;
     }
 
+    public List<User> getUsersWhoHaveNotPaid() {
+        return usersWhoHaveNotPaid;
+    }
+
+    public void setUsersWhoHaveNotPaid(List<User> usersWhoHaveNotPaid) {
+        this.usersWhoHaveNotPaid = usersWhoHaveNotPaid;
+    }
+
     @Override
     public Course merge(Course course) {
         setName(course.getName());
@@ -199,6 +214,7 @@ public class Course extends IdEntity<Course> implements NamedElement {
         setRating(course.getRating());
         setRatingCount(course.getRatingCount());
         setRatedByUsers(course.getRatedByUsers());
+        setUsersWhoHaveNotPaid(course.getUsersWhoHaveNotPaid());
         return this;
     }
 

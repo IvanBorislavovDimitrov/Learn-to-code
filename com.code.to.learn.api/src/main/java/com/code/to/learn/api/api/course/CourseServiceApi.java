@@ -44,4 +44,11 @@ public interface CourseServiceApi {
     ResponseEntity<CourseResponseModel> rateCourse(CourseRatingBindingModel courseRatingBindingModel, String username);
 
     ResponseEntity<RatedCourseResponseModel> hasUserRatedCourse(String courseName, String username);
+
+    ResponseEntity<UserPaidForCourse> hasUserPaidForCourse(String username, String courseName);
+
+    ResponseEntity<CourseResponseModel> confirmUserHasPaidForCourse(String username, String courseName);
+
+    ResponseEntity<List<UnpaidCourseResponseModel>> getCoursesThatAreStillUnpaid();
+
 }

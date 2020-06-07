@@ -20,6 +20,7 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
     private String thumbnailName;
     private double rating;
     private int ratingCount;
+    private List<UserServiceModel> usersWhoHaveNotPaid;
 
     @Override
     public String getName() {
@@ -116,6 +117,14 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
     public void setRatingCount(int ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public List<UserServiceModel> getUsersWhoHaveNotPaid() {
+        return usersWhoHaveNotPaid;
+    }
+
+    public void setUsersWhoHaveNotPaid(List<UserServiceModel> usersWhoHaveNotPaid) {
+        this.usersWhoHaveNotPaid = usersWhoHaveNotPaid;
     }
 
     public static class CourseVideoServiceModel {

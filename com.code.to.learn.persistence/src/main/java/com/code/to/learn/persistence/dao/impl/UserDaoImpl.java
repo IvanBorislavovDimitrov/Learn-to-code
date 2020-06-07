@@ -65,6 +65,18 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         return getDistinctTeachers(teachersQuery);
     }
 
+    @Override
+    public List<User> findAllUsersWithUnpaidCourses() {
+        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> userRoot = userCriteriaQuery.from(User.class);
+        userRoot.join("unpaidCourses", JoinType.INNER);
+        userCriteriaQuery.select(userRoot);
+        Query<User> userQuery = session.createQuery(userCriteriaQuery);
+        return userQuery.getResultList();
+    }
+
     private List<User> getDistinctTeachers(Query<Course> teachersQuery) {
         return teachersQuery.getResultList()
                 .stream()

@@ -17,6 +17,8 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> findTeachers();
 
+    List<User> findAllUsersWithUnpaidCourses();
+
     List<User> findUsersByPage(int page, int maxResults);
 
     Optional<User> findByResetPasswordToken(String resetPasswordToken);

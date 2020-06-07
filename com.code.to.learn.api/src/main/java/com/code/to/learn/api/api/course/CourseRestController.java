@@ -63,6 +63,22 @@ public class CourseRestController {
         return courseServiceApi.isUserEnrolledForCourse(loggedUser, courseEnrolledFor);
     }
 
+    @GetMapping(value = "/has-paid/{courseName}")
+    public ResponseEntity<UserPaidForCourse> hasUserPaidForCourse(@PathVariable String courseName) {
+        String loggedUser = usernameGetter.getLoggedInUserUsername();
+        return courseServiceApi.hasUserPaidForCourse(loggedUser, courseName);
+    }
+
+    @PostMapping(value = "/has-paid/{courseName}/{username}")
+    public ResponseEntity<CourseResponseModel> confirmUserHasPaidForCourse(@PathVariable String courseName, @PathVariable String username) {
+        return courseServiceApi.confirmUserHasPaidForCourse(username, courseName);
+    }
+
+    @GetMapping(value = "/unpaid")
+    public ResponseEntity<List<UnpaidCourseResponseModel>> getCoursesThatAreStillNotPaid() {
+        return courseServiceApi.getCoursesThatAreStillUnpaid();
+    }
+
     @PostMapping(value = "/cart/add/{courseName}")
     public ResponseEntity<CourseResponseModel> addToCart(@PathVariable String courseName) {
         String loggedUser = usernameGetter.getLoggedInUserUsername();

@@ -34,4 +34,6 @@ public interface UserService extends GenericService<UserServiceModel> {
     void storeUserLoginInformation(String username, LocalDate date, String additionalInformation);
 
     UserServiceModel deactivateUserProfile(String username);
+
+    List<UserServiceModel> findAllUsersWithUnpaidCourses();
 }

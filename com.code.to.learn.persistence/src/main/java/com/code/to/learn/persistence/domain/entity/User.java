@@ -81,6 +81,9 @@ public class User extends IdEntity<User> implements UserDetails {
     @ManyToMany(mappedBy = "ratedByUsers", targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Course> ratedCourses = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "usersWhoHaveNotPaid", targetEntity = Course.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Course> unpaidCourses = new ArrayList<>();
+
     public String getFirstName() {
         return firstName;
     }
@@ -260,6 +263,14 @@ public class User extends IdEntity<User> implements UserDetails {
         this.ratedCourses = ratedCourses;
     }
 
+    public List<Course> getUnpaidCourses() {
+        return unpaidCourses;
+    }
+
+    public void setUnpaidCourses(List<Course> unpaidCourses) {
+        this.unpaidCourses = unpaidCourses;
+    }
+
     @Override
     public User merge(User user) {
         setFirstName(user.getFirstName());
@@ -281,6 +292,7 @@ public class User extends IdEntity<User> implements UserDetails {
         setResetPasswordToken(user.getResetPasswordToken());
         setLoginRecords(user.getLoginRecords());
         setRatedCourses(user.getRatedCourses());
+        setUnpaidCourses(user.getUnpaidCourses());
         return this;
     }
 

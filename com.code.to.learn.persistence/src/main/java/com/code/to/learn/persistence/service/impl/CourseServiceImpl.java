@@ -53,8 +53,10 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
         User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         Course course = getOrThrowNotFound(() -> courseDao.findByName(courseName), Messages.COURSE_NOT_FOUND, courseName);
         user.getCourses().add(course);
+        user.getUnpaidCourses().add(course);
         userDao.update(user);
         course.getAttendants().add(user);
+        course.getUsersWhoHaveNotPaid().add(user);
         Course updatedCourse = getWithoutCheck(() -> courseDao.update(course));
         removeFromCart(user, courseName);
         return toOutput(updatedCourse);

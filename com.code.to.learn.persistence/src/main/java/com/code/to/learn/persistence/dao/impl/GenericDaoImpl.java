@@ -2,6 +2,7 @@ package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
+import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

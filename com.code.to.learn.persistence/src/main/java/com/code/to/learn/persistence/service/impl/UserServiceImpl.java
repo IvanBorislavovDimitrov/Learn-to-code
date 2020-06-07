@@ -154,6 +154,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     }
 
     @Override
+    public List<UserServiceModel> findAllUsersWithUnpaidCourses() {
+        return toOutput(userDao.findAllUsersWithUnpaidCourses());
+    }
+
+    @Override
     protected Class<UserServiceModel> getModelClass() {
         return UserServiceModel.class;
     }

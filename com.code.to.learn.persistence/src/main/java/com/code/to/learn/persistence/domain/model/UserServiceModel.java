@@ -29,6 +29,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
     private String description;
     private boolean isEnabled;
     private List<LoginRecord> loginRecords;
+    private List<CourseServiceModel> unpaidCourses;
 
     public UserServiceModel() {
         // Required by ModelMapper
@@ -183,6 +184,14 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public List<CourseServiceModel> getUnpaidCourses() {
+        return unpaidCourses;
+    }
+
+    public void setUnpaidCourses(List<CourseServiceModel> unpaidCourses) {
+        this.unpaidCourses = unpaidCourses;
     }
 
     public boolean isAdminOrModerator() {
