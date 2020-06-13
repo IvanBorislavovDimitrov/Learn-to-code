@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static com.code.to.learn.web.constants.Messages.USER_SUCCESSFULLY_LOGGED;
 
@@ -55,7 +56,8 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     private void trackSuccessfulUserLogin(String username) {
         try {
-            userService.storeUserLoginInformation(username, LocalDate.now(), MessageFormat.format(USER_SUCCESSFULLY_LOGGED, username));
+            userService.storeUserLoginInformation(username, LocalDate.now(), MessageFormat.format(USER_SUCCESSFULLY_LOGGED,
+                    username, LocalDate.now(), LocalTime.now()));
         } catch (Exception e) {
             DatabaseSessionUtil.closeWithRollback(sessionFactory);
         }

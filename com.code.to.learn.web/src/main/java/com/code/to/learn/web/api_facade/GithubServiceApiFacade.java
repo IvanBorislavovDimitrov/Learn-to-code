@@ -10,6 +10,7 @@ import com.code.to.learn.core.client.UncheckedEntityUtils;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.persistence.constant.Messages;
+import com.code.to.learn.persistence.domain.entity.GithubAccessToken;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
@@ -179,6 +180,9 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
         githubAccessTokenServiceModel.setUserServiceModel(userServiceModel);
         userServiceModel.setGithubAccessToken(githubAccessTokenServiceModel);
         githubService.save(githubAccessTokenServiceModel);
+        GithubAccessTokenServiceModel updateEntity = githubService.findByAccessToken(githubAccessTokenResponseModel.getAccessToken());
+        userServiceModel.setGithubAccessToken(updateEntity);
+        userService.update(userServiceModel);
     }
 
     @Override

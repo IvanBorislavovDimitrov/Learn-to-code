@@ -38,4 +38,5 @@ public class GithubAccessTokenServiceModel extends IdServiceModel {
     public void setUserServiceModel(UserServiceModel userServiceModel) {
         this.userServiceModel = userServiceModel;
     }
+
 }

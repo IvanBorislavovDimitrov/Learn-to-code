@@ -17,6 +17,11 @@ public class GithubServiceImpl extends GenericServiceImpl<GithubAccessToken, Git
     }
 
     @Override
+    public GithubAccessTokenServiceModel findByAccessToken(String accessToken) {
+        return toOutput(getGenericDao().findByField("accessToken", accessToken).get());
+    }
+
+    @Override
     protected Class<GithubAccessTokenServiceModel> getModelClass() {
         return GithubAccessTokenServiceModel.class;
     }
