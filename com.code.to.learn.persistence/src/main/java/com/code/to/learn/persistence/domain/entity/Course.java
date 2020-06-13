@@ -221,6 +221,8 @@ public class Course extends IdEntity<Course> implements NamedElement {
     @Embeddable
     public static class CourseVideo {
 
+        @Column(columnDefinition = "int default 0")
+        private int number;
         @Column(nullable = false)
         private String videoTitle;
         @Column(nullable = false)
@@ -259,6 +261,14 @@ public class Course extends IdEntity<Course> implements NamedElement {
 
         public void setVideoFileSize(Long videoFileSize) {
             this.videoFileSize = videoFileSize;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
         }
     }
 }

@@ -5,6 +5,7 @@ public class GithubAccessTokenServiceModel extends IdServiceModel {
     private String accessToken;
     private String scope;
     private String tokenType;
+    private UserServiceModel userServiceModel;
 
     public String getAccessToken() {
         return accessToken;
@@ -28,5 +29,13 @@ public class GithubAccessTokenServiceModel extends IdServiceModel {
 
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public UserServiceModel getUserServiceModel() {
+        return userServiceModel;
+    }
+
+    public void setUserServiceModel(UserServiceModel userServiceModel) {
+        this.userServiceModel = userServiceModel;
     }
 }

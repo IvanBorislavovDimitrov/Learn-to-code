@@ -15,7 +15,7 @@ public class GithubAccessToken extends IdEntity<GithubAccessToken> {
     @Basic
     private String tokenType;
 
-    @OneToOne(mappedBy = "githubAccessToken", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "githubAccessToken", cascade = {CascadeType.ALL})
     private User accessTokenOwner;
 
     public String getAccessToken() {

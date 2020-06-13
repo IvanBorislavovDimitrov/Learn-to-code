@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +112,7 @@ public class CourseBindingModel {
         if (videos.size() != videosNames.size()) {
             throw new IllegalArgumentException("Videos and videos' names do no match!");
         }
-        Map<String, MultipartFile> videosToUpload = new HashMap<>();
+        Map<String, MultipartFile> videosToUpload = new LinkedHashMap<>();
         for (int i = 0; i < videosNames.size(); i++) {
             videosToUpload.put(videosNames.get(i), videos.get(i));
         }

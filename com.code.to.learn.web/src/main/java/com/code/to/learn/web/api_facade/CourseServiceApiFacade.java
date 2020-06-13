@@ -35,6 +35,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
@@ -119,13 +120,15 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     private List<CourseServiceModel.CourseVideoServiceModel> getVideos(CourseBindingModel courseBindingModel, List<FileMetadata> fileMetadata) {
+        AtomicInteger number = new AtomicInteger(0);
         return courseBindingModel.getVideosToUpload().entrySet()
                 .stream()
                 .map(videoToUpload -> {
                     String videoTitle = videoToUpload.getKey();
                     String videoFullName = getVideoFileName(courseBindingModel.getName(), videoToUpload.getKey(), videoToUpload.getValue());
                     long videoFileSize = getVideoFileSize(videoFullName, fileMetadata);
-                    return new CourseServiceModel.CourseVideoServiceModel(videoTitle, videoFullName, videoFileSize);
+                    number.set(number.get() + 1);
+                    return new CourseServiceModel.CourseVideoServiceModel(number.get(), videoTitle, videoFullName, videoFileSize);
                 })
                 .collect(Collectors.toList());
     }
@@ -196,6 +199,7 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     @Override
     public ResponseEntity<CourseResponseModel> get(String name) {
         CourseServiceModel courseServiceModel = toCourseServiceModelWithCalculatedRating(courseService.findByName(name));
+        courseServiceModel.getVideosNames().sort(CourseServiceModel.CourseVideoServiceModel::compareTo);
         return ResponseEntity.ok(toOutput(courseServiceModel));
     }
 
@@ -432,6 +436,11 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     private boolean hasUserPaidForCourse(UserServiceModel userServiceModel, String courseName) {
+        if (userServiceModel.getCourses().stream()
+                .map(CourseServiceModel::getName)
+                .noneMatch(currentCourseName -> Objects.equals(currentCourseName, courseName))) {
+            return false;
+        }
         return userServiceModel.getUnpaidCourses()
                 .stream()
                 .map(CourseServiceModel::getName)

@@ -101,7 +101,7 @@ public class CourseResponseModel {
     }
 
     public static class CourseVideoResponseModel {
-
+        private int number;
         private String videoTitle;
         private String videoFullName;
         private long videoFileSize;
@@ -136,6 +136,14 @@ public class CourseResponseModel {
 
         public void setVideoFileSize(long videoFileSize) {
             this.videoFileSize = videoFileSize;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
         }
     }
 }

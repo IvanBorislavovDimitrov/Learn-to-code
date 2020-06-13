@@ -14,6 +14,7 @@ import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.github.GithubException;
+import com.code.to.learn.persistence.service.api.GithubService;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.mapper.ExtendableMapper;
 import com.code.to.learn.util.parser.Parser;
@@ -50,15 +51,17 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
     private final ResilientHttpClient resilientHttpClient;
     private final ApplicationConfiguration applicationConfiguration;
     private final UserService userService;
+    private final GithubService githubService;
 
     @Autowired
     public GithubServiceApiFacade(Parser parser, ResilientHttpClient resilientHttpClient,
-                                  ModelMapper modelMapper, ApplicationConfiguration applicationConfiguration, UserService userService) {
+                                  ModelMapper modelMapper, ApplicationConfiguration applicationConfiguration, UserService userService, GithubService githubService) {
         super(modelMapper);
         this.parser = parser;
         this.resilientHttpClient = resilientHttpClient;
         this.applicationConfiguration = applicationConfiguration;
         this.userService = userService;
+        this.githubService = githubService;
     }
 
     @Override
@@ -173,8 +176,9 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
 
     private void updateGithubAccessTokenForUser(UserServiceModel userServiceModel, GithubAccessTokenResponseModel githubAccessTokenResponseModel) {
         GithubAccessTokenServiceModel githubAccessTokenServiceModel = toInput(githubAccessTokenResponseModel);
+        githubAccessTokenServiceModel.setUserServiceModel(userServiceModel);
         userServiceModel.setGithubAccessToken(githubAccessTokenServiceModel);
-        userService.update(userServiceModel);
+        githubService.save(githubAccessTokenServiceModel);
     }
 
     @Override

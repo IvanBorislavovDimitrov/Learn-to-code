@@ -127,7 +127,8 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
         this.usersWhoHaveNotPaid = usersWhoHaveNotPaid;
     }
 
-    public static class CourseVideoServiceModel {
+    public static class CourseVideoServiceModel implements Comparable<CourseVideoServiceModel> {
+        private int number;
         private String videoTitle;
         private String videoFullName;
         private long videoFileSize;
@@ -135,7 +136,8 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
         public CourseVideoServiceModel() {
         }
 
-        public CourseVideoServiceModel(String videoTitle, String videoFullName, long videoFileSize) {
+        public CourseVideoServiceModel(int number, String videoTitle, String videoFullName, long videoFileSize) {
+            this.number = number;
             this.videoTitle = videoTitle;
             this.videoFullName = videoFullName;
             this.videoFileSize = videoFileSize;
@@ -163,6 +165,19 @@ public class CourseServiceModel extends IdServiceModel implements NamedElement {
 
         public void setVideoFileSize(long videoFileSize) {
             this.videoFileSize = videoFileSize;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
+        }
+
+        @Override
+        public int compareTo(CourseVideoServiceModel courseVideoServiceModel) {
+            return Integer.compare(getNumber(), courseVideoServiceModel.getNumber());
         }
     }
 }
