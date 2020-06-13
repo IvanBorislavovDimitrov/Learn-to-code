@@ -27,8 +27,8 @@ public class UserRestController {
         this.usernameGetter = usernameGetter;
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserResponseModel> register(@Valid UserBindingModel userBindingModel) {
+    @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<UserResponseModel> register( UserBindingModel userBindingModel) {
         return userServiceApi.register(userBindingModel);
     }
 

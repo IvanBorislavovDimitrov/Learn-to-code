@@ -104,7 +104,7 @@ public class CourseRestController {
     }
 
     @PostMapping(value = "/update")
-    public ResponseEntity<CourseResponseModel> updateCourse(@Valid CourseBindingModel courseBindingModel,
+        public ResponseEntity<CourseResponseModel> updateCourse(@Valid CourseBindingModel courseBindingModel,
                                                             @RequestParam(defaultValue = "false") boolean shouldUpdateContent) {
         return courseServiceApi.updateCourse(courseBindingModel, shouldUpdateContent);
     }
