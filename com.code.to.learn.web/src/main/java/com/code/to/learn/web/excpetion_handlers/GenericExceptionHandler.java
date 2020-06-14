@@ -5,30 +5,27 @@ import com.code.to.learn.persistence.exception.basic.InvalidTokenException;
 import com.code.to.learn.persistence.exception.course.CourseException;
 import com.code.to.learn.persistence.exception.github.GithubException;
 import com.code.to.learn.persistence.exception.user.UserException;
-import com.code.to.learn.util.parser.Parser;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 @ControllerAdvice
 public class GenericExceptionHandler {
 
-    private final Parser parser;
-
-    public GenericExceptionHandler(Parser parser) {
-        this.parser = parser;
-    }
-
     @ExceptionHandler({UserException.class, CourseException.class, GithubException.class, InvalidTokenException.class})
-    public ResponseEntity<String> userExceptionOccurred(Exception exception) {
+    public ResponseEntity<ApiErrorResponse> userExceptionOccurred(Exception exception) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message(exception.getMessage())
                 .type(exception.getClass().getSimpleName())
                 .build();
         return ResponseEntity.badRequest()
-                .body(parser.serialize(apiErrorResponse));
+                .header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(apiErrorResponse);
     }
 
 }

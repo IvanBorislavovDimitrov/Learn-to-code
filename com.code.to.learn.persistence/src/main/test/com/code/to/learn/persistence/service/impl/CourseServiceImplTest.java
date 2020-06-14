@@ -121,7 +121,7 @@ public class CourseServiceImplTest {
     }
 
     @Test
-    public void testHasUserRatedCourses() {
+    public void testHasUserRatedCourse() {
         Assertions.assertFalse(courseService.hasUserRatedCourse("123", "123"));
     }
 

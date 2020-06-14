@@ -116,7 +116,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGenerateResetPassword() {
+    public void testGenerateResetPasswordToken() {
         Mockito.when(resetPasswordTokenGenerator.generateResetPasswordToken()).thenReturn("123");
         User user = Mockito.mock(User.class);
         Mockito.when(userDao.findByUsername(anyString())).thenReturn(Optional.of(user));
