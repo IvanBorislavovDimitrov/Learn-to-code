@@ -26,7 +26,7 @@ public class ContactUsRestController {
         return contactUsServiceApi.getAll();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ContactUsResponseModel> add(@RequestBody @Valid ContactUsBindingModel contactUsBindingModel) {
         return contactUsServiceApi.add(contactUsBindingModel);
     }

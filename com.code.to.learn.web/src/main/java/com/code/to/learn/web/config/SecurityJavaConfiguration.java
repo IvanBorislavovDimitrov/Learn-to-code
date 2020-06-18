@@ -1,5 +1,6 @@
 package com.code.to.learn.web.config;
 
+import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.parser.Parser;
 import com.code.to.learn.web.config.handler.CustomUrlAuthenticationFailureHandler;
@@ -68,11 +69,18 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(getRestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users/logout", "/users/all", "/github/**", "/comments/add",
-                        "/courses/enroll/**", "/courses/is-enrolled/**", "/courses/cart/**", "/users/user", "/courses/rate")
+                .antMatchers("/users/logout", "/github/**", "/comments/add", "/comments/delete/**",
+                        "/courses/enroll/**", "/courses/is-enrolled/**", "/courses/cart/**", "/users/user", "/courses/rate",
+                        "/users/forgotten-password/**", "/users/change-forgotten-password/**", "/users/change-profile-picture/**",
+                        "/users/update/basic/**", "/users/update/deactivate/**", "/users/update/password/**")
                 .authenticated()
                 .antMatchers("/api/admin/**", "/users/change-roles/**")
-                .hasRole("ADMIN")
+                .hasRole(UserRole.ROLE_ADMIN.getValue())
+                .and()
+                .authorizeRequests()
+                .antMatchers("/contact-us", "/courses/has-paid", "/course-categories/add", "/course-categories/update",
+                        "/courses/unpaid", "/courses/add", "/courses/update", "/course/delete/**")
+                .hasRole(UserRole.ROLE_MODERATOR.getValue())
                 .and()
                 .formLogin()
                 .loginPage("/users/login")
