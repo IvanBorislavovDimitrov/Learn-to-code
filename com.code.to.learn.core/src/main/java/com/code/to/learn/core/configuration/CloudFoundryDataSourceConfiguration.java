@@ -99,7 +99,7 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "3");
             properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, "2");
             properties.setProperty(HIBERNATE_DBCP_MAX_WAIT_MILLIS, "-1");
-            properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, "org.hibernate.context.internal.ThreadLocalSessionContext");
+            properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, "org.hibernate.context.internal.ManagedSessionContext");
 
             configuration.setProperties(properties);
 

@@ -4,6 +4,7 @@ import com.code.to.learn.persistence.exception.basic.LCException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.context.internal.ManagedSessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,8 @@ public final class DatabaseSessionUtil {
 
     private static Session openNewSession(SessionFactory sessionFactory) {
         Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
+        session.beginTransaction();
+        ManagedSessionContext.bind(session);
         return session;
     }
 

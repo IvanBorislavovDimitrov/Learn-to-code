@@ -3,7 +3,6 @@ package com.code.to.learn.core.interceptor;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -28,7 +27,7 @@ public class HibernateSessionManagementInterceptor implements HandlerInterceptor
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (response.getStatus() == HttpStatus.OK.value()) {
+        if (response.getStatus() >= 200 && response.getStatus() <= 299) {
             DatabaseSessionUtil.closeWithCommit(sessionFactory);
             return;
         }
