@@ -94,12 +94,12 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "update");
             properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, "class");
             properties.setProperty(HIBERNATE_SHOW_SQL, "true");
-            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "20");
-            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "30");
+            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "5");
+            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "5");
             properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "3");
             properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, "2");
             properties.setProperty(HIBERNATE_DBCP_MAX_WAIT_MILLIS, "-1");
-            properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, "org.hibernate.context.internal.ManagedSessionContext");
+            properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, applicationConfiguration.getHibernateSessionContext());
 
             configuration.setProperties(properties);
 

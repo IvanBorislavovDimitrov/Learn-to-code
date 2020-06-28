@@ -36,31 +36,25 @@ public final class DatabaseSessionUtil {
     private static Session openNewSession(SessionFactory sessionFactory) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        ManagedSessionContext.bind(session);
         return session;
     }
 
     public static void closeWithRollback(SessionFactory sessionFactory) {
-        Session session;
         try {
-            session = sessionFactory.getCurrentSession();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return;
-        }
-        rollbackTransaction(session.getTransaction());
-        close(session);
-    }
-
-    private static void close(Session session) {
-        try {
-            session.close();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            Session session;
+            try {
+                session = sessionFactory.getCurrentSession();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+                return;
+            }
+            rollbackTransaction(session.getTransaction(), session);
+        } finally {
+            close(sessionFactory);
         }
     }
 
-    private static void rollbackTransaction(Transaction transaction) {
+    private static void rollbackTransaction(Transaction transaction, Session session) {
         try {
             transaction.rollback();
         } catch (Exception e) {
@@ -69,21 +63,30 @@ public final class DatabaseSessionUtil {
     }
 
     public static void closeWithCommit(SessionFactory sessionFactory) {
-        Session session;
+       try {
+           Session session;
+           try {
+               session = sessionFactory.getCurrentSession();
+           } catch (Exception e) {
+               LOGGER.error(e.getMessage(), e);
+               return;
+           }
+           commitTransaction(session.getTransaction(), session);
+       } finally {
+           close(sessionFactory);
+       }
+    }
+
+    private static void close(SessionFactory sessionFactory) {
         try {
-            session = sessionFactory.getCurrentSession();
+            Session currentSession = sessionFactory.getCurrentSession();
+            currentSession.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            return;
-        }
-        try {
-            commitTransaction(session.getTransaction());
-        } finally {
-            close(session);
         }
     }
 
-    private static void commitTransaction(Transaction transaction) {
+    private static void commitTransaction(Transaction transaction, Session session) {
         try {
             transaction.commit();
         } catch (Exception e) {

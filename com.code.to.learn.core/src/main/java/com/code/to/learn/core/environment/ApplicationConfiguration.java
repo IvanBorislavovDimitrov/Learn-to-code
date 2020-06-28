@@ -53,9 +53,8 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_DBCP_MAX_IDLE_VALUE = "3";
     private static final String HIBERNATE_DBCP_MIN_IDLE_VALUE = "0";
     private static final String HIBERNATE_DBCP_MAX_WAIT_MILLIS_VALUE = "-1";
-    private static final String HIBERNATE_SESSION_CONTEXT_CLASS_VALUE = "org.hibernate.context.internal.ManagedSessionContext";
+    private static final String HIBERNATE_SESSION_CONTEXT_CLASS_VALUE = "org.hibernate.context.internal.ThreadLocalSessionContext";
     private static final String DROPBOX_CLIENT_IDENTIFIER_VALUE = "dropbox/learn-to-code";
-    private static final String DROPBOX_ACCESS_TOKEN_VALUE = "Hvk-7gwjBJAAAAAAAAAA993f88QX0MWFA3tKDlNZz3kmE3UgePDW_coEu3QJwY5B";
     private static final int THREAD_POOL_SIZE_VALUE = 5;
     private static final int ASYNC_EXECUTOR_THREADS_COUNT_VALUE = 5;
     private static final int MAX_COURSES_ON_PAGE_VALUE = 3;
@@ -138,7 +137,7 @@ public class ApplicationConfiguration {
     }
 
     public String getDropboxAccessToken() {
-        return getOrDefault(DROPBOX_ACCESS_TOKEN_NAME, DROPBOX_ACCESS_TOKEN_VALUE);
+        return getOrDefault(DROPBOX_ACCESS_TOKEN_NAME, null);
     }
 
     public String getDropboxClientIdentifier() {

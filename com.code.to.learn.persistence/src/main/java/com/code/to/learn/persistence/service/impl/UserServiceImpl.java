@@ -141,7 +141,10 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
         User.LoginRecord loginRecordToRemove = loginRecords.stream()
                 .sorted()
                 .findFirst()
-                .get();
+                .orElse(null);
+        if (loginRecordToRemove == null) {
+            return;
+        }
         loginRecords.remove(loginRecordToRemove);
     }
 
