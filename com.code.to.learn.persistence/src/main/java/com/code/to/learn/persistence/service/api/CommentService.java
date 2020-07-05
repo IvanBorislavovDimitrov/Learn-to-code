@@ -7,4 +7,6 @@ import java.util.List;
 public interface CommentService extends GenericService<CommentServiceModel> {
 
     List<CommentServiceModel> findCommentsByCourseName(String courseName);
+
+    void deleteAllCommentsByCourseName(String courseName);
 }

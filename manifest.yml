@@ -4,9 +4,10 @@ applications:
   disk_quota: 2GB
   path: ./com.code.to.learn.web/target/com.code.to.learn.web-0.0.1-SNAPSHOT.war
   env:
-    SPRING_PROFILES_ACTIVE: cloud,postgresql
+    sub: cloud,postgresql
     CLIENT_URL: https://learn-to-code-frontend-reliable-platypus-ft.cfapps.sap.hana.ondemand.com
     HIBERNATE_CONNECTION_POOL_SIZE: 50
+    DROPBOX_ACCESS_TOKEN: Hvk-7gwjBJAAAAAAAAABTrT_cCCzeGtJQqDzXYU_-6vOAdJIx418XrtclwOky6we
   services:
     - learn-to-code-database
   routes:

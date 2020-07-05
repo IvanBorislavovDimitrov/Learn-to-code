@@ -13,6 +13,7 @@ import com.code.to.learn.persistence.domain.model.CourseServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.exception.basic.NotFoundException;
+import com.code.to.learn.persistence.service.api.CommentService;
 import com.code.to.learn.persistence.service.api.CourseCategoryService;
 import com.code.to.learn.persistence.service.api.CourseService;
 import com.code.to.learn.persistence.service.api.UserService;
@@ -56,12 +57,13 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     private final RemoteStorageFileGetter remoteStorageFileGetter;
     private final ApplicationConfiguration configuration;
     private final RatingEstimatorFactory ratingEstimatorFactory;
+    private final CommentService commentService;
 
     @Autowired
     public CourseServiceApiFacade(CourseService courseService, ModelMapper modelMapper, RemoteStorageFileOperator remoteStorageFileOperator,
                                   CourseValidator courseValidator, UserService userService,
                                   CourseCategoryService courseCategoryService, ExecutorService executorService,
-                                  RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration, RatingEstimatorFactory ratingEstimatorFactory) {
+                                  RemoteStorageFileGetter remoteStorageFileGetter, ApplicationConfiguration configuration, RatingEstimatorFactory ratingEstimatorFactory, CommentService commentService) {
         super(modelMapper);
         this.courseService = courseService;
         this.remoteStorageFileOperator = remoteStorageFileOperator;
@@ -72,6 +74,7 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
         this.remoteStorageFileGetter = remoteStorageFileGetter;
         this.configuration = configuration;
         this.ratingEstimatorFactory = ratingEstimatorFactory;
+        this.commentService = commentService;
     }
 
     @Override
@@ -357,6 +360,7 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     @Override
     public ResponseEntity<CourseResponseModel> deleteCourse(String courseName) {
         CourseServiceModel courseServiceModel = courseService.findByName(courseName);
+        commentService.deleteAllCommentsByCourseName(courseServiceModel.getName());
         CourseServiceModel deletedCourseServiceModel = courseService.deleteById(courseServiceModel.getId());
         return ResponseEntity.ok(toOutput(deletedCourseServiceModel));
     }

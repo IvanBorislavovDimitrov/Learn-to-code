@@ -27,6 +27,12 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment, CommentServi
     }
 
     @Override
+    public void deleteAllCommentsByCourseName(String courseName) {
+        List<Comment> comments = commentDao.findAllByCourseName(courseName);
+        comments.forEach(commentDao::delete);
+    }
+
+    @Override
     protected Class<Comment> getEntityClass() {
         return Comment.class;
     }
