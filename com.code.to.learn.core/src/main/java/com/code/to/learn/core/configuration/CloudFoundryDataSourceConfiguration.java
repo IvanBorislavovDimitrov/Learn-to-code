@@ -90,14 +90,14 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_CONNECTION_URL, "jdbc:postgresql://localhost:5432/code");
             properties.setProperty(HIBERNATE_DIALECT, applicationConfiguration.getHibernateDialect());
             properties.setProperty(HIBERNATE_CONNECTION_DRIVER_CLASS, "org.postgresql.Driver");
-            properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "30");
+            properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "100");
             properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "update");
             properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, "class");
             properties.setProperty(HIBERNATE_SHOW_SQL, "true");
-            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "5");
-            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "5");
-            properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "3");
-            properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, "2");
+            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "20");
+            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "20");
+            properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "30");
+            properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, "30");
             properties.setProperty(HIBERNATE_DBCP_MAX_WAIT_MILLIS, "-1");
             properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, applicationConfiguration.getHibernateSessionContext());
 
