@@ -47,7 +47,7 @@ public class ApplicationConfiguration {
     private static final String HIBERNATE_CONNECTION_POOL_SIZE_VALUE = "3";
     private static final String HIBERNATE_DDL_STRATEGY_VALUE = "update";
     private static final String HIBERNATE_ARCHIVE_AUTO_DETECTION_VALUE = "class";
-    private static final String HIBERNATE_SHOW_SQL_VALUE = "true";
+    private static final String HIBERNATE_SHOW_SQL_VALUE = "false";
     private static final String HIBERNATE_DBCP_INITIAL_SIZE_VALUE = "2";
     private static final String HIBERNATE_DBCP_MAX_TOTAL_VALUE = "3";
     private static final String HIBERNATE_DBCP_MAX_IDLE_VALUE = "3";
