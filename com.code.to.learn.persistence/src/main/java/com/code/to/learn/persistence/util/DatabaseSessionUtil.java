@@ -20,6 +20,7 @@ public final class DatabaseSessionUtil {
         try {
             Session session = sessionFactory.getCurrentSession();
             beginTransactionIfNotActive(session.getTransaction());
+            ManagedSessionContext.bind(session);
             return session;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -36,6 +37,7 @@ public final class DatabaseSessionUtil {
     private static Session openNewSession(SessionFactory sessionFactory) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        ManagedSessionContext.bind(session);
         return session;
     }
 
@@ -63,23 +65,24 @@ public final class DatabaseSessionUtil {
     }
 
     public static void closeWithCommit(SessionFactory sessionFactory) {
-       try {
-           Session session;
-           try {
-               session = sessionFactory.getCurrentSession();
-           } catch (Exception e) {
-               LOGGER.error(e.getMessage(), e);
-               return;
-           }
-           commitTransaction(session.getTransaction(), session);
-       } finally {
-           close(sessionFactory);
-       }
+        try {
+            Session session;
+            try {
+                session = sessionFactory.getCurrentSession();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+                return;
+            }
+            commitTransaction(session.getTransaction(), session);
+        } finally {
+            close(sessionFactory);
+        }
     }
 
     private static void close(SessionFactory sessionFactory) {
         try {
             Session currentSession = sessionFactory.getCurrentSession();
+            ManagedSessionContext.unbind(sessionFactory);
             currentSession.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
