@@ -93,7 +93,7 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "100");
             properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "update");
             properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, "class");
-            properties.setProperty(HIBERNATE_SHOW_SQL, "true");
+            properties.setProperty(HIBERNATE_SHOW_SQL, applicationConfiguration.hibernateShowSql());
             properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "20");
             properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "20");
             properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "30");

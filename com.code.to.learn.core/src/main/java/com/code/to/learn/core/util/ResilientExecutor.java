@@ -1,6 +1,7 @@
 package com.code.to.learn.core.util;
 
 import com.code.to.learn.core.constant.Messages;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,10 +34,10 @@ public class ResilientExecutor {
                 return supplier.execute();
             } catch (Exception e) {
                 if (retries-- == 0) {
-                    throw new RuntimeException(e.getMessage(), e);
+                    throw new LCException(e.getMessage(), e);
                 }
                 sleep(TIME_BETWEEN_RETRIES);
-                LOGGER.debug(MessageFormat.format(Messages.EXECUTION_RETRIED, retries, this.retries));
+                LOGGER.info(MessageFormat.format(Messages.EXECUTION_RETRIED, retries, this.retries));
             }
         }
     }

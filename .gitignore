@@ -28,4 +28,3 @@ rebel.xml
 com.code.to.learn.web/src/main/webapp/WEB-INF/
 *.log
 *.logs
-manifest.yml

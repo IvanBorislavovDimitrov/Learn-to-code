@@ -1,5 +1,6 @@
 package com.code.to.learn.core.dropbox;
 
+import com.code.to.learn.core.util.ResilientExecutor;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.dropbox.core.DbxDownloader;
 import com.dropbox.core.DbxException;
@@ -16,33 +17,27 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class DropboxClientV2Impl implements DropboxClient {
+public class ResilientDropboxClientV2Impl implements DropboxClient {
 
     private final DbxClientV2 client;
+    private final ResilientExecutor resilientExecutor;
 
     @Autowired
-    public DropboxClientV2Impl(DropboxClientFactory dropboxClientFactory) {
+    public ResilientDropboxClientV2Impl(DropboxClientFactory dropboxClientFactory, ResilientExecutor resilientExecutor) {
         client = dropboxClientFactory.createDropboxClient();
+        this.resilientExecutor = resilientExecutor;
     }
 
     @Override
     public FullAccount getCurrentAccount() {
-        try {
-            return client.users().getCurrentAccount();
-        } catch (DbxException e) {
-            throw new LCException(e.getMessage(), e);
-        }
+        return resilientExecutor.executeWithRetry(() -> client.users().getCurrentAccount());
     }
 
     @Override
     public FileMetadata uploadFile(InputStream inputStream, String filename) {
-        try {
-            return client.files().uploadBuilder(insertFrontSlash(filename))
-                    .withMode(WriteMode.OVERWRITE)
-                    .uploadAndFinish(inputStream);
-        } catch (IOException | DbxException e) {
-            throw new LCException(e.getMessage(), e);
-        }
+        return resilientExecutor.executeWithRetry(() -> client.files().uploadBuilder(insertFrontSlash(filename))
+                .withMode(WriteMode.OVERWRITE)
+                .uploadAndFinish(inputStream));
     }
 
     @Override
@@ -50,7 +45,7 @@ public class DropboxClientV2Impl implements DropboxClient {
         try {
             DbxDownloader<FileMetadata> fileToDownload = client.files().download(insertFrontSlash(filename));
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-            return fileToDownload.download(fileOutputStream);
+            return resilientExecutor.executeWithRetry(() -> fileToDownload.download(fileOutputStream));
         } catch (DbxException | IOException e) {
             throw new LCException(e.getMessage(), e);
         }
@@ -58,24 +53,16 @@ public class DropboxClientV2Impl implements DropboxClient {
 
     @Override
     public InputStream getFileAsInputStream(String filename, Long offset) {
-        try {
-            return client.files()
-                    .downloadBuilder(insertFrontSlash(filename))
-                    .range(offset)
-                    .start()
-                    .getInputStream();
-        } catch (DbxException e) {
-            throw new LCException(e.getMessage(), e);
-        }
+        return resilientExecutor.executeWithRetry(() -> client.files()
+                .downloadBuilder(insertFrontSlash(filename))
+                .range(offset)
+                .start()
+                .getInputStream());
     }
 
     @Override
     public void removeFile(String filename) {
-        try {
-            client.files().deleteV2(insertFrontSlash(filename));
-        } catch (DbxException e) {
-            throw new LCException(e.getMessage(), e);
-        }
+        resilientExecutor.executeWithRetry(() -> client.files().deleteV2(insertFrontSlash(filename)));
     }
 
     private String insertFrontSlash(String filename) {
