@@ -144,6 +144,11 @@ public class CourseServiceImpl extends NamedElementServiceImpl<Course, CourseSer
     }
 
     @Override
+    public long getVideoSize(String courseName, String videoName) {
+        return courseDao.getVideoSize(courseName, videoName);
+    }
+
+    @Override
     protected Class<CourseServiceModel> getModelClass() {
         return CourseServiceModel.class;
     }

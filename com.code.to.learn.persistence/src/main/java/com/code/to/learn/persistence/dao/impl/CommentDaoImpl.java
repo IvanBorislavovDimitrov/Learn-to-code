@@ -23,7 +23,7 @@ public class CommentDaoImpl extends GenericDaoImpl<Comment> implements CommentDa
 
     @Override
     public List<Comment> findAllByCourseName(String courseName) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Comment> commentCriteriaQuery = criteriaBuilder.createQuery(Comment.class);
         Root<Comment> commentRoot = commentCriteriaQuery.from(Comment.class);

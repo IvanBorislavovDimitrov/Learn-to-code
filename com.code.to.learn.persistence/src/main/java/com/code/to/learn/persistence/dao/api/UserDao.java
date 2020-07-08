@@ -23,4 +23,8 @@ public interface UserDao extends GenericDao<User> {
 
     Optional<User> findByResetPasswordToken(String resetPasswordToken);
 
+    Optional<User> forceFindByUsername(String username);
+
+    Optional<User> forceUpdate(User user);
+
 }

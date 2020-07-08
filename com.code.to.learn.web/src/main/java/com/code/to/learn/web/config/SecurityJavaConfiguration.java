@@ -1,5 +1,6 @@
 package com.code.to.learn.web.config;
 
+import com.code.to.learn.core.interceptor.HibernateSessionManagementInterceptor;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.persistence.service.api.UserService;
 import com.code.to.learn.util.parser.Parser;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -60,6 +62,8 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
         encodingFilter.setEncoding("UTF-8");
         encodingFilter.setForceEncoding(true);
+
+        HibernateSessionManagementInterceptor hibernateSessionManagementInterceptor = new HibernateSessionManagementInterceptor(sessionFactory);
 
         http.csrf()
                 .disable()
@@ -117,11 +121,11 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
-        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, sessionFactory, userService);
+        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, userService);
     }
 
     private SimpleUrlAuthenticationFailureHandler getFailureHandler() {
-        return new CustomUrlAuthenticationFailureHandler(sessionFactory);
+        return new CustomUrlAuthenticationFailureHandler();
     }
 
 }

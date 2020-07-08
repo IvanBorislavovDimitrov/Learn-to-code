@@ -2,10 +2,11 @@ package com.code.to.learn.persistence.dao.impl;
 
 import com.code.to.learn.persistence.dao.api.GenericDao;
 import com.code.to.learn.persistence.domain.entity.IdEntity;
-import com.code.to.learn.persistence.domain.entity.User;
+import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javax.persistence.NoResultException;
@@ -14,6 +15,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDao<E> {
 
@@ -25,7 +29,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
 
     @Override
     public List<E> findAll() {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -41,7 +45,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
 
     @Override
     public void persist(E entity) {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory)
+        DatabaseSessionUtil.getCurrentSession(sessionFactory)
                 .persist(entity);
     }
 
@@ -57,25 +61,25 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
 
     @Override
     public Optional<E> delete(E entity) {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).delete(entity);
+        DatabaseSessionUtil.getCurrentSession(sessionFactory).delete(entity);
         return Optional.of(entity);
     }
 
     @Override
     public Optional<E> update(E entity) {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).update(entity);
+        DatabaseSessionUtil.getCurrentSession(sessionFactory).update(entity);
         return Optional.of(entity);
     }
 
     @Override
     public Optional<E> merge(E entity) {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory).merge(entity);
+        DatabaseSessionUtil.getCurrentSession(sessionFactory).merge(entity);
         return Optional.of(entity);
     }
 
     @Override
     public long count() {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -85,7 +89,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
 
     @Override
     public Optional<E> findByField(String field, Object value) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<E> root = criteriaQuery.from(getDomainClassType());
@@ -107,6 +111,24 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
 
     private <T> Optional<T> getSingleResult(Session session, CriteriaQuery<T> criteriaQuery) {
         return Optional.of(session.createQuery(criteriaQuery).getSingleResult());
+    }
+
+    protected <T> T executeInNewTransaction(BiFunction<Session, Transaction, T> supplier) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = DatabaseSessionUtil.openNewSession(sessionFactory);
+            transaction = DatabaseSessionUtil.beginTransaction(session);
+            T result = supplier.apply(session, transaction);
+            DatabaseSessionUtil.commitTransaction(transaction);
+            return result;
+        } catch (Exception e) {
+            DatabaseSessionUtil.rollbackTransaction(transaction);
+            throw new LCException(e.getMessage(), e);
+        } finally {
+            DatabaseSessionUtil.closeSession(sessionFactory, session);
+        }
+
     }
 
     protected abstract Class<E> getDomainClassType();

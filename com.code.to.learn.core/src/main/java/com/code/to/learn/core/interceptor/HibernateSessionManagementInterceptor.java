@@ -1,6 +1,7 @@
 package com.code.to.learn.core.interceptor;
 
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,12 +22,19 @@ public class HibernateSessionManagementInterceptor implements HandlerInterceptor
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        if (request.getRequestURI() != null && request.getRequestURI().startsWith("/resource")) {
+            return true;
+        }
+        Session session = DatabaseSessionUtil.openNewSession(sessionFactory);
+        DatabaseSessionUtil.beginTransaction(session);
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        if (request.getRequestURI() != null && request.getRequestURI().startsWith("/resource")) {
+            return;
+        }
         if (response.getStatus() >= 200 && response.getStatus() <= 299) {
             DatabaseSessionUtil.closeWithCommit(sessionFactory);
             return;

@@ -22,4 +22,6 @@ public interface CourseDao extends GenericDao<Course> {
     Course markCourseAsRatedByUser(String courseName, String username);
 
     boolean hasUserRatedCourse(String courseName, String username);
+
+    long getVideoSize(String courseName, String videoName);
 }

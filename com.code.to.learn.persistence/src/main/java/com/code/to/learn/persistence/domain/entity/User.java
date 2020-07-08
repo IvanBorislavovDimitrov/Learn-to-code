@@ -321,7 +321,7 @@ public class User extends IdEntity<User> implements UserDetails {
 
         @Override
         public int compareTo(LoginRecord loginRecord) {
-            return loginRecord.getDate().compareTo(date);
+            return date.compareTo(loginRecord.getDate()); // asc
         }
     }
 }

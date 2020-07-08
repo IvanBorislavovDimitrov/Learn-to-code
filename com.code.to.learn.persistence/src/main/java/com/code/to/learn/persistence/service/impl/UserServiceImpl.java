@@ -121,13 +121,13 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
 
     @Override
     public void storeUserLoginInformation(String username, LocalDate date, String additionalInformation) {
-        User user = getOrThrowNotFound(() -> userDao.findByUsername(username), Messages.USERNAME_NOT_FOUND, username);
+        User user = getOrThrowNotFound(() -> userDao.forceFindByUsername(username), Messages.USERNAME_NOT_FOUND, username);
         User.LoginRecord loginRecord = new User.LoginRecord();
         loginRecord.setDate(date);
         loginRecord.setAdditionalInformation(additionalInformation);
         user.getLoginRecords().add(loginRecord);
         removeOldestLoginRecordIfNeeded(user.getLoginRecords());
-        userDao.update(user);
+        userDao.forceUpdate(user);
     }
 
     private void removeOldestLoginRecordIfNeeded(List<User.LoginRecord> loginRecords) {

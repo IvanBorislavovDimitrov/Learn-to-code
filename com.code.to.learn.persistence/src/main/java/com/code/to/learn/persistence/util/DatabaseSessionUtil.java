@@ -16,15 +16,11 @@ public final class DatabaseSessionUtil {
 
     }
 
-    public static Session getCurrentOrOpen(SessionFactory sessionFactory) {
-        try {
-            Session session = sessionFactory.getCurrentSession();
-            beginTransactionIfNotActive(session.getTransaction());
-            return session;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return openNewSession(sessionFactory);
-        }
+    public static Session getCurrentSession(SessionFactory sessionFactory) {
+        Session session = sessionFactory.getCurrentSession();
+        beginTransactionIfNotActive(session.getTransaction());
+        ManagedSessionContext.bind(session);
+        return session;
     }
 
     private static void beginTransactionIfNotActive(Transaction transaction) {
@@ -33,10 +29,14 @@ public final class DatabaseSessionUtil {
         }
     }
 
-    private static Session openNewSession(SessionFactory sessionFactory) {
+    public static Session openNewSession(SessionFactory sessionFactory) {
         Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        ManagedSessionContext.bind(session);
         return session;
+    }
+
+    public static Transaction beginTransaction(Session session) {
+        return session.beginTransaction();
     }
 
     public static void closeWithRollback(SessionFactory sessionFactory) {
@@ -48,49 +48,65 @@ public final class DatabaseSessionUtil {
                 LOGGER.error(e.getMessage(), e);
                 return;
             }
-            rollbackTransaction(session.getTransaction(), session);
+            rollbackTransaction(session.getTransaction());
         } finally {
             close(sessionFactory);
         }
     }
 
-    private static void rollbackTransaction(Transaction transaction, Session session) {
+    public static void rollbackTransaction(Transaction transaction) {
         try {
-            transaction.rollback();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
 
     public static void closeWithCommit(SessionFactory sessionFactory) {
-       try {
-           Session session;
-           try {
-               session = sessionFactory.getCurrentSession();
-           } catch (Exception e) {
-               LOGGER.error(e.getMessage(), e);
-               return;
-           }
-           commitTransaction(session.getTransaction(), session);
-       } finally {
-           close(sessionFactory);
-       }
+        try {
+            Session session;
+            try {
+                session = sessionFactory.getCurrentSession();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+                return;
+            }
+            commitTransaction(session.getTransaction());
+        } finally {
+            close(sessionFactory);
+        }
+    }
+
+    public static void commitTransaction(Transaction transaction) {
+        try {
+            if (transaction != null && transaction.isActive()) {
+                transaction.commit();
+            }
+        } catch (Exception e) {
+            throw new LCException(e.getMessage(), e);
+        }
+    }
+
+    public static void closeSession(SessionFactory sessionFactory, Session session) {
+        if (session != null) {
+            try {
+                session.close();
+                ManagedSessionContext.unbind(sessionFactory);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
 
     private static void close(SessionFactory sessionFactory) {
         try {
             Session currentSession = sessionFactory.getCurrentSession();
+            ManagedSessionContext.unbind(sessionFactory);
             currentSession.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private static void commitTransaction(Transaction transaction, Session session) {
-        try {
-            transaction.commit();
-        } catch (Exception e) {
-            throw new LCException(e.getMessage(), e);
         }
     }
 

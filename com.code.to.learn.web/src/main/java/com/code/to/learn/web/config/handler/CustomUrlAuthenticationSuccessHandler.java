@@ -4,10 +4,10 @@ import com.code.to.learn.api.model.user.UserResponseModel;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.exception.basic.LCException;
 import com.code.to.learn.persistence.service.api.UserService;
-import com.code.to.learn.persistence.util.DatabaseSessionUtil;
 import com.code.to.learn.util.parser.Parser;
-import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -24,15 +24,15 @@ import static com.code.to.learn.web.constants.Messages.USER_SUCCESSFULLY_LOGGED;
 
 public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomUrlAuthenticationSuccessHandler.class);
+
     private final ModelMapper modelMapper;
     private final Parser parser;
-    private final SessionFactory sessionFactory;
     private final UserService userService;
 
-    public CustomUrlAuthenticationSuccessHandler(ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory, UserService userService) {
+    public CustomUrlAuthenticationSuccessHandler(ModelMapper modelMapper, Parser parser, UserService userService) {
         this.modelMapper = modelMapper;
         this.parser = parser;
-        this.sessionFactory = sessionFactory;
         this.userService = userService;
     }
 
@@ -59,8 +59,8 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
             userService.storeUserLoginInformation(username, LocalDate.now(), MessageFormat.format(USER_SUCCESSFULLY_LOGGED,
                     username, LocalDate.now(), LocalTime.now()));
         } catch (Exception e) {
-            DatabaseSessionUtil.closeWithRollback(sessionFactory);
+            LOGGER.error(e.getMessage(), e);
         }
-        DatabaseSessionUtil.closeWithCommit(sessionFactory);
+
     }
 }

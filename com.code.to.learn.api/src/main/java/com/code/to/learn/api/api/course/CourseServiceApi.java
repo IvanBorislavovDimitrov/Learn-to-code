@@ -51,4 +51,5 @@ public interface CourseServiceApi {
 
     ResponseEntity<List<UnpaidCourseResponseModel>> getCoursesThatAreStillUnpaid();
 
+    long getVideoSize(String courseName, String videoName);
 }

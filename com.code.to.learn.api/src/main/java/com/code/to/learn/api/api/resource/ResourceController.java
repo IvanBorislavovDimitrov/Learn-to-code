@@ -68,8 +68,7 @@ public class ResourceController {
     }
 
     private long getVideoFileSize(String courseName, String videoName) {
-        ResponseEntity<CourseResponseModel.CourseVideoResponseModel> video = courseServiceApi.getVideoByCourse(courseName, videoName);
-        return video.getBody().getVideoFileSize();
+        return courseServiceApi.getVideoSize(courseName, videoName);
     }
 
 }

@@ -4,6 +4,7 @@ import com.code.to.learn.persistence.dao.api.UserDao;
 import com.code.to.learn.persistence.domain.entity.Course;
 import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.util.DatabaseSessionUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -43,7 +44,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> findUsersByUsernameContaining(String username) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<User> root = criteriaQuery.from(getDomainClassType());
@@ -55,7 +56,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> findTeachers() {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(Course.class);
         Root<Course> courseRoot = criteriaQuery.from(Course.class);
@@ -67,7 +68,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> findAllUsersWithUnpaidCourses() {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> userRoot = userCriteriaQuery.from(User.class);
@@ -87,7 +88,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> findUsersByPage(int page, int maxResults) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<User> userRoot = userCriteriaQuery.from(getDomainClassType());
@@ -102,12 +103,36 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     @Override
     public Optional<User> findByResetPasswordToken(String resetPasswordToken) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(sessionFactory);
+        Session session = DatabaseSessionUtil.getCurrentSession(sessionFactory);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<User> root = criteriaQuery.from(getDomainClassType());
         criteriaQuery.select(root).where(criteriaBuilder.equal(criteriaBuilder.lower(root.get(User.RESET_PASSWORD_TOKEN)), resetPasswordToken));
         return getOrEmpty(session, criteriaQuery);
+    }
+
+    @Override
+    public Optional<User> forceFindByUsername(String username) {
+        return executeInNewTransaction((session, transaction) -> {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+            Root<User> root = criteriaQuery.from(getDomainClassType());
+            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(User.USERNAME), username));
+            Optional<User> user = getOrEmpty(session, criteriaQuery);
+            if (user.isPresent()) {
+                Hibernate.initialize(user.get().getLoginRecords());
+                Hibernate.initialize(user.get().getAuthorities());
+            }
+            return user;
+        });
+    }
+
+    @Override
+    public Optional<User> forceUpdate(User user) {
+        return executeInNewTransaction((session, transaction) -> {
+            session.update(user);
+            return Optional.of(user);
+        });
     }
 
     @Override

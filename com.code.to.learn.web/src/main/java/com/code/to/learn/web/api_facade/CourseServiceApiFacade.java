@@ -481,6 +481,11 @@ public class CourseServiceApiFacade extends ExtendableMapper<CourseServiceModel,
     }
 
     @Override
+    public long getVideoSize(String courseName, String videoName) {
+        return courseService.getVideoSize(courseName, videoName);
+    }
+
+    @Override
     protected Class<CourseServiceModel> getInputClass() {
         return CourseServiceModel.class;
     }

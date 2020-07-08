@@ -33,4 +33,6 @@ public interface CourseService extends GenericService<CourseServiceModel>, Named
     CourseServiceModel markCourseAsRatedByUser(String courseName, String username);
 
     boolean hasUserRatedCourse(String courseName, String username);
+
+    long getVideoSize(String courseName, String videoName);
 }

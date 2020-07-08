@@ -48,7 +48,7 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
     }
 
     private Query<Course> getCoursesOrderedByStartDate() {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> root = criteriaQuery.from(getDomainClassType());
@@ -59,7 +59,7 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public List<Course> findCourses(int page, int maxResults, String name, String category) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> courseRoot = criteriaQuery.from(getDomainClassType());
@@ -83,7 +83,7 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public long countByNameLike(String name) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<Course> root = criteriaQuery.from(getDomainClassType());
@@ -95,7 +95,7 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public List<Course> findBestSellers(int limit) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> courseCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> courseRoot = courseCriteriaQuery.from(getDomainClassType());
@@ -110,7 +110,7 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public List<Course> findMostCommented(int limit) {
-        Session session = DatabaseSessionUtil.getCurrentOrOpen(getSessionFactory());
+        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Course> courseCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
         Root<Course> courseRoot = courseCriteriaQuery.from(getDomainClassType());
@@ -140,6 +140,28 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
         return user.getRatedCourses().stream()
                 .map(Course::getName)
                 .anyMatch(currentCourseName -> Objects.equals(currentCourseName, courseName));
+    }
+
+    @Override
+    public long getVideoSize(String courseName, String videoName) {
+        return executeInNewTransaction((session, transaction) -> {
+            Course course = findCourseByName(session, courseName)
+                    .orElseThrow(() -> new NotFoundException(Messages.COURSE_NOT_FOUND, courseName));
+            Course.CourseVideo courseVideo = course.getVideosNames()
+                    .stream()
+                    .filter(video -> Objects.equals(video.getVideoFullName(), videoName))
+                    .findFirst()
+                    .get();
+            return courseVideo.getVideoFileSize();
+        });
+    }
+
+    private Optional<Course> findCourseByName(Session session, String name) {
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+        Root<Course> root = criteriaQuery.from(getDomainClassType());
+        criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(NAME), name));
+        return getOrEmpty(session, criteriaQuery);
     }
 
     @Override
