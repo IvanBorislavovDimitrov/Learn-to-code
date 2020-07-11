@@ -74,7 +74,7 @@ public class CloudFoundryDataSourceConfiguration {
 
     @Configuration
     @Profile("dev")
-    public class CloudFoundryDataSourceConfigurationDev {
+    public class LocalDatabaseConfiguration {
 
         @Bean
         public SessionFactory sessionFactory() {
@@ -89,16 +89,16 @@ public class CloudFoundryDataSourceConfiguration {
             properties.setProperty(HIBERNATE_CONNECTION_PASSWORD, "34273427");
             properties.setProperty(HIBERNATE_CONNECTION_URL, "jdbc:postgresql://localhost:5432/code");
             properties.setProperty(HIBERNATE_DIALECT, applicationConfiguration.getHibernateDialect());
-            properties.setProperty(HIBERNATE_CONNECTION_DRIVER_CLASS, "org.postgresql.Driver");
-            properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, "100");
-            properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, "update");
-            properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, "class");
+            properties.setProperty(HIBERNATE_CONNECTION_DRIVER_CLASS, applicationConfiguration.getHibernatePostgresqlDriver());
+            properties.setProperty(HIBERNATE_CONNECTION_POOL_SIZE, applicationConfiguration.getHibernateConnectionPool());
+            properties.setProperty(HIBERNATE_HBM_2_DDL_AUTO, applicationConfiguration.getHibernateDDLStrategy());
+            properties.setProperty(HIBERNATE_ARCHIVE_AUTODETECTION, applicationConfiguration.getHibernateArchiveAutodetection());
             properties.setProperty(HIBERNATE_SHOW_SQL, applicationConfiguration.hibernateShowSql());
-            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, "20");
-            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, "20");
-            properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, "30");
-            properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, "30");
-            properties.setProperty(HIBERNATE_DBCP_MAX_WAIT_MILLIS, "-1");
+            properties.setProperty(HIBERNATE_DBCP_INITIAL_SIZE, applicationConfiguration.getHibernateDBCPInitialSize());
+            properties.setProperty(HIBERNATE_DBCP_MAX_TOTAL, applicationConfiguration.getHibernateDBCPMaxTotal());
+            properties.setProperty(HIBERNATE_DBCP_MAX_IDLE, applicationConfiguration.getHibernateDBCPMaxIdle());
+            properties.setProperty(HIBERNATE_DBCP_MIN_IDLE, applicationConfiguration.getHibernateDBCPMinIdle());
+            properties.setProperty(HIBERNATE_DBCP_MAX_WAIT_MILLIS, applicationConfiguration.getHibernateDBCPMaxWait());
             properties.setProperty(HIBERNATE_CURRENT_SESSION_CONTEXT_CLASS, applicationConfiguration.getHibernateSessionContext());
 
             configuration.setProperties(properties);
