@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -56,8 +57,9 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
 
     private void trackSuccessfulUserLogin(String username) {
         try {
-            userService.storeUserLoginInformation(username, LocalDate.now(), MessageFormat.format(USER_SUCCESSFULLY_LOGGED,
-                    username, LocalDate.now(), LocalTime.now()));
+            String message = MessageFormat.format(USER_SUCCESSFULLY_LOGGED, username, LocalDate.now(), LocalTime.now());
+            message = new String(message.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8.displayName());
+            userService.storeUserLoginInformation(username, LocalDate.now(), message);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

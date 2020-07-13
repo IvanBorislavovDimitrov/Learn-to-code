@@ -14,8 +14,7 @@ public final class Messages {
     public static final String RESET_YOUR_PASSWORD = "Please click here: {0}, to reset your password!";
 
     // Info messages
-    public static final String EXECUTION_RETRIED = "Execution retries: times: {0}/{1}";
-    public static final String USER_SUCCESSFULLY_LOGGED = "User: \"{0}\" successfully logged. Date: \"{1}\" and time \"{2}\"";
+    public static final String USER_SUCCESSFULLY_LOGGED = "Потребителят: \"{0}\" успешно влезе в профила си. Дата: \"{1}\"; час: \"{2}\"";
 
     // Exception messages
     public static final String INVALID_GITHUB_VERIFICATION_CODE = "Invalid github verification code!";
