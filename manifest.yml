@@ -7,7 +7,11 @@ applications:
     sub: cloud,postgresql
     CLIENT_URL: https://learn-to-code-frontend-reliable-platypus-ft.cfapps.sap.hana.ondemand.com
     HIBERNATE_CONNECTION_POOL_SIZE: 50
-    DROPBOX_ACCESS_TOKEN: Hvk-7gwjBJAAAAAAAAABVch0WSiUATG6W8QeUAP72yFmW20vE7iZ8CQ2KNc-1dJN
+    DROPBOX_ACCESS_TOKEN: ""
+    JAVA_OPTS: "-Dfile.encoding=UTF-8"
+    JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
+    JBP_CONFIG_JAVA_OPTS: "java_opts: -Dfile.encoding=UTF-8"
+    LANG: "en_US.UTF-8"
   services:
     - learn-to-code-database
   routes:

@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -43,6 +44,12 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
         UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setCharacterEncoding("UTF-8");
         setResponseBody(response, userResponseModel);
         trackSuccessfulUserLogin(user.getUsername());
     }
@@ -58,7 +65,6 @@ public class CustomUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticati
     private void trackSuccessfulUserLogin(String username) {
         try {
             String message = MessageFormat.format(USER_SUCCESSFULLY_LOGGED, username, LocalDate.now(), LocalTime.now());
-            message = new String(message.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8.displayName());
             userService.storeUserLoginInformation(username, LocalDate.now(), message);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

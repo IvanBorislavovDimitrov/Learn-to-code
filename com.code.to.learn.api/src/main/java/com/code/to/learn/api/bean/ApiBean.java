@@ -11,6 +11,7 @@ public class ApiBean {
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        commonsMultipartResolver.setMaxUploadSize(3000 * 1024);
         return commonsMultipartResolver;
     }
 }
