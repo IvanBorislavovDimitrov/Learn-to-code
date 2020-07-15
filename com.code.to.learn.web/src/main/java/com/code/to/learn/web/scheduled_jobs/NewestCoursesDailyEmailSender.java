@@ -38,10 +38,10 @@ public class NewestCoursesDailyEmailSender {
     @Async
     public void sendDailyNewCourses() {
         int page = 0;
-        List<User> userServiceModels = userDao.findUsersByPage(page, MAX_USERS_BY_PAGE);
+        List<User> userServiceModels = userDao.forceFindUsersByPage(page, MAX_USERS_BY_PAGE);
         while (!userServiceModels.isEmpty()) {
             sendDailyEmails(userServiceModels);
-            userServiceModels = userDao.findUsersByPage(++page, MAX_USERS_BY_PAGE);
+            userServiceModels = userDao.forceFindUsersByPage(++page, MAX_USERS_BY_PAGE);
         }
     }
 

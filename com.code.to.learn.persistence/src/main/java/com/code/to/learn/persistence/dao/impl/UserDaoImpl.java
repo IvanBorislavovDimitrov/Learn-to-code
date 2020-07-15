@@ -87,18 +87,17 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public List<User> findUsersByPage(int page, int maxResults) {
-        Session session = DatabaseSessionUtil.getCurrentSession(getSessionFactory());
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
-        Root<User> userRoot = userCriteriaQuery.from(getDomainClassType());
-        userCriteriaQuery.select(userRoot);
-        Query<User> userQuery = session.createQuery(userCriteriaQuery);
-        userQuery.setFirstResult(page * maxResults);
-        userQuery.setMaxResults(maxResults);
-        List<User> users = userQuery.getResultList();
-        DatabaseSessionUtil.closeWithCommit(getSessionFactory());
-        return users;
+    public List<User> forceFindUsersByPage(int page, int maxResults) {
+        return executeInNewTransaction((session, transaction) -> {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(getDomainClassType());
+            Root<User> userRoot = userCriteriaQuery.from(getDomainClassType());
+            userCriteriaQuery.select(userRoot);
+            Query<User> userQuery = session.createQuery(userCriteriaQuery);
+            userQuery.setFirstResult(page * maxResults);
+            userQuery.setMaxResults(maxResults);
+            return userQuery.getResultList();
+        });
     }
 
     @Override
