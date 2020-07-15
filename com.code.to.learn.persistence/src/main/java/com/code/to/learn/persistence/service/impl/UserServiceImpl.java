@@ -122,8 +122,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, UserServiceModel> 
     @Override
     public void storeUserLoginInformation(String username, LocalDate date, String additionalInformation) {
         User user = getOrThrowNotFound(() -> userDao.forceFindByUsername(username), Messages.USERNAME_NOT_FOUND, username);
-        System.out.println(additionalInformation+ " Kurvii");
-
         User.LoginRecord loginRecord = new User.LoginRecord();
         loginRecord.setDate(date);
         loginRecord.setAdditionalInformation(additionalInformation);

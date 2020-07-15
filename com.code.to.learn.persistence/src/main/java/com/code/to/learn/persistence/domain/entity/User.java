@@ -20,22 +20,22 @@ public class User extends IdEntity<User> implements UserDetails {
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String RESET_PASSWORD_TOKEN = "resetPasswordToken";
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(length = 100, nullable = false, name = USERNAME)
+    @Column(nullable = false, name = USERNAME)
     private String username;
 
-    @Column(length = 100, nullable = false, unique = true, name = PHONE_NUMBER)
+    @Column(nullable = false, unique = true, name = PHONE_NUMBER)
     private String phoneNumber;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(length = 100, nullable = false, name = EMAIL)
+    @Column(nullable = false, name = EMAIL)
     private String email;
 
     @Column(nullable = false)
