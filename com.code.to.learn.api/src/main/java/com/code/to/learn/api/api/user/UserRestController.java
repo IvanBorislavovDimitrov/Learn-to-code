@@ -29,6 +29,9 @@ public class UserRestController {
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserResponseModel> register(@Valid UserBindingModel userBindingModel) {
+        if (userBindingModel.getProfilePicture() != null && userBindingModel.getProfilePicture().getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return userServiceApi.register(userBindingModel);
     }
 
@@ -100,6 +103,9 @@ public class UserRestController {
 
     @PostMapping(value = "/change-profile-picture/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponseModel> changeProfilePicture(@PathVariable String username, @RequestParam MultipartFile profilePicture) {
+        if (profilePicture != null && profilePicture.getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return userServiceApi.updateProfilePicture(username, profilePicture);
     }
 

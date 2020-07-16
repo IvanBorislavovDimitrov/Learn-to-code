@@ -63,7 +63,7 @@ public class ApplicationConfiguration {
     private static final String SMTP_AUTH_ENABLED_VALUE = "true";
     private static final String SMPT_START_TLS_ENABLED_VALUE = "true";
     private static final String SMTP_USERNAME_VALUE = "automaticmailsendercommunity@gmail.com";
-    private static final String SMTP_PASSWORD_VALUE = "uwzttwwzklrbpmdo";
+    private static final String SMTP_PASSWORD_VALUE = "buphvgmlikarayke";
     private static final String ACTIVATE_EMAIL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/activate/%s";
     private static final String CLIENT_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME);
     private static final String RESET_PASSWORD_URL_VALUE = EnvironmentGetter.getVariable(CLIENT_URL_NAME) + "/users/new-password/%s";

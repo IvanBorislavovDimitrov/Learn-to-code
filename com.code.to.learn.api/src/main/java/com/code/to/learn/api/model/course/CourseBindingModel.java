@@ -31,13 +31,10 @@ public class CourseBindingModel {
     @NotNull
     private String categoryName;
 
-    @NotNull
     private List<String> videosNames;
 
-    @NotNull
     private List<MultipartFile> videos;
 
-    @NotNull
     private MultipartFile thumbnail;
 
     public String getName() {

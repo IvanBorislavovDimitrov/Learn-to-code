@@ -23,11 +23,17 @@ public class CourseCategoryRestController {
 
     @PostMapping(value ="/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> add(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
+        if (courseCategoryBindingModel.getThumbnail().getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return courseCategoryServiceApi.add(courseCategoryBindingModel);
     }
 
     @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> update(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
+        if (courseCategoryBindingModel.getThumbnail().getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return courseCategoryServiceApi.update(courseCategoryBindingModel);
     }
 

@@ -25,6 +25,9 @@ public class CourseRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseResponseModel> addCourse(@Valid CourseBindingModel courseBindingModel) {
+        if (courseBindingModel.getThumbnail().getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return courseServiceApi.add(courseBindingModel);
     }
 
@@ -106,6 +109,9 @@ public class CourseRestController {
     @PostMapping(value = "/update")
         public ResponseEntity<CourseResponseModel> updateCourse(@Valid CourseBindingModel courseBindingModel,
                                                             @RequestParam(defaultValue = "false") boolean shouldUpdateContent) {
+        if (courseBindingModel.getThumbnail() != null && courseBindingModel.getThumbnail().getSize() > 20971520) {
+            throw new IllegalArgumentException("File too big");
+        }
         return courseServiceApi.updateCourse(courseBindingModel, shouldUpdateContent);
     }
 
