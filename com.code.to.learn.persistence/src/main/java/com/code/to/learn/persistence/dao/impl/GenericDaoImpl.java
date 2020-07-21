@@ -16,8 +16,6 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDao<E> {
 
@@ -126,7 +124,7 @@ public abstract class GenericDaoImpl<E extends IdEntity<E>> implements GenericDa
             DatabaseSessionUtil.rollbackTransaction(transaction);
             throw new LCException(e.getMessage(), e);
         } finally {
-            DatabaseSessionUtil.closeSession(sessionFactory, session);
+            DatabaseSessionUtil.closeSession(session);
         }
 
     }

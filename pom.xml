@@ -23,6 +23,8 @@
         <apache.http.client>4.5.10</apache.http.client>
         <junit.version>5.6.2</junit.version>
         <mockito.version>1.10.19</mockito.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <jaxb.version>2.3.0</jaxb.version>
     </properties>
 
     <modules>
@@ -140,7 +142,16 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
 
     </dependencies>
 </project>

@@ -30,9 +30,11 @@ public final class DatabaseSessionUtil {
     }
 
     public static Session openNewSession(SessionFactory sessionFactory) {
-        Session session = sessionFactory.openSession();
+        return sessionFactory.openSession();
+    }
+
+    public static void bindSessionToContext(Session session) {
         ManagedSessionContext.bind(session);
-        return session;
     }
 
     public static Transaction beginTransaction(Session session) {
@@ -89,15 +91,18 @@ public final class DatabaseSessionUtil {
         }
     }
 
-    public static void closeSession(SessionFactory sessionFactory, Session session) {
+    public static void closeSession(Session session) {
         if (session != null) {
             try {
                 session.close();
-                ManagedSessionContext.unbind(sessionFactory);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
         }
+    }
+
+    public static void unbindSessionFactory(SessionFactory sessionFactory) {
+        ManagedSessionContext.unbind(sessionFactory);
     }
 
     private static void close(SessionFactory sessionFactory) {

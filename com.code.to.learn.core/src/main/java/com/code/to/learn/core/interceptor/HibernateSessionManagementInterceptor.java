@@ -26,6 +26,7 @@ public class HibernateSessionManagementInterceptor implements HandlerInterceptor
             return true;
         }
         Session session = DatabaseSessionUtil.openNewSession(sessionFactory);
+        DatabaseSessionUtil.bindSessionToContext(session);
         DatabaseSessionUtil.beginTransaction(session);
         return true;
     }
@@ -35,10 +36,15 @@ public class HibernateSessionManagementInterceptor implements HandlerInterceptor
         if (request.getRequestURI() != null && request.getRequestURI().startsWith("/resource")) {
             return;
         }
-        if (response.getStatus() >= 200 && response.getStatus() <= 299) {
-            DatabaseSessionUtil.closeWithCommit(sessionFactory);
-            return;
+        try {
+            if (response.getStatus() >= 200 && response.getStatus() <= 299) {
+                DatabaseSessionUtil.closeWithCommit(sessionFactory);
+                return;
+            }
+            DatabaseSessionUtil.closeWithRollback(sessionFactory);
+        } finally {
+            DatabaseSessionUtil.unbindSessionFactory(sessionFactory);
         }
-        DatabaseSessionUtil.closeWithRollback(sessionFactory);
+
     }
 }

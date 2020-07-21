@@ -1,10 +1,14 @@
 package com.code.to.learn.api.api.user;
 
+import com.code.to.learn.api.authentication.Authenticator;
+import com.code.to.learn.api.model.authentication.AuthenticationRequest;
+import com.code.to.learn.api.model.authentication.JwtTokenResponse;
 import com.code.to.learn.api.model.user.*;
 import com.code.to.learn.api.util.UsernameGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +24,13 @@ public class UserRestController {
 
     private final UserServiceApi userServiceApi;
     private final UsernameGetter usernameGetter;
+    private final Authenticator authenticator;
 
     @Autowired
-    public UserRestController(UserServiceApi userServiceApi, UsernameGetter usernameGetter) {
+    public UserRestController(UserServiceApi userServiceApi, UsernameGetter usernameGetter, Authenticator authenticator) {
         this.userServiceApi = userServiceApi;
         this.usernameGetter = usernameGetter;
+        this.authenticator = authenticator;
     }
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -35,15 +41,12 @@ public class UserRestController {
         return userServiceApi.register(userBindingModel);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity<Object> preflightLogin() {
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping(value = "/logout")
-    public ResponseEntity<Object> logout(HttpSession httpSession) {
-        httpSession.invalidate();
-        return ResponseEntity.ok().build();
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<JwtTokenResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        authenticator.authenticate(usernamePasswordAuthenticationToken);
+        return userServiceApi.generateTokenForUser(authenticationRequest.getUsername());
     }
 
     @GetMapping

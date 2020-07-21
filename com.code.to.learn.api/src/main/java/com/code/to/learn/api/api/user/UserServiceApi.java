@@ -1,5 +1,6 @@
 package com.code.to.learn.api.api.user;
 
+import com.code.to.learn.api.model.authentication.JwtTokenResponse;
 import com.code.to.learn.api.model.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +34,6 @@ public interface UserServiceApi {
     ResponseEntity<UserResponseModel> deactivateProfile(String username);
 
     ResponseEntity<?> changeUserPassword(UserPasswordChangeBindingModel userPasswordChangeBindingModel);
+
+    ResponseEntity<JwtTokenResponse> generateTokenForUser(String username);
 }

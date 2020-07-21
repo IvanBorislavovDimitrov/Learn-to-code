@@ -1,6 +1,8 @@
 package com.code.to.learn.web.api_facade;
 
 import com.code.to.learn.api.api.user.UserServiceApi;
+import com.code.to.learn.api.jwt.JwtUtil;
+import com.code.to.learn.api.model.authentication.JwtTokenResponse;
 import com.code.to.learn.api.model.user.*;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.core.validator.UserValidator;
@@ -21,6 +23,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -258,6 +261,13 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
         userServiceModel.setPassword(passwordEncoder.encode(userPasswordChangeBindingModel.getNewPassword()));
         userService.update(userServiceModel);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<JwtTokenResponse> generateTokenForUser(String username) {
+        UserDetails userDetails = userService.findByUsername(username);
+        String jwt = JwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtTokenResponse(jwt));
     }
 
     @Override

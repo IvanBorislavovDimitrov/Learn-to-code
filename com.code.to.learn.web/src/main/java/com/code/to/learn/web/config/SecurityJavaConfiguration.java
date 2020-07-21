@@ -2,25 +2,22 @@ package com.code.to.learn.web.config;
 
 import com.code.to.learn.core.interceptor.HibernateSessionManagementInterceptor;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
-import com.code.to.learn.persistence.service.api.UserService;
-import com.code.to.learn.util.parser.Parser;
-import com.code.to.learn.web.config.handler.CustomUrlAuthenticationFailureHandler;
-import com.code.to.learn.web.config.handler.CustomUrlAuthenticationSuccessHandler;
+import com.code.to.learn.web.filter.JwtFilter;
 import org.hibernate.SessionFactory;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -35,20 +32,16 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
-    private final ModelMapper modelMapper;
-    private final Parser parser;
     private final SessionFactory sessionFactory;
-    private final UserService userService;
+    private final JwtFilter jwtFilter;
 
     @Autowired
     public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService,
-                                     ModelMapper modelMapper, Parser parser, SessionFactory sessionFactory, UserService userService) {
+                                     SessionFactory sessionFactory, JwtFilter jwtFilter) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.modelMapper = modelMapper;
-        this.parser = parser;
         this.sessionFactory = sessionFactory;
-        this.userService = userService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Override
@@ -86,16 +79,11 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
                         "/courses/unpaid", "/courses/add", "/courses/update", "/course/delete/**")
                 .hasRole(UserRole.ROLE_MODERATOR.getValue())
                 .and()
-                .formLogin()
-                .loginPage("/users/login")
-                .successHandler(getSuccessHandler())
-                .failureHandler(getFailureHandler())
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .permitAll()
-                .and()
-                .addFilterBefore(encodingFilter, CsrfFilter.class);
+                .addFilterBefore(encodingFilter, CsrfFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -116,16 +104,14 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
         return new CorsFilter(source);
     }
 
+    @Bean
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
     private RestAuthenticationEntryPoint getRestAuthenticationEntryPoint() {
         return new RestAuthenticationEntryPoint();
-    }
-
-    private CustomUrlAuthenticationSuccessHandler getSuccessHandler() {
-        return new CustomUrlAuthenticationSuccessHandler(modelMapper, parser, userService);
-    }
-
-    private SimpleUrlAuthenticationFailureHandler getFailureHandler() {
-        return new CustomUrlAuthenticationFailureHandler();
     }
 
 }
