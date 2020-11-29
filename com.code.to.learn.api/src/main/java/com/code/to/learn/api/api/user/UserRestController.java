@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +34,10 @@ public class UserRestController {
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserResponseModel> register(@Valid UserBindingModel userBindingModel) {
-        if (userBindingModel.getProfilePicture() != null && userBindingModel.getProfilePicture().getSize() > 20971520) {
-            throw new IllegalArgumentException("File too big");
-        }
         return userServiceApi.register(userBindingModel);
     }
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JwtTokenResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -124,11 +120,9 @@ public class UserRestController {
     }
 
     @PostMapping(value = "/update/deactivate")
-    public ResponseEntity<UserResponseModel> deactivateCurrentUser(HttpSession httpSession) {
+    public ResponseEntity<UserResponseModel> deactivateCurrentUser() {
         String loggedUserUsername = usernameGetter.getLoggedInUserUsername();
-        ResponseEntity<UserResponseModel> userResponseModelResponseEntity = userServiceApi.deactivateProfile(loggedUserUsername);
-        httpSession.invalidate();
-        return userResponseModelResponseEntity;
+        return userServiceApi.deactivateProfile(loggedUserUsername);
     }
 
     @PatchMapping(value = "/update/password", consumes = MediaType.APPLICATION_JSON_VALUE)

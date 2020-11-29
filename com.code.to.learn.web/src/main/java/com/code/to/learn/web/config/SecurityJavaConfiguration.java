@@ -55,9 +55,6 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
         encodingFilter.setEncoding("UTF-8");
         encodingFilter.setForceEncoding(true);
-
-        HibernateSessionManagementInterceptor hibernateSessionManagementInterceptor = new HibernateSessionManagementInterceptor(sessionFactory);
-
         http.csrf()
                 .disable()
                 .cors()

@@ -12,7 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.version>5.2.2.RELEASE</spring.version>
         <spring.security.version>5.2.1.RELEASE</spring.security.version>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
         <jackson.version>2.9.10</jackson.version>
@@ -25,6 +25,8 @@
         <mockito.version>1.10.19</mockito.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <common.codec.version>1.14</common.codec.version>
+        <java.annotation.version>1.3.2</java.annotation.version>
     </properties>
 
     <modules>
@@ -47,14 +49,6 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.plugin.version}</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 
@@ -62,8 +56,14 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.14</version>
+            <version>${common.codec.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${java.annotation.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>

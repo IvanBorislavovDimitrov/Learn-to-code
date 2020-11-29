@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 public class GenericExceptionHandler {
 
     @ExceptionHandler({UserException.class, CourseException.class, GithubException.class, InvalidTokenException.class})
-    public ResponseEntity<ApiErrorResponse> userExceptionOccurred(Exception exception) {
+    public ResponseEntity<ApiErrorResponse> handleUserException(Exception exception) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message(exception.getMessage())
@@ -28,4 +29,15 @@ public class GenericExceptionHandler {
                 .body(apiErrorResponse);
     }
 
+    @ExceptionHandler({ResponseStatusException.class})
+    public ResponseEntity<ApiErrorResponse> handleResponseStatusException(ResponseStatusException responseStatusException) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse.Builder()
+                .code(responseStatusException.getStatus().value())
+                .message(responseStatusException.getMessage())
+                .type(ResponseStatusException.class.getSimpleName())
+                .build();
+        return ResponseEntity.status(responseStatusException.getStatus())
+                .header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(apiErrorResponse);
+    }
 }

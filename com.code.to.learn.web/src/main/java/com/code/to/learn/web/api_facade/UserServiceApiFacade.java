@@ -23,6 +23,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.code.to.learn.api.constant.Constants.DATE_PATTERN;
+import static com.code.to.learn.persistence.domain.model.UserServiceModel.ROLES_ATTRIBUTE;
 import static com.code.to.learn.web.constants.Constants.DEFAULT_PICTURE_NAME;
 import static com.code.to.learn.web.constants.Constants.PROFILE_PICTURE_EXTENSION;
 
@@ -265,9 +267,13 @@ public class UserServiceApiFacade extends ExtendableMapper<UserServiceModel, Use
 
     @Override
     public ResponseEntity<JwtTokenResponse> generateTokenForUser(String username) {
-        UserDetails userDetails = userService.findByUsername(username);
-        String jwt = JwtUtil.generateToken(userDetails);
+        UserServiceModel userServiceModel = userService.findByUsername(username);
+        String jwt = JwtUtil.generateToken(userServiceModel, createUserRolesTokenModel(userServiceModel.getParsedRoles()));
         return ResponseEntity.ok(new JwtTokenResponse(jwt));
+    }
+
+    private UserRolesTokenModel createUserRolesTokenModel(List<String> parsedRoles) {
+        return new UserRolesTokenModel(ROLES_ATTRIBUTE, parsedRoles);
     }
 
     @Override

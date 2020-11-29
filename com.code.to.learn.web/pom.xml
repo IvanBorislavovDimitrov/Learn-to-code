@@ -12,6 +12,7 @@
 
 	<properties>
 		<java.mail.version>1.4.7</java.mail.version>
+		<apache.commons.version>1.9</apache.commons.version>
 	</properties>
 
 	<build>
@@ -36,6 +37,11 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>${java.mail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>${apache.commons.version}</version>
 		</dependency>
 
 	</dependencies>

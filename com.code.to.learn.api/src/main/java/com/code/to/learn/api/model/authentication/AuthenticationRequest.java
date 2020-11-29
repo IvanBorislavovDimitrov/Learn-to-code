@@ -1,12 +1,12 @@
 package com.code.to.learn.api.model.authentication;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class AuthenticationRequest {
 
-    @NotNull
+    @NotBlank
     private String username;
-    @NotNull
+    @NotBlank
     private String password;
 
     public String getUsername() {

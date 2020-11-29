@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class UserServiceModel extends IdServiceModel implements UserDetails {
 
+    public static final String ROLES_ATTRIBUTE = "roles";
+
     private String firstName;
     private String lastName;
     private String username;
@@ -153,6 +155,18 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
 
     public void setLoginRecords(List<LoginRecord> loginRecords) {
         this.loginRecords = loginRecords;
+    }
+
+    public List<String> getParsedRoles() {
+        return getRoles()
+                .stream()
+                .map(RoleServiceModel::getName)
+                .map(this::removeRolePrefixIfExists)
+                .collect(Collectors.toList());
+    }
+
+    private String removeRolePrefixIfExists(String roleName) {
+        return roleName.startsWith("ROLE_") ? roleName.split("ROLE_")[1] : roleName;
     }
 
     @Override
