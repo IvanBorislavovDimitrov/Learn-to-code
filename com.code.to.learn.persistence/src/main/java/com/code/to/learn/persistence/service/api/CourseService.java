@@ -1,7 +1,6 @@
 package com.code.to.learn.persistence.service.api;
 
 import com.code.to.learn.persistence.domain.entity.Course;
-import com.code.to.learn.persistence.domain.entity.User;
 import com.code.to.learn.persistence.domain.model.CourseServiceModel;
 
 import java.util.List;

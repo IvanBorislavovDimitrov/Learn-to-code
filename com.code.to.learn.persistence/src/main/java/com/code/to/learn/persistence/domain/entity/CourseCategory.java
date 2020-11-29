@@ -21,7 +21,7 @@ public class CourseCategory extends IdEntity<CourseCategory> implements NamedEle
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Course> courses = new ArrayList<>();
-    
+
     @Override
     public String getName() {
         return name;

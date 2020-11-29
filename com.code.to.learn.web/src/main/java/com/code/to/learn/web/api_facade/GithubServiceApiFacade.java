@@ -10,7 +10,6 @@ import com.code.to.learn.core.client.UncheckedEntityUtils;
 import com.code.to.learn.core.constant.Constants;
 import com.code.to.learn.core.environment.ApplicationConfiguration;
 import com.code.to.learn.persistence.constant.Messages;
-import com.code.to.learn.persistence.domain.entity.GithubAccessToken;
 import com.code.to.learn.persistence.domain.model.GithubAccessTokenServiceModel;
 import com.code.to.learn.persistence.domain.model.UserServiceModel;
 import com.code.to.learn.persistence.exception.basic.LCException;

@@ -21,7 +21,7 @@ public class CourseCategoryRestController {
         this.courseCategoryServiceApi = courseCategoryServiceApi;
     }
 
-    @PostMapping(value ="/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CourseCategoryResponseModel> add(@Valid CourseCategoryBindingModel courseCategoryBindingModel) {
         if (courseCategoryBindingModel.getThumbnail().getSize() > 20971520) {
             throw new IllegalArgumentException("File too big");

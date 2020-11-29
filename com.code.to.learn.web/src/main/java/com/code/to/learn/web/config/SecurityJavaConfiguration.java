@@ -1,6 +1,5 @@
 package com.code.to.learn.web.config;
 
-import com.code.to.learn.core.interceptor.HibernateSessionManagementInterceptor;
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.web.filter.JwtFilter;
 import org.hibernate.SessionFactory;

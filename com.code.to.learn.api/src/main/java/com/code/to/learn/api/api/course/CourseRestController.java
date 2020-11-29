@@ -107,7 +107,7 @@ public class CourseRestController {
     }
 
     @PostMapping(value = "/update")
-        public ResponseEntity<CourseResponseModel> updateCourse(@Valid CourseBindingModel courseBindingModel,
+    public ResponseEntity<CourseResponseModel> updateCourse(@Valid CourseBindingModel courseBindingModel,
                                                             @RequestParam(defaultValue = "false") boolean shouldUpdateContent) {
         if (courseBindingModel.getThumbnail() != null && courseBindingModel.getThumbnail().getSize() > 20971520) {
             throw new IllegalArgumentException("File too big");

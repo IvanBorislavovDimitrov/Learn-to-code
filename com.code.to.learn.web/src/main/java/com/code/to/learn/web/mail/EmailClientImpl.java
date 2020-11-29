@@ -8,13 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -22,10 +16,7 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
-import static com.code.to.learn.web.constants.Constants.MAIL_SMPT_START_TLS_ENABLED;
-import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_AUTH;
-import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_HOST;
-import static com.code.to.learn.web.constants.Constants.MAIL_SMTP_PORT;
+import static com.code.to.learn.web.constants.Constants.*;
 
 @Component
 public class EmailClientImpl implements EmailClient {
