@@ -181,6 +181,7 @@ public class GithubServiceApiFacade extends ExtendableMapper<GithubAccessTokenSe
         githubService.save(githubAccessTokenServiceModel);
         GithubAccessTokenServiceModel updateEntity = githubService.findByAccessToken(githubAccessTokenResponseModel.getAccessToken());
         userServiceModel.setGithubAccessToken(updateEntity);
+        updateEntity.setUserServiceModel(userServiceModel);
         userService.update(userServiceModel);
     }
 
