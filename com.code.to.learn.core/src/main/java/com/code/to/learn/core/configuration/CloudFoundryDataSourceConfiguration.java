@@ -85,7 +85,7 @@ public class CloudFoundryDataSourceConfiguration {
             StandardServiceRegistryBuilder standardServiceRegistryBuilder = new StandardServiceRegistryBuilder();
 
             Properties properties = new Properties();
-            properties.setProperty(HIBERNATE_CONNECTION_USERNAME, "postgres");
+            properties.setProperty(HIBERNATE_CONNECTION_USERNAME, "ivan");
             properties.setProperty(HIBERNATE_CONNECTION_PASSWORD, "34273427");
             properties.setProperty(HIBERNATE_CONNECTION_URL, "jdbc:postgresql://localhost:5432/code");
             properties.setProperty(HIBERNATE_DIALECT, applicationConfiguration.getHibernateDialect());
