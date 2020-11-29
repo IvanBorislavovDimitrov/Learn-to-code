@@ -161,12 +161,7 @@ public class UserServiceModel extends IdServiceModel implements UserDetails {
         return getRoles()
                 .stream()
                 .map(RoleServiceModel::getName)
-                .map(this::removeRolePrefixIfExists)
                 .collect(Collectors.toList());
-    }
-
-    private String removeRolePrefixIfExists(String roleName) {
-        return roleName.startsWith("ROLE_") ? roleName.split("ROLE_")[1] : roleName;
     }
 
     @Override
