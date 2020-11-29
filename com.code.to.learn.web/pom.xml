@@ -22,6 +22,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<webappDirectory>src/main/webapp</webappDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 		</plugins>
