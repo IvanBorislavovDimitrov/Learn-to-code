@@ -2,7 +2,6 @@ package com.code.to.learn.web.config;
 
 import com.code.to.learn.persistence.domain.entity.entity_enum.UserRole;
 import com.code.to.learn.web.filter.JwtFilter;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -31,15 +30,14 @@ public class SecurityJavaConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
-    private final SessionFactory sessionFactory;
     private final JwtFilter jwtFilter;
 
     @Autowired
-    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder, @Qualifier("userDetailsService") UserDetailsService userDetailsService,
-                                     SessionFactory sessionFactory, JwtFilter jwtFilter) {
+    public SecurityJavaConfiguration(PasswordEncoder passwordEncoder,
+                                     @Qualifier("userDetailsService") UserDetailsService userDetailsService,
+                                     JwtFilter jwtFilter) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.sessionFactory = sessionFactory;
         this.jwtFilter = jwtFilter;
     }
 
