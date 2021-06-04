@@ -20,7 +20,7 @@
         <java.servlet.version>4.0.1</java.servlet.version>
         <maven.war.plugin.version>2.4</maven.war.plugin.version>
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
-        <apache.http.client>4.5.10</apache.http.client>
+        <apache.http.client>4.5.13</apache.http.client>
         <junit.version>5.6.2</junit.version>
         <mockito.version>1.10.19</mockito.version>
         <jjwt.version>0.9.1</jjwt.version>
