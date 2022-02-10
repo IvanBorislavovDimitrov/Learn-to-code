@@ -10,7 +10,7 @@
     <artifactId>com.code.to.learn.persistence</artifactId>
 
     <properties>
-        <hibernate.version>5.4.10.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <postgres.version>42.2.9</postgres.version>
         <reflections.version>0.9.12</reflections.version>
         <spring.cloud.version>2.0.7.RELEASE</spring.cloud.version>
