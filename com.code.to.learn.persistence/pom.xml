@@ -11,7 +11,7 @@
 
     <properties>
         <hibernate.version>5.4.10.Final</hibernate.version>
-        <postgres.version>42.2.9</postgres.version>
+        <postgres.version>42.3.3</postgres.version>
         <reflections.version>0.9.12</reflections.version>
         <spring.cloud.version>2.0.7.RELEASE</spring.cloud.version>
     </properties>
